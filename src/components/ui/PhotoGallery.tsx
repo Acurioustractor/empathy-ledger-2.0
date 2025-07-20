@@ -13,12 +13,12 @@ interface PhotoGalleryProps {
 }
 
 const PhotoGallery: React.FC<PhotoGalleryProps> = ({
-  title = "Photo Gallery",
+  title = 'Photo Gallery',
   description,
   layout = 'grid',
   count = 6,
   className = '',
-  showCaptions = true
+  showCaptions = true,
 }) => {
   const renderGridLayout = () => (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -29,7 +29,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
           size="md"
           aspect="square"
           title={`Photo ${index + 1}`}
-          description={showCaptions ? "Add meaningful caption here" : undefined}
+          description={showCaptions ? 'Add meaningful caption here' : undefined}
           className="hover:scale-105 transition-transform duration-300"
         />
       ))}
@@ -48,7 +48,9 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               size="full"
               aspect={randomAspect}
               title={`Photo ${index + 1}`}
-              description={showCaptions ? "Add meaningful caption here" : undefined}
+              description={
+                showCaptions ? 'Add meaningful caption here' : undefined
+              }
               className="mb-4 hover:scale-105 transition-transform duration-300"
             />
           </div>
@@ -78,7 +80,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             size="md"
             aspect="landscape"
             title={`Supporting Photo ${index + 1}`}
-            description={showCaptions ? "Supporting visual story" : undefined}
+            description={showCaptions ? 'Supporting visual story' : undefined}
             className="hover:scale-105 transition-transform duration-300"
           />
         ))}
@@ -135,7 +137,9 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             <div className="h-4 bg-gray-200 rounded mb-2"></div>
             <div className="h-4 bg-gray-200 rounded mb-2"></div>
             <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
-            <div className="text-sm text-gray-500 mt-2">Testimonial quote placeholder</div>
+            <div className="text-sm text-gray-500 mt-2">
+              Testimonial quote placeholder
+            </div>
           </div>
         </div>
       ))}
@@ -162,14 +166,12 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
       {(title || description) && (
         <div className="mb-8">
           <h3 className="text-2xl font-bold text-gray-900 mb-2">{title}</h3>
-          {description && (
-            <p className="text-gray-600">{description}</p>
-          )}
+          {description && <p className="text-gray-600">{description}</p>}
         </div>
       )}
-      
+
       {renderLayout()}
-      
+
       <div className="mt-6 text-center">
         <button className="text-primary-600 hover:text-primary-700 font-medium text-sm transition-colors">
           + Add more photos

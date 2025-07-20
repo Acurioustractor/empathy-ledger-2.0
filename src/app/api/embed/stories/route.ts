@@ -1,6 +1,6 @@
 /**
  * Embeddable Story Widgets API
- * 
+ *
  * Philosophy: Stories can be shared beyond the platform while maintaining
  * sovereignty principles and storyteller control.
  */
@@ -30,7 +30,9 @@ export async function GET(request: NextRequest) {
     // Verify project allows embedding
     const { data: project } = await supabase
       .from('projects')
-      .select('api_configuration, branding_config, settings, name, organization_name')
+      .select(
+        'api_configuration, branding_config, settings, name, organization_name'
+      )
       .eq('id', project_id)
       .eq('status', 'active')
       .single();
@@ -42,12 +44,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const embedding_enabled = project.api_configuration?.embedding_enabled ?? true;
+    const embedding_enabled =
+      project.api_configuration?.embedding_enabled ?? true;
     if (!embedding_enabled) {
       return NextResponse.json(
-        { 
+        {
           error: 'Embedding not enabled for this project',
-          sovereignty_note: 'Project has chosen to disable story embedding'
+          sovereignty_note: 'Project has chosen to disable story embedding',
         },
         { status: 403 }
       );
@@ -59,7 +62,8 @@ export async function GET(request: NextRequest) {
       // Get specific story
       const { data: story_data } = await supabase
         .from('stories')
-        .select(`
+        .select(
+          `
           id,
           title,
           transcript,
@@ -71,7 +75,8 @@ export async function GET(request: NextRequest) {
             full_name,
             community_affiliation
           )
-        `)
+        `
+        )
         .eq('id', story_id)
         .eq('project_id', project_id)
         .eq('privacy_level', 'public')
@@ -79,9 +84,9 @@ export async function GET(request: NextRequest) {
 
       if (!story_data || !story_data.consent_settings?.allowPublicSharing) {
         return NextResponse.json(
-          { 
+          {
             error: 'Story not available for embedding',
-            sovereignty_note: 'Story does not have public sharing consent'
+            sovereignty_note: 'Story does not have public sharing consent',
           },
           { status: 403 }
         );
@@ -92,7 +97,8 @@ export async function GET(request: NextRequest) {
       // Get public stories from project
       const { data: stories_data } = await supabase
         .from('stories')
-        .select(`
+        .select(
+          `
           id,
           title,
           transcript,
@@ -104,7 +110,8 @@ export async function GET(request: NextRequest) {
             full_name,
             community_affiliation
           )
-        `)
+        `
+        )
         .eq('project_id', project_id)
         .eq('privacy_level', 'public')
         .eq('status', 'published')
@@ -112,31 +119,48 @@ export async function GET(request: NextRequest) {
         .limit(limit);
 
       // Filter stories with public sharing consent
-      stories = stories_data?.filter(story => 
-        story.consent_settings?.allowPublicSharing
-      ) || [];
+      stories =
+        stories_data?.filter(
+          story => story.consent_settings?.allowPublicSharing
+        ) || [];
     }
 
     // Generate widget based on type and format
     let widget_content = '';
-    
+
     switch (format) {
       case 'html':
-        widget_content = generateHTMLWidget(widget_type, stories, project, theme);
+        widget_content = generateHTMLWidget(
+          widget_type,
+          stories,
+          project,
+          theme
+        );
         break;
       case 'json':
-        widget_content = JSON.stringify({
-          stories: stories.map(story => sanitizeStoryForEmbed(story)),
-          project: {
-            name: project.name,
-            organization: project.organization_name
+        widget_content = JSON.stringify(
+          {
+            stories: stories.map(story => sanitizeStoryForEmbed(story)),
+            project: {
+              name: project.name,
+              organization: project.organization_name,
+            },
+            sovereignty_notice:
+              'Stories shared with explicit consent. Rights remain with storytellers.',
+            powered_by: 'Empathy Ledger',
           },
-          sovereignty_notice: 'Stories shared with explicit consent. Rights remain with storytellers.',
-          powered_by: 'Empathy Ledger'
-        }, null, 2);
+          null,
+          2
+        );
         break;
       case 'iframe':
-        widget_content = generateIframeWidget(widget_type, stories, project, theme, project_id);
+        widget_content = generateIframeWidget(
+          widget_type,
+          stories,
+          project,
+          theme,
+          project_id
+        );
         break;
       default:
         return NextResponse.json(
@@ -151,7 +175,7 @@ export async function GET(request: NextRequest) {
       'Access-Control-Allow-Methods': 'GET',
       'Access-Control-Allow-Headers': 'Content-Type',
       'X-Sovereignty-Compliant': 'true',
-      'X-Stories-Consented': 'true'
+      'X-Stories-Consented': 'true',
     };
 
     if (format === 'html' || format === 'iframe') {
@@ -162,9 +186,8 @@ export async function GET(request: NextRequest) {
 
     return new Response(widget_content, {
       status: 200,
-      headers
+      headers,
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -174,49 +197,84 @@ export async function GET(request: NextRequest) {
 }
 
 function generateHTMLWidget(
-  widget_type: string, 
-  stories: any[], 
-  project: any, 
+  widget_type: string,
+  stories: any[],
+  project: any,
   theme: string
 ): string {
   const primary_color = project.branding_config?.primary_color || '#B85C38';
   const secondary_color = project.branding_config?.secondary_color || '#7A9B76';
   const font_family = project.branding_config?.font_family || 'Inter';
 
-  const theme_styles = theme === 'dark' ? {
-    background: '#1a1a1a',
-    text: '#ffffff',
-    card_bg: '#2d2d2d',
-    border: '#404040'
-  } : {
-    background: '#ffffff',
-    text: '#1a1a1a',
-    card_bg: '#ffffff',
-    border: '#e5e5e5'
-  };
+  const theme_styles =
+    theme === 'dark'
+      ? {
+          background: '#1a1a1a',
+          text: '#ffffff',
+          card_bg: '#2d2d2d',
+          border: '#404040',
+        }
+      : {
+          background: '#ffffff',
+          text: '#1a1a1a',
+          card_bg: '#ffffff',
+          border: '#e5e5e5',
+        };
 
   switch (widget_type) {
     case 'story_card':
-      return generateStoryCardWidget(stories, project, theme_styles, primary_color, font_family);
+      return generateStoryCardWidget(
+        stories,
+        project,
+        theme_styles,
+        primary_color,
+        font_family
+      );
     case 'story_carousel':
-      return generateStoryCarouselWidget(stories, project, theme_styles, primary_color, font_family);
+      return generateStoryCarouselWidget(
+        stories,
+        project,
+        theme_styles,
+        primary_color,
+        font_family
+      );
     case 'story_list':
-      return generateStoryListWidget(stories, project, theme_styles, primary_color, font_family);
+      return generateStoryListWidget(
+        stories,
+        project,
+        theme_styles,
+        primary_color,
+        font_family
+      );
     case 'featured_story':
-      return generateFeaturedStoryWidget(stories[0], project, theme_styles, primary_color, font_family);
+      return generateFeaturedStoryWidget(
+        stories[0],
+        project,
+        theme_styles,
+        primary_color,
+        font_family
+      );
     default:
-      return generateStoryCardWidget(stories, project, theme_styles, primary_color, font_family);
+      return generateStoryCardWidget(
+        stories,
+        project,
+        theme_styles,
+        primary_color,
+        font_family
+      );
   }
 }
 
 function generateStoryCardWidget(
-  stories: any[], 
-  project: any, 
-  theme: any, 
-  primary_color: string, 
+  stories: any[],
+  project: any,
+  theme: any,
+  primary_color: string,
   font_family: string
 ): string {
-  const story_cards = stories.map(story => `
+  const story_cards = stories
+    .map(
+      story => `
     <div class="empathy-story-card" style="
       background: ${theme.card_bg};
       border: 1px solid ${theme.border};
@@ -248,7 +306,9 @@ function generateStoryCardWidget(
         <span>${formatDate(story.submitted_at)}</span>
       </div>
     </div>
-  `).join('');
+  `
+    )
+    .join('');
 
   return `
     <div class="empathy-widget" style="
@@ -291,13 +351,15 @@ function generateStoryCardWidget(
 }
 
 function generateStoryCarouselWidget(
-  stories: any[], 
-  project: any, 
-  theme: any, 
-  primary_color: string, 
+  stories: any[],
+  project: any,
+  theme: any,
+  primary_color: string,
   font_family: string
 ): string {
-  const story_slides = stories.map((story, index) => `
+  const story_slides = stories
+    .map(
+      (story, index) => `
     <div class="carousel-slide" style="
       display: ${index === 0 ? 'block' : 'none'};
       background: ${theme.card_bg};
@@ -321,7 +383,9 @@ function generateStoryCarouselWidget(
         — ${escapeHtml(story.storyteller.full_name)}
       </div>
     </div>
-  `).join('');
+  `
+    )
+    .join('');
 
   return `
     <div class="empathy-carousel-widget" style="
@@ -346,7 +410,9 @@ function generateStoryCarouselWidget(
       <div class="carousel-container" style="position: relative;">
         ${story_slides}
         
-        ${stories.length > 1 ? `
+        ${
+          stories.length > 1
+            ? `
         <div style="
           display: flex;
           justify-content: center;
@@ -376,7 +442,9 @@ function generateStoryCarouselWidget(
             font-size: 0.875rem;
           ">Next</button>
         </div>
-        ` : ''}
+        `
+            : ''
+        }
       </div>
       
       <div style="
@@ -418,13 +486,15 @@ function generateStoryCarouselWidget(
 }
 
 function generateStoryListWidget(
-  stories: any[], 
-  project: any, 
-  theme: any, 
-  primary_color: string, 
+  stories: any[],
+  project: any,
+  theme: any,
+  primary_color: string,
   font_family: string
 ): string {
-  const story_items = stories.map(story => `
+  const story_items = stories
+    .map(
+      story => `
     <li style="
       padding: 0.75rem 0;
       border-bottom: 1px solid ${theme.border};
@@ -446,7 +516,9 @@ function generateStoryListWidget(
         <span>${formatDate(story.submitted_at)}</span>
       </div>
     </li>
-  `).join('');
+  `
+    )
+    .join('');
 
   return `
     <div class="empathy-list-widget" style="
@@ -484,10 +556,10 @@ function generateStoryListWidget(
 }
 
 function generateFeaturedStoryWidget(
-  story: any, 
-  project: any, 
-  theme: any, 
-  primary_color: string, 
+  story: any,
+  project: any,
+  theme: any,
+  primary_color: string,
   font_family: string
 ): string {
   if (!story) {
@@ -527,7 +599,9 @@ function generateFeaturedStoryWidget(
         </span>
       </div>
       
-      ${story.title ? `
+      ${
+        story.title
+          ? `
       <h2 style="
         margin: 0 0 1.5rem 0;
         color: ${primary_color};
@@ -536,7 +610,9 @@ function generateFeaturedStoryWidget(
       ">
         ${escapeHtml(story.title)}
       </h2>
-      ` : ''}
+      `
+          : ''
+      }
       
       <blockquote style="
         margin: 0 0 1.5rem 0;
@@ -560,7 +636,9 @@ function generateFeaturedStoryWidget(
         — ${escapeHtml(story.storyteller.full_name)}
       </div>
       
-      ${story.storyteller.community_affiliation ? `
+      ${
+        story.storyteller.community_affiliation
+          ? `
       <div style="
         font-size: 0.875rem;
         opacity: 0.7;
@@ -568,7 +646,9 @@ function generateFeaturedStoryWidget(
       ">
         ${escapeHtml(story.storyteller.community_affiliation)}
       </div>
-      ` : ''}
+      `
+          : ''
+      }
       
       <div style="
         font-size: 0.75rem;
@@ -584,14 +664,14 @@ function generateFeaturedStoryWidget(
 }
 
 function generateIframeWidget(
-  widget_type: string, 
-  stories: any[], 
-  project: any, 
-  theme: string, 
+  widget_type: string,
+  stories: any[],
+  project: any,
+  theme: string,
   project_id: string
 ): string {
   const iframe_url = `${process.env.NEXT_PUBLIC_APP_URL}/embed/iframe?project_id=${project_id}&type=${widget_type}&theme=${theme}`;
-  
+
   return `
     <iframe 
       src="${iframe_url}"
@@ -612,10 +692,10 @@ function sanitizeStoryForEmbed(story: any) {
     excerpt: truncateText(story.transcript, 200),
     storyteller: {
       name: story.storyteller.full_name,
-      community: story.storyteller.community_affiliation
+      community: story.storyteller.community_affiliation,
     },
     submitted_at: story.submitted_at,
-    tags: story.tags
+    tags: story.tags,
   };
 }
 
@@ -637,6 +717,6 @@ function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   });
 }

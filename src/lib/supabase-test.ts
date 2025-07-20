@@ -1,32 +1,32 @@
 // @ts-nocheck - Test response types need proper definitions
 /**
  * Comprehensive Supabase Test Suite
- * 
+ *
  * Tests all the fucking edge cases to make sure nothing breaks
  */
 
-import { 
-  createClient, 
-  createServerClient, 
+import {
+  createClient,
+  createServerClient,
   createAdminClient,
-  SupabaseClient 
+  SupabaseClient,
 } from './supabase-client';
 
-import { 
-  testConnection, 
-  validateSupabaseEnvironment 
+import {
+  testConnection,
+  validateSupabaseEnvironment,
 } from './supabase-factory';
 
-import { 
+import {
   getSupabaseHealthReport,
   quickHealthCheck,
-  isSupabaseReady 
+  isSupabaseReady,
 } from './supabase-health';
 
-import { 
-  SupabaseError, 
+import {
+  SupabaseError,
   SupabaseErrorType,
-  classifySupabaseError 
+  classifySupabaseError,
 } from './supabase-errors';
 
 export interface TestResult {
@@ -49,23 +49,22 @@ class SupabaseTestRunner {
 
   async runTest(name: string, testFn: () => Promise<any>): Promise<TestResult> {
     const startTime = Date.now();
-    
+
     try {
       console.log(`🧪 Running test: ${name}`);
       const result = await testFn();
-      
+
       const duration = Date.now() - startTime;
       const testResult: TestResult = {
         name,
         success: true,
         duration,
-        details: result
+        details: result,
       };
-      
+
       console.log(`✅ ${name} passed (${duration}ms)`);
       this.results.push(testResult);
       return testResult;
-      
     } catch (error) {
       const duration = Date.now() - startTime;
       const testResult: TestResult = {
@@ -73,9 +72,9 @@ class SupabaseTestRunner {
         success: false,
         duration,
         error: error.message,
-        details: error
+        details: error,
       };
-      
+
       console.error(`❌ ${name} failed (${duration}ms):`, error.message);
       this.results.push(testResult);
       return testResult;
@@ -101,36 +100,39 @@ export async function testEnvironmentConfiguration(): Promise<TestSuite> {
     if (!env.isValid) {
       throw new Error(`Missing variables: ${env.missingVars.join(', ')}`);
     }
-    return { valid: true, vars: ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'] };
+    return {
+      valid: true,
+      vars: ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'],
+    };
   });
 
   await runner.runTest('URL Format Validation', async () => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     if (!url) throw new Error('URL not found');
-    
+
     if (!url.includes('.supabase.co') && !url.includes('localhost')) {
       throw new Error('Invalid URL format');
     }
-    
+
     return { url: url.substring(0, 20) + '...' };
   });
 
   await runner.runTest('Anon Key Format', async () => {
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     if (!key) throw new Error('Anon key not found');
-    
+
     if (key.length < 100) {
       throw new Error('Anon key seems too short');
     }
-    
+
     return { keyLength: key.length, preview: key.substring(0, 10) + '...' };
   });
 
   await runner.runTest('Service Key Check', async () => {
     const serviceKey = process.env.SUPABASE_SERVICE_KEY;
-    return { 
+    return {
       hasServiceKey: !!serviceKey,
-      keyLength: serviceKey?.length || 0
+      keyLength: serviceKey?.length || 0,
     };
   });
 
@@ -139,7 +141,7 @@ export async function testEnvironmentConfiguration(): Promise<TestSuite> {
     name: 'Environment Configuration',
     results,
     overallSuccess: results.every(r => r.success),
-    totalDuration: Date.now() - startTime
+    totalDuration: Date.now() - startTime,
   };
 }
 
@@ -180,7 +182,7 @@ export async function testClientConnections(): Promise<TestSuite> {
     name: 'Client Connections',
     results,
     overallSuccess: results.every(r => r.success),
-    totalDuration: Date.now() - startTime
+    totalDuration: Date.now() - startTime,
   };
 }
 
@@ -197,9 +199,16 @@ export async function testDatabaseOperations(): Promise<TestSuite> {
     } catch (error) {
       // Table might not exist, try a different approach
       const rawClient = client.getRawClient();
-      const { data, error: dbError } = await rawClient.from('profiles').select('count').limit(1);
+      const { data, error: dbError } = await rawClient
+        .from('profiles')
+        .select('count')
+        .limit(1);
       if (dbError && dbError.code === '42P01') {
-        return { query: 'table_not_found', table: 'profiles', message: 'Expected if database not set up' };
+        return {
+          query: 'table_not_found',
+          table: 'profiles',
+          message: 'Expected if database not set up',
+        };
       }
       throw error;
     }
@@ -208,19 +217,19 @@ export async function testDatabaseOperations(): Promise<TestSuite> {
   await runner.runTest('Authentication Test', async () => {
     const client = await SupabaseClient.createBrowser();
     const session = await client.getSession();
-    return { 
+    return {
       hasSession: !!session.session,
-      user: session.session?.user?.id || null
+      user: session.session?.user?.id || null,
     };
   });
 
   await runner.runTest('Raw Client Access', async () => {
     const client = await SupabaseClient.createBrowser();
     const rawClient = client.getRawClient();
-    return { 
+    return {
       hasRawClient: !!rawClient,
       hasFrom: typeof rawClient.from === 'function',
-      hasAuth: typeof rawClient.auth === 'object'
+      hasAuth: typeof rawClient.auth === 'object',
     };
   });
 
@@ -229,7 +238,7 @@ export async function testDatabaseOperations(): Promise<TestSuite> {
     name: 'Database Operations',
     results,
     overallSuccess: results.every(r => r.success),
-    totalDuration: Date.now() - startTime
+    totalDuration: Date.now() - startTime,
   };
 }
 
@@ -240,45 +249,45 @@ export async function testErrorHandling(): Promise<TestSuite> {
   await runner.runTest('Network Error Classification', async () => {
     const networkError = new Error('Failed to fetch');
     const classified = classifySupabaseError(networkError);
-    
+
     if (classified.type !== SupabaseErrorType.NETWORK_ERROR) {
       throw new Error(`Expected NETWORK_ERROR, got ${classified.type}`);
     }
-    
-    return { 
+
+    return {
       type: classified.type,
       retryable: classified.retryable,
-      userMessage: classified.userMessage
+      userMessage: classified.userMessage,
     };
   });
 
   await runner.runTest('Auth Error Classification', async () => {
     const authError = { message: 'Invalid login credentials', status: 401 };
     const classified = classifySupabaseError(authError);
-    
+
     if (classified.type !== SupabaseErrorType.AUTHENTICATION_FAILED) {
       throw new Error(`Expected AUTHENTICATION_FAILED, got ${classified.type}`);
     }
-    
-    return { 
+
+    return {
       type: classified.type,
       retryable: classified.retryable,
-      userMessage: classified.userMessage
+      userMessage: classified.userMessage,
     };
   });
 
   await runner.runTest('Rate Limit Error Classification', async () => {
     const rateLimitError = { message: 'Too many requests', status: 429 };
     const classified = classifySupabaseError(rateLimitError);
-    
+
     if (classified.type !== SupabaseErrorType.RATE_LIMITED) {
       throw new Error(`Expected RATE_LIMITED, got ${classified.type}`);
     }
-    
-    return { 
+
+    return {
       type: classified.type,
       retryable: classified.retryable,
-      userMessage: classified.userMessage
+      userMessage: classified.userMessage,
     };
   });
 
@@ -288,17 +297,17 @@ export async function testErrorHandling(): Promise<TestSuite> {
       message: 'Test error',
       userMessage: 'Test user message',
       suggestion: 'Test suggestion',
-      retryable: true
+      retryable: true,
     });
-    
+
     if (!(error instanceof SupabaseError)) {
       throw new Error('SupabaseError not created correctly');
     }
-    
+
     return {
       isSupabaseError: error instanceof SupabaseError,
       type: error.type,
-      retryable: error.retryable
+      retryable: error.retryable,
     };
   });
 
@@ -307,7 +316,7 @@ export async function testErrorHandling(): Promise<TestSuite> {
     name: 'Error Handling',
     results,
     overallSuccess: results.every(r => r.success),
-    totalDuration: Date.now() - startTime
+    totalDuration: Date.now() - startTime,
   };
 }
 
@@ -319,7 +328,7 @@ export async function testHealthMonitoring(): Promise<TestSuite> {
     const health = await quickHealthCheck();
     return {
       healthy: health.healthy,
-      responseTime: health.responseTime
+      responseTime: health.responseTime,
     };
   });
 
@@ -333,18 +342,20 @@ export async function testHealthMonitoring(): Promise<TestSuite> {
     return {
       overall: report.overall,
       hasRecommendations: report.recommendations.length > 0,
-      clientsChecked: Object.keys(report).filter(k => ['browser', 'server', 'admin'].includes(k)).length
+      clientsChecked: Object.keys(report).filter(k =>
+        ['browser', 'server', 'admin'].includes(k)
+      ).length,
     };
   });
 
   await runner.runTest('Connection Testing', async () => {
     const browserTest = await testConnection('browser');
     const serverTest = await testConnection('server');
-    
+
     return {
       browser: browserTest.success,
       server: serverTest.success,
-      errors: [browserTest.error, serverTest.error].filter(Boolean)
+      errors: [browserTest.error, serverTest.error].filter(Boolean),
     };
   });
 
@@ -353,7 +364,7 @@ export async function testHealthMonitoring(): Promise<TestSuite> {
     name: 'Health Monitoring',
     results,
     overallSuccess: results.every(r => r.success),
-    totalDuration: Date.now() - startTime
+    totalDuration: Date.now() - startTime,
   };
 }
 
@@ -370,43 +381,45 @@ export async function runFullTestSuite(): Promise<{
   };
 }> {
   const startTime = Date.now();
-  
+
   console.log('🚀 Starting comprehensive Supabase test suite...');
-  
+
   const suites = await Promise.all([
     testEnvironmentConfiguration(),
     testClientConnections(),
     testDatabaseOperations(),
     testErrorHandling(),
-    testHealthMonitoring()
+    testHealthMonitoring(),
   ]);
-  
+
   const allResults = suites.flatMap(suite => suite.results);
   const passedTests = allResults.filter(r => r.success).length;
   const failedTests = allResults.filter(r => !r.success).length;
   const totalTests = allResults.length;
-  
+
   const summary = {
     totalTests,
     passedTests,
     failedTests,
-    successRate: (passedTests / totalTests) * 100
+    successRate: (passedTests / totalTests) * 100,
   };
-  
+
   const overallSuccess = suites.every(suite => suite.overallSuccess);
   const totalDuration = Date.now() - startTime;
-  
+
   console.log(`\n📊 Test Suite Complete:`);
-  console.log(`✅ Passed: ${passedTests}/${totalTests} (${summary.successRate.toFixed(1)}%)`);
+  console.log(
+    `✅ Passed: ${passedTests}/${totalTests} (${summary.successRate.toFixed(1)}%)`
+  );
   console.log(`❌ Failed: ${failedTests}/${totalTests}`);
   console.log(`⏱️  Duration: ${totalDuration}ms`);
   console.log(`🎯 Overall: ${overallSuccess ? 'SUCCESS' : 'FAILURE'}`);
-  
+
   return {
     suites,
     overallSuccess,
     totalDuration,
-    summary
+    summary,
   };
 }
 

@@ -34,42 +34,46 @@ async function readSQLFile(filename) {
 
 async function executeSQLFile(filename, description) {
   console.log(`\n📝 Setting up ${description}...`);
-  
+
   const sql = await readSQLFile(filename);
   if (!sql) {
     console.log(`⏭️  Skipping ${filename} (file not found)`);
     return false;
   }
-  
+
   try {
     // Split SQL into individual statements and execute them
     const statements = sql
       .split(';')
       .map(s => s.trim())
       .filter(s => s.length > 0 && !s.startsWith('--'));
-    
+
     let successCount = 0;
     let errorCount = 0;
-    
+
     for (const statement of statements) {
       if (statement.trim().length === 0) continue;
-      
+
       try {
-        const { error } = await supabase.rpc('exec_sql', { sql_query: statement });
+        const { error } = await supabase.rpc('exec_sql', {
+          sql_query: statement,
+        });
         if (error) {
           // Try direct execution for DDL statements
           const response = await fetch(`${supabaseUrl}/rest/v1/rpc/exec_sql`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${supabaseServiceKey}`,
-              'apikey': supabaseServiceKey
+              Authorization: `Bearer ${supabaseServiceKey}`,
+              apikey: supabaseServiceKey,
             },
-            body: JSON.stringify({ sql_query: statement })
+            body: JSON.stringify({ sql_query: statement }),
           });
-          
+
           if (!response.ok) {
-            console.log(`⚠️  Statement might need manual execution: ${statement.substring(0, 50)}...`);
+            console.log(
+              `⚠️  Statement might need manual execution: ${statement.substring(0, 50)}...`
+            );
             errorCount++;
           } else {
             successCount++;
@@ -82,10 +86,11 @@ async function executeSQLFile(filename, description) {
         errorCount++;
       }
     }
-    
-    console.log(`✅ ${description} completed: ${successCount} successful, ${errorCount} need manual review`);
+
+    console.log(
+      `✅ ${description} completed: ${successCount} successful, ${errorCount} need manual review`
+    );
     return true;
-    
   } catch (error) {
     console.error(`❌ Failed to execute ${filename}:`, error.message);
     return false;
@@ -94,7 +99,7 @@ async function executeSQLFile(filename, description) {
 
 async function createBasicTables() {
   console.log('\n🔧 Creating essential tables manually...');
-  
+
   const basicSQL = `
     -- Enable Row Level Security
     ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated;
@@ -203,12 +208,14 @@ async function createBasicTables() {
     
     ALTER TABLE public.stories ENABLE ROW LEVEL SECURITY;
   `;
-  
+
   try {
     const { error } = await supabase.rpc('exec_sql', { sql_query: basicSQL });
     if (error) {
       console.log('⚠️  Basic table creation needs manual setup');
-      console.log('Please go to SQL Editor in Supabase and run the schema.sql file');
+      console.log(
+        'Please go to SQL Editor in Supabase and run the schema.sql file'
+      );
       return false;
     }
     console.log('✅ Essential tables created successfully');
@@ -221,10 +228,10 @@ async function createBasicTables() {
 
 async function testSetup() {
   console.log('\n🧪 Testing database setup...');
-  
+
   const tables = ['profiles', 'organizations', 'communities', 'stories'];
   const results = {};
-  
+
   for (const table of tables) {
     try {
       const { data, error } = await supabase.from(table).select('*').limit(1);
@@ -233,12 +240,12 @@ async function testSetup() {
       results[table] = `❌ ${err.message}`;
     }
   }
-  
+
   console.log('\nTable Status:');
   Object.entries(results).forEach(([table, status]) => {
     console.log(`  ${table}: ${status}`);
   });
-  
+
   return results;
 }
 
@@ -246,10 +253,10 @@ async function main() {
   console.log('🚀 EMPATHY LEDGER DATABASE SETUP');
   console.log('='.repeat(50));
   console.log(`📍 Project: ${supabaseUrl}`);
-  
+
   // First, try to create basic tables
   const basicSuccess = await createBasicTables();
-  
+
   if (!basicSuccess) {
     console.log('\n📋 MANUAL SETUP REQUIRED');
     console.log('='.repeat(30));
@@ -261,12 +268,14 @@ async function main() {
     console.log('6. Then run this script again');
     return;
   }
-  
+
   // Test the setup
   const testResults = await testSetup();
-  
-  const allTablesReady = Object.values(testResults).every(status => status.includes('✅'));
-  
+
+  const allTablesReady = Object.values(testResults).every(status =>
+    status.includes('✅')
+  );
+
   if (allTablesReady) {
     console.log('\n🎉 DATABASE SETUP COMPLETE!');
     console.log('✅ Ready for user journey testing');

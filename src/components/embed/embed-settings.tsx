@@ -11,10 +11,15 @@ interface EmbedSettingsProps {
   onSettingsChange?: (settings: any) => void;
 }
 
-export function EmbedSettings({ projectId, onSettingsChange }: EmbedSettingsProps) {
+export function EmbedSettings({
+  projectId,
+  onSettingsChange,
+}: EmbedSettingsProps) {
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Embed Settings</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Embed Settings
+      </h3>
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -24,7 +29,7 @@ export function EmbedSettings({ projectId, onSettingsChange }: EmbedSettingsProp
             type="text"
             defaultValue="100%"
             className="w-full border border-gray-300 rounded-md px-3 py-2"
-            onChange={(e) => onSettingsChange?.({ width: e.target.value })}
+            onChange={e => onSettingsChange?.({ width: e.target.value })}
           />
         </div>
         <div>
@@ -35,7 +40,7 @@ export function EmbedSettings({ projectId, onSettingsChange }: EmbedSettingsProp
             type="text"
             defaultValue="400px"
             className="w-full border border-gray-300 rounded-md px-3 py-2"
-            onChange={(e) => onSettingsChange?.({ height: e.target.value })}
+            onChange={e => onSettingsChange?.({ height: e.target.value })}
           />
         </div>
         <div>

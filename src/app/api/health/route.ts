@@ -11,17 +11,17 @@ export async function GET() {
         database: 'not_implemented', // Will implement when database is ready
         memory: process.memoryUsage(),
         uptime: process.uptime(),
-      }
+      },
     };
 
     return NextResponse.json(healthCheck, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { 
-        status: 'unhealthy', 
+      {
+        status: 'unhealthy',
         error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
-      }, 
+        timestamp: new Date().toISOString(),
+      },
       { status: 500 }
     );
   }

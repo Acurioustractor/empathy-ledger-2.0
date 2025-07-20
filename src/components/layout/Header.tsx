@@ -14,7 +14,7 @@ const Header: React.FC = () => {
     { name: 'Case Studies', href: '/case-studies' },
     { name: 'Community Gallery', href: '/community-gallery' },
     { name: 'Data Stories', href: '/visualizations' },
-    { name: 'Trust & Security', href: '/trust-security' }
+    { name: 'Trust & Security', href: '/trust-security' },
   ];
 
   return (
@@ -35,7 +35,7 @@ const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-10">
-            {navigation.map((item) => (
+            {navigation.map(item => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -48,7 +48,12 @@ const Header: React.FC = () => {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center">
-            <Button variant="primary" size="sm" href="/submit" className="no-underline">
+            <Button
+              variant="primary"
+              size="sm"
+              href="/submit"
+              className="no-underline"
+            >
               Share Story
             </Button>
           </div>
@@ -62,12 +67,32 @@ const Header: React.FC = () => {
             >
               <span className="sr-only">Open main menu</span>
               {mobileMenuOpen ? (
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               ) : (
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               )}
             </button>
@@ -77,7 +102,7 @@ const Header: React.FC = () => {
         {/* Mobile menu */}
         <div className={`md:hidden ${mobileMenuOpen ? 'block' : 'hidden'}`}>
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navigation.map((item) => (
+            {navigation.map(item => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -88,10 +113,10 @@ const Header: React.FC = () => {
               </Link>
             ))}
             <div className="pt-4">
-              <Button 
-                variant="cta" 
-                size="sm" 
-                href="/submit" 
+              <Button
+                variant="cta"
+                size="sm"
+                href="/submit"
                 fullWidth
                 onClick={() => setMobileMenuOpen(false)}
               >

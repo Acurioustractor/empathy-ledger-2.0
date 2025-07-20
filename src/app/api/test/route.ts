@@ -1,6 +1,6 @@
 /**
  * Simple Test API - No Auth Required
- * 
+ *
  * Philosophy: Basic health check to verify the platform is running
  */
 
@@ -17,14 +17,14 @@ export async function GET() {
       community_ownership: true,
       storyteller_control: true,
       cultural_protocols: true,
-      value_sharing: true
+      value_sharing: true,
     },
     features_ready: [
       'Multi-tenant projects',
       'Custom branding system',
       'Analytics dashboard',
       'Embeddable widgets',
-      'Sovereignty compliance'
-    ]
+      'Sovereignty compliance',
+    ],
   });
 }

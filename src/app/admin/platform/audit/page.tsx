@@ -13,7 +13,7 @@ interface SearchParams {
 }
 
 export default async function AuditLogPage({
-  searchParams
+  searchParams,
 }: {
   searchParams: SearchParams;
 }) {
@@ -29,7 +29,7 @@ export default async function AuditLogPage({
     start_date: searchParams.start_date,
     end_date: searchParams.end_date,
     limit,
-    offset
+    offset,
   };
 
   // Initialize with empty data for build-time
@@ -40,11 +40,12 @@ export default async function AuditLogPage({
 
   try {
     const supabase = await createServerClient();
-    
+
     // Get audit log entries
     const { data: entries, error } = await supabase
       .from('platform_audit_log')
-      .select(`
+      .select(
+        `
         id,
         action,
         target_type,
@@ -59,7 +60,8 @@ export default async function AuditLogPage({
           email,
           platform_role
         )
-      `)
+      `
+      )
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -80,7 +82,7 @@ export default async function AuditLogPage({
     // Get audit statistics (may not exist during build)
     try {
       const { data: stats } = await supabase.rpc('get_audit_stats', {
-        timeframe: '7d'
+        timeframe: '7d',
       });
       statsData = stats;
     } catch (error) {
@@ -138,7 +140,7 @@ export default async function AuditLogPage({
       <AuditLogFilters currentFilters={filters} />
 
       {/* Audit Log Table */}
-      <AuditLogTable 
+      <AuditLogTable
         entries={auditEntries || []}
         currentPage={page}
         totalPages={totalPages}

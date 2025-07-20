@@ -57,7 +57,7 @@ export interface Story {
   updated_at: string;
 }
 
-export type StoryCategory = 
+export type StoryCategory =
   | 'healthcare'
   | 'education'
   | 'housing'
@@ -70,7 +70,12 @@ export type StoryCategory =
   | 'social_services';
 
 export type PrivacyLevel = 'public' | 'community' | 'organization' | 'private';
-export type StoryStatus = 'draft' | 'pending' | 'approved' | 'featured' | 'archived';
+export type StoryStatus =
+  | 'draft'
+  | 'pending'
+  | 'approved'
+  | 'featured'
+  | 'archived';
 
 export interface StorySubmission {
   title: string;
@@ -125,18 +130,18 @@ export async function submitStory(
     }
 
     const storyId = uuidv4();
-    
+
     // Upload media files first
     const mediaUrls = await uploadStoryMedia(storyId, {
       audio: submission.audio_file,
       video: submission.video_file,
-      images: submission.image_files
+      images: submission.image_files,
     });
 
     // Process audio transcription if audio is provided
     let transcription = null;
     let transcriptionConfidence = null;
-    
+
     if (mediaUrls.audio_url) {
       const transcriptionResult = await transcribeAudio(mediaUrls.audio_url);
       transcription = transcriptionResult.text;
@@ -146,7 +151,9 @@ export async function submitStory(
     // Analyze content for AI insights (if allowed)
     let aiAnalysis = null;
     if (submission.allow_ai_analysis !== false) {
-      aiAnalysis = await analyzeStoryContent(submission.content + ' ' + (transcription || ''));
+      aiAnalysis = await analyzeStoryContent(
+        submission.content + ' ' + (transcription || '')
+      );
     }
 
     // Create story record
@@ -183,7 +190,7 @@ export async function submitStory(
       impact_score: 0,
       cited_in_reports: 0,
       policy_influence_score: 0,
-      flagged_content: false
+      flagged_content: false,
     };
 
     const { data, error } = await supabase
@@ -231,12 +238,18 @@ export async function updateStory(
     }
 
     if (existingStory.contributor_id !== userId) {
-      return { story: null, error: { message: 'Unauthorized to update this story' } };
+      return {
+        story: null,
+        error: { message: 'Unauthorized to update this story' },
+      };
     }
 
     // Don't allow updates to approved/featured stories without admin approval
     if (['approved', 'featured'].includes(existingStory.status)) {
-      return { story: null, error: { message: 'Cannot update published stories' } };
+      return {
+        story: null,
+        error: { message: 'Cannot update published stories' },
+      };
     }
 
     // Re-analyze content if changed
@@ -252,7 +265,7 @@ export async function updateStory(
       topic_scores: aiAnalysis?.topic_scores,
       language_detected: aiAnalysis?.language,
       content_warnings: aiAnalysis?.content_warnings,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     };
 
     const { data, error } = await supabase
@@ -292,15 +305,18 @@ export async function deleteStory(
     }
 
     if (story.contributor_id !== userId) {
-      return { success: false, error: { message: 'Unauthorized to delete this story' } };
+      return {
+        success: false,
+        error: { message: 'Unauthorized to delete this story' },
+      };
     }
 
     // Soft delete by archiving
     const { error } = await supabase
       .from('stories')
-      .update({ 
+      .update({
         status: 'archived',
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq('id', storyId);
 
@@ -331,9 +347,8 @@ export async function getStories(
   userId?: string
 ): Promise<{ stories: Story[]; total_count: number; error: any }> {
   try {
-    let query = supabase
-      .from('stories')
-      .select(`
+    let query = supabase.from('stories').select(
+      `
         *,
         profiles:contributor_id (
           display_name,
@@ -343,7 +358,9 @@ export async function getStories(
           name,
           slug
         )
-      `, { count: 'exact' });
+      `,
+      { count: 'exact' }
+    );
 
     // Apply privacy filters based on user
     if (!userId) {
@@ -399,7 +416,9 @@ export async function getStories(
 
     // Apply media filter
     if (filter.has_media) {
-      query = query.or('audio_url.not.is.null,video_url.not.is.null,image_urls.not.is.null');
+      query = query.or(
+        'audio_url.not.is.null,video_url.not.is.null,image_urls.not.is.null'
+      );
     }
 
     // Apply featured filter
@@ -423,10 +442,10 @@ export async function getStories(
       return { stories: [], total_count: 0, error };
     }
 
-    return { 
-      stories: data as Story[], 
-      total_count: count || 0, 
-      error: null 
+    return {
+      stories: data as Story[],
+      total_count: count || 0,
+      error: null,
     };
   } catch (error) {
     return { stories: [], total_count: 0, error };
@@ -443,7 +462,8 @@ export async function getStoryById(
   try {
     let query = supabase
       .from('stories')
-      .select(`
+      .select(
+        `
         *,
         profiles:contributor_id (
           display_name,
@@ -459,7 +479,8 @@ export async function getStoryById(
           name,
           logo_url
         )
-      `)
+      `
+      )
       .eq('id', storyId);
 
     // Apply privacy filtering
@@ -519,10 +540,10 @@ export async function getUserStories(
       return { stories: [], total_count: 0, error };
     }
 
-    return { 
-      stories: data as Story[], 
-      total_count: count || 0, 
-      error: null 
+    return {
+      stories: data as Story[],
+      total_count: count || 0,
+      error: null,
     };
   } catch (error) {
     return { stories: [], total_count: 0, error };
@@ -542,13 +563,11 @@ export async function addStoryReaction(
   reactionType: string
 ): Promise<{ success: boolean; error: any }> {
   try {
-    const { error } = await supabase
-      .from('story_reactions')
-      .insert({
-        story_id: storyId,
-        user_id: userId,
-        reaction_type: reactionType
-      });
+    const { error } = await supabase.from('story_reactions').insert({
+      story_id: storyId,
+      user_id: userId,
+      reaction_type: reactionType,
+    });
 
     if (error) {
       return { success: false, error };
@@ -610,7 +629,7 @@ export async function addStoryComment(
         user_id: userId,
         content,
         is_anonymous: isAnonymous,
-        parent_comment_id: parentCommentId
+        parent_comment_id: parentCommentId,
       })
       .select()
       .single();
@@ -658,9 +677,9 @@ async function uploadStoryMedia(
         .upload(audioPath, files.audio);
 
       if (!audioError) {
-        const { data: { publicUrl } } = supabase.storage
-          .from('media')
-          .getPublicUrl(audioPath);
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('media').getPublicUrl(audioPath);
         results.audio_url = publicUrl;
       }
     }
@@ -673,9 +692,9 @@ async function uploadStoryMedia(
         .upload(videoPath, files.video);
 
       if (!videoError) {
-        const { data: { publicUrl } } = supabase.storage
-          .from('media')
-          .getPublicUrl(videoPath);
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('media').getPublicUrl(videoPath);
         results.video_url = publicUrl;
       }
     }
@@ -683,7 +702,7 @@ async function uploadStoryMedia(
     // Upload image files
     if (files.images && files.images.length > 0) {
       const imageUrls = [];
-      
+
       for (const [index, image] of files.images.entries()) {
         const imagePath = `stories/${storyId}/images/${index}-${image.name}`;
         const { data: imageData, error: imageError } = await supabase.storage
@@ -691,13 +710,13 @@ async function uploadStoryMedia(
           .upload(imagePath, image);
 
         if (!imageError) {
-          const { data: { publicUrl } } = supabase.storage
-            .from('media')
-            .getPublicUrl(imagePath);
+          const {
+            data: { publicUrl },
+          } = supabase.storage.from('media').getPublicUrl(imagePath);
           imageUrls.push(publicUrl);
         }
       }
-      
+
       if (imageUrls.length > 0) {
         results.image_urls = imageUrls;
       }
@@ -734,15 +753,15 @@ async function analyzeStoryContent(content: string): Promise<{
         sadness: Math.random() * 0.3,
         anger: Math.random() * 0.2,
         fear: Math.random() * 0.2,
-        hope: Math.random() * 0.6
+        hope: Math.random() * 0.6,
       },
       topic_scores: {
         healthcare: content.toLowerCase().includes('health') ? 0.8 : 0.1,
         education: content.toLowerCase().includes('school') ? 0.8 : 0.1,
-        housing: content.toLowerCase().includes('home') ? 0.8 : 0.1
+        housing: content.toLowerCase().includes('home') ? 0.8 : 0.1,
       },
       language: 'en',
-      content_warnings: []
+      content_warnings: [],
     };
   } catch (error) {
     console.error('Error analyzing content:', error);
@@ -761,14 +780,14 @@ async function transcribeAudio(audioUrl: string): Promise<{
     // This would integrate with Assembly AI, OpenAI Whisper, or similar
     // For now, return mock transcription
     return {
-      text: "This is a mock transcription of the audio content.",
-      confidence: 0.95
+      text: 'This is a mock transcription of the audio content.',
+      confidence: 0.95,
     };
   } catch (error) {
     console.error('Error transcribing audio:', error);
     return {
-      text: "",
-      confidence: 0
+      text: '',
+      confidence: 0,
     };
   }
 }
@@ -823,11 +842,16 @@ async function getUserCommunityIds(userId: string): Promise<string> {
 /**
  * Notify community moderators of new story
  */
-async function notifyCommunityModerators(communityId: string, storyId: string): Promise<void> {
+async function notifyCommunityModerators(
+  communityId: string,
+  storyId: string
+): Promise<void> {
   try {
     // This would send notifications to moderators
     // Implementation depends on notification system
-    console.log(`Notifying moderators of community ${communityId} about story ${storyId}`);
+    console.log(
+      `Notifying moderators of community ${communityId} about story ${storyId}`
+    );
   } catch (error) {
     console.error('Error notifying moderators:', error);
   }

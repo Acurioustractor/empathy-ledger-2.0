@@ -14,7 +14,7 @@ export default function SupabaseHealthCheck() {
   useEffect(() => {
     // Set up automatic keep-alive
     const cleanup = setupKeepAlive();
-    
+
     // Initial status check
     checkStatus();
 
@@ -29,7 +29,7 @@ export default function SupabaseHealthCheck() {
     } catch (error) {
       setStatus({
         isActive: false,
-        error: 'Failed to check status'
+        error: 'Failed to check status',
       });
     } finally {
       setIsChecking(false);
@@ -56,9 +56,11 @@ export default function SupabaseHealthCheck() {
       {status && (
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className={`w-3 h-3 rounded-full ${
-              status.isActive ? 'bg-green-500' : 'bg-red-500'
-            }`}></div>
+            <div
+              className={`w-3 h-3 rounded-full ${
+                status.isActive ? 'bg-green-500' : 'bg-red-500'
+              }`}
+            ></div>
             <span className="font-light text-gray-900">
               {status.isActive ? 'Active' : 'Inactive/Paused'}
             </span>
@@ -78,9 +80,12 @@ export default function SupabaseHealthCheck() {
 
           {!status.isActive && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 mt-4">
-              <h4 className="font-normal text-yellow-800 mb-2">Project Paused</h4>
+              <h4 className="font-normal text-yellow-800 mb-2">
+                Project Paused
+              </h4>
               <p className="text-sm text-yellow-700 font-light mb-3">
-                Your Supabase project has been paused. Go to your Supabase dashboard to restart it.
+                Your Supabase project has been paused. Go to your Supabase
+                dashboard to restart it.
               </p>
               <a
                 href="https://supabase.com/dashboard"
@@ -95,9 +100,12 @@ export default function SupabaseHealthCheck() {
 
           {status.isActive && (
             <div className="bg-green-50 border border-green-200 rounded-2xl p-4 mt-4">
-              <h4 className="font-normal text-green-800 mb-2">Auto Keep-Alive Active</h4>
+              <h4 className="font-normal text-green-800 mb-2">
+                Auto Keep-Alive Active
+              </h4>
               <p className="text-sm text-green-700 font-light">
-                Automatic health checks every 6 hours will keep your project active.
+                Automatic health checks every 6 hours will keep your project
+                active.
               </p>
             </div>
           )}

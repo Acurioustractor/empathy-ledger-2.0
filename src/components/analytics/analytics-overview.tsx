@@ -1,6 +1,6 @@
 /**
  * Analytics Overview Component
- * 
+ *
  * Philosophy: High-level metrics that celebrate community growth and empowerment
  * while maintaining transparency about platform impact.
  */
@@ -41,7 +41,9 @@ export function AnalyticsOverview({ data }: AnalyticsOverviewProps) {
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="p-6 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900">Platform Overview</h2>
+        <h2 className="text-xl font-semibold text-gray-900">
+          Platform Overview
+        </h2>
         <p className="text-sm text-gray-600 mt-1">
           Community-driven storytelling ecosystem impact
         </p>
@@ -57,7 +59,7 @@ export function AnalyticsOverview({ data }: AnalyticsOverviewProps) {
             icon="🏛️"
             description="Organizations building storytelling communities"
           />
-          
+
           <MetricCard
             title="Stories Shared"
             value={data.total_stories_period}
@@ -65,7 +67,7 @@ export function AnalyticsOverview({ data }: AnalyticsOverviewProps) {
             icon="📖"
             description="Community narratives this period"
           />
-          
+
           <MetricCard
             title="Active Storytellers"
             value={data.active_storytellers_period}
@@ -73,7 +75,7 @@ export function AnalyticsOverview({ data }: AnalyticsOverviewProps) {
             icon="👥"
             description="Community members sharing experiences"
           />
-          
+
           <MetricCard
             title="Insights Generated"
             value={data.insights_generated}
@@ -87,7 +89,9 @@ export function AnalyticsOverview({ data }: AnalyticsOverviewProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Subscription Tiers */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Project Types</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Project Types
+            </h3>
             <div className="space-y-3">
               <DistributionBar
                 label="Community"
@@ -115,53 +119,70 @@ export function AnalyticsOverview({ data }: AnalyticsOverviewProps) {
 
           {/* Geographic Distribution */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Geographic Reach</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Geographic Reach
+            </h3>
             <div className="space-y-3">
-              {Object.entries(data.geographic_distribution.regions).map(([region, count]) => (
-                <DistributionBar
-                  key={region}
-                  label={region}
-                  value={count}
-                  total={Object.values(data.geographic_distribution.regions).reduce((a, b) => a + b, 0)}
-                  color="bg-indigo-500"
-                  description={`${count} active communities`}
-                />
-              ))}
+              {Object.entries(data.geographic_distribution.regions).map(
+                ([region, count]) => (
+                  <DistributionBar
+                    key={region}
+                    label={region}
+                    value={count}
+                    total={Object.values(
+                      data.geographic_distribution.regions
+                    ).reduce((a, b) => a + b, 0)}
+                    color="bg-indigo-500"
+                    description={`${count} active communities`}
+                  />
+                )
+              )}
             </div>
           </div>
 
           {/* Project Categories */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Focus Areas</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Focus Areas
+            </h3>
             <div className="space-y-3">
-              {Object.entries(data.project_categories).slice(0, 4).map(([category, count]) => (
-                <DistributionBar
-                  key={category}
-                  label={formatCategoryName(category)}
-                  value={count}
-                  total={Object.values(data.project_categories).reduce((a, b) => a + b, 0)}
-                  color="bg-orange-500"
-                  description={`${count} projects`}
-                />
-              ))}
+              {Object.entries(data.project_categories)
+                .slice(0, 4)
+                .map(([category, count]) => (
+                  <DistributionBar
+                    key={category}
+                    label={formatCategoryName(category)}
+                    value={count}
+                    total={Object.values(data.project_categories).reduce(
+                      (a, b) => a + b,
+                      0
+                    )}
+                    color="bg-orange-500"
+                    description={`${count} projects`}
+                  />
+                ))}
             </div>
           </div>
         </div>
 
         {/* Community Impact Highlights */}
         <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
-          <h3 className="text-lg font-medium text-gray-900 mb-3">Community Impact This Period</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-3">
+            Community Impact This Period
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div className="flex items-center space-x-2">
               <span className="w-2 h-2 bg-green-500 rounded-full"></span>
               <span className="text-gray-700">
-                <strong>{data.active_storytellers_period}</strong> voices heard and honored
+                <strong>{data.active_storytellers_period}</strong> voices heard
+                and honored
               </span>
             </div>
             <div className="flex items-center space-x-2">
               <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
               <span className="text-gray-700">
-                <strong>{data.insights_generated}</strong> patterns of wisdom identified
+                <strong>{data.insights_generated}</strong> patterns of wisdom
+                identified
               </span>
             </div>
             <div className="flex items-center space-x-2">
@@ -185,11 +206,19 @@ interface MetricCardProps {
   description: string;
 }
 
-function MetricCard({ title, value, subtitle, icon, description }: MetricCardProps) {
+function MetricCard({
+  title,
+  value,
+  subtitle,
+  icon,
+  description,
+}: MetricCardProps) {
   return (
     <div className="text-center">
       <div className="text-2xl mb-2">{icon}</div>
-      <div className="text-2xl font-bold text-gray-900">{value.toLocaleString()}</div>
+      <div className="text-2xl font-bold text-gray-900">
+        {value.toLocaleString()}
+      </div>
       <div className="text-sm font-medium text-gray-600">{title}</div>
       <div className="text-xs text-gray-500">{subtitle}</div>
       <div className="text-xs text-gray-400 mt-1">{description}</div>
@@ -205,7 +234,13 @@ interface DistributionBarProps {
   description: string;
 }
 
-function DistributionBar({ label, value, total, color, description }: DistributionBarProps) {
+function DistributionBar({
+  label,
+  value,
+  total,
+  color,
+  description,
+}: DistributionBarProps) {
   const percentage = total > 0 ? (value / total) * 100 : 0;
 
   return (
@@ -215,7 +250,7 @@ function DistributionBar({ label, value, total, color, description }: Distributi
         <span className="text-sm text-gray-500">{value}</span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2 mb-1">
-        <div 
+        <div
           className={`h-2 rounded-full ${color}`}
           style={{ width: `${percentage}%` }}
         ></div>

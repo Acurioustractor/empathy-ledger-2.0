@@ -1,19 +1,25 @@
 // @ts-nocheck - Project schema fields need proper type generation
 /**
  * Main Projects API - Organization Management
- * 
+ *
  * Philosophy: Organizations can create sovereign storytelling spaces while
  * maintaining the core principles of community ownership and data sovereignty.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
-import { projectOperations, CreateProjectRequest } from '@/lib/project-operations';
+import {
+  projectOperations,
+  CreateProjectRequest,
+} from '@/lib/project-operations';
 
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -29,7 +35,8 @@ export async function GET(request: NextRequest) {
     // Get projects user has access to
     let query = supabase
       .from('projects')
-      .select(`
+      .select(
+        `
         id,
         name,
         slug,
@@ -49,7 +56,8 @@ export async function GET(request: NextRequest) {
           status,
           joined_at
         )
-      `)
+      `
+      )
       .eq('project_members.user_id', user.id)
       .eq('project_members.status', 'active')
       .eq('status', status_filter)
@@ -58,45 +66,53 @@ export async function GET(request: NextRequest) {
     const { data: projects, error } = await query;
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     // Add sovereignty metadata and role context
-    const enriched_projects = projects?.map(project => ({
-      ...project,
-      user_role: project.project_members[0]?.role,
-      sovereignty_status: {
-        compliance_score: project.sovereignty_compliance_score,
-        status: project.sovereignty_compliance_score >= 90 ? 'excellent' : 
-                project.sovereignty_compliance_score >= 70 ? 'good' : 'needs_attention',
-        community_controlled: true,
-        data_sovereignty_maintained: true
-      },
-      project_health: {
-        stories_this_month: 0, // TODO: Calculate from recent submissions
-        active_storytellers: project.total_storytellers,
-        engagement_trend: 'stable'
-      }
-    })) || [];
+    const enriched_projects =
+      projects?.map(project => ({
+        ...project,
+        user_role: project.project_members[0]?.role,
+        sovereignty_status: {
+          compliance_score: project.sovereignty_compliance_score,
+          status:
+            project.sovereignty_compliance_score >= 90
+              ? 'excellent'
+              : project.sovereignty_compliance_score >= 70
+                ? 'good'
+                : 'needs_attention',
+          community_controlled: true,
+          data_sovereignty_maintained: true,
+        },
+        project_health: {
+          stories_this_month: 0, // TODO: Calculate from recent submissions
+          active_storytellers: project.total_storytellers,
+          engagement_trend: 'stable',
+        },
+      })) || [];
 
     return NextResponse.json({
       projects: enriched_projects,
       sovereignty_principles: {
-        community_ownership: 'All projects maintain community control over their data',
+        community_ownership:
+          'All projects maintain community control over their data',
         data_sovereignty: 'Each organization controls their storytelling space',
-        cross_project_collaboration: 'Organizations can choose to collaborate while maintaining sovereignty',
-        value_sharing: 'Benefits from insights flow back to storytelling communities'
+        cross_project_collaboration:
+          'Organizations can choose to collaborate while maintaining sovereignty',
+        value_sharing:
+          'Benefits from insights flow back to storytelling communities',
       },
       platform_stats: {
         total_projects: enriched_projects.length,
-        active_organizations: enriched_projects.filter(p => p.status === 'active').length,
-        sovereignty_compliant: enriched_projects.filter(p => p.sovereignty_compliance_score >= 90).length
-      }
+        active_organizations: enriched_projects.filter(
+          p => p.status === 'active'
+        ).length,
+        sovereignty_compliant: enriched_projects.filter(
+          p => p.sovereignty_compliance_score >= 90
+        ).length,
+      },
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -108,7 +124,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -120,12 +139,17 @@ export async function POST(request: NextRequest) {
     const project_request: CreateProjectRequest = await request.json();
 
     // Validate required fields
-    if (!project_request.name || !project_request.organization_name || !project_request.organization_email) {
+    if (
+      !project_request.name ||
+      !project_request.organization_name ||
+      !project_request.organization_email
+    ) {
       return NextResponse.json(
-        { 
+        {
           error: 'Missing required fields',
           required: ['name', 'organization_name', 'organization_email'],
-          sovereignty_note: 'Organization identity is required for community accountability'
+          sovereignty_note:
+            'Organization identity is required for community accountability',
         },
         { status: 400 }
       );
@@ -140,7 +164,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for duplicate project names/slugs
-    const potential_slug = project_request.name.toLowerCase()
+    const potential_slug = project_request.name
+      .toLowerCase()
       .replace(/[^a-zA-Z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
 
@@ -152,19 +177,18 @@ export async function POST(request: NextRequest) {
 
     if (existing_project) {
       return NextResponse.json(
-        { 
+        {
           error: 'A project with this name already exists',
-          suggestion: 'Consider adding your organization name to make it unique'
+          suggestion:
+            'Consider adding your organization name to make it unique',
         },
         { status: 409 }
       );
     }
 
     // Create the project using our sovereignty-compliant operation
-    const { project, error: create_error } = await projectOperations.createProject(
-      project_request,
-      user.id
-    );
+    const { project, error: create_error } =
+      await projectOperations.createProject(project_request, user.id);
 
     if (create_error || !project) {
       return NextResponse.json(
@@ -176,7 +200,8 @@ export async function POST(request: NextRequest) {
     // Get the created project with full details
     const { data: full_project } = await supabase
       .from('projects')
-      .select(`
+      .select(
+        `
         *,
         project_members (
           role,
@@ -184,7 +209,8 @@ export async function POST(request: NextRequest) {
           status,
           joined_at
         )
-      `)
+      `
+      )
       .eq('id', project.id)
       .single();
 
@@ -195,22 +221,21 @@ export async function POST(request: NextRequest) {
         data_sovereignty_configured: true,
         cultural_protocols_ready: true,
         consent_management_enabled: true,
-        value_sharing_configured: true
+        value_sharing_configured: true,
       },
       next_steps: {
         onboarding: 'Complete your project setup to start collecting stories',
         team_setup: 'Invite team members and storytellers to your project',
         customization: 'Configure branding and cultural protocols',
-        launch: 'Begin collecting community stories'
+        launch: 'Begin collecting community stories',
       },
       api_access: {
         project_endpoint: `/api/projects/${project.id}`,
         stories_endpoint: `/api/projects/${project.id}/stories`,
         insights_endpoint: `/api/projects/${project.id}/insights`,
-        public_api: project.api_configuration?.public_api_enabled || false
-      }
+        public_api: project.api_configuration?.public_api_enabled || false,
+      },
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },

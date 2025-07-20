@@ -1,6 +1,6 @@
 /**
  * Professional Backup and Disaster Recovery System
- * 
+ *
  * Features:
  * - Automated scheduled backups
  * - Point-in-time recovery
@@ -10,7 +10,12 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 import * as cron from 'node-cron';
@@ -62,7 +67,7 @@ enum BackupType {
   FULL = 'full',
   INCREMENTAL = 'incremental',
   DIFFERENTIAL = 'differential',
-  SNAPSHOT = 'snapshot'
+  SNAPSHOT = 'snapshot',
 }
 
 // Backup status
@@ -71,7 +76,7 @@ enum BackupStatus {
   IN_PROGRESS = 'in_progress',
   COMPLETED = 'completed',
   FAILED = 'failed',
-  VERIFIED = 'verified'
+  VERIFIED = 'verified',
 }
 
 // Backup metadata
@@ -97,7 +102,10 @@ class BackupSystem {
 
   constructor(config: BackupConfig) {
     this.config = config;
-    this.supabase = createClient(config.supabase.url, config.supabase.serviceKey);
+    this.supabase = createClient(
+      config.supabase.url,
+      config.supabase.serviceKey
+    );
     this.s3Client = new S3Client({
       region: config.s3.region,
       credentials: {
@@ -155,7 +163,7 @@ class BackupSystem {
       tables: [],
       encryptionKey: '',
       checksum: '',
-      location: ''
+      location: '',
     };
 
     try {
@@ -205,7 +213,6 @@ class BackupSystem {
       await this.sendNotification('backup_success', metadata);
 
       return metadata;
-
     } catch (error) {
       metadata.status = BackupStatus.FAILED;
       metadata.error = error.message;
@@ -244,8 +251,8 @@ class BackupSystem {
       metadata: {
         tables,
         version: '1.0',
-        platform: 'empathy-ledger'
-      }
+        platform: 'empathy-ledger',
+      },
     };
 
     return Buffer.from(JSON.stringify(backup));
@@ -254,7 +261,9 @@ class BackupSystem {
   /**
    * Create an incremental backup
    */
-  private async createIncrementalBackup(metadata: BackupMetadata): Promise<Buffer> {
+  private async createIncrementalBackup(
+    metadata: BackupMetadata
+  ): Promise<Buffer> {
     console.log('📦 Creating incremental backup...');
 
     // Get last backup timestamp
@@ -276,8 +285,8 @@ class BackupSystem {
       metadata: {
         tables: metadata.tables,
         version: '1.0',
-        platform: 'empathy-ledger'
-      }
+        platform: 'empathy-ledger',
+      },
     };
 
     return Buffer.from(JSON.stringify(backup));
@@ -286,7 +295,9 @@ class BackupSystem {
   /**
    * Create a snapshot backup
    */
-  private async createSnapshotBackup(metadata: BackupMetadata): Promise<Buffer> {
+  private async createSnapshotBackup(
+    metadata: BackupMetadata
+  ): Promise<Buffer> {
     console.log('📦 Creating snapshot backup...');
 
     // Use Supabase's point-in-time recovery feature
@@ -299,8 +310,8 @@ class BackupSystem {
       data: stdout,
       metadata: {
         version: '1.0',
-        platform: 'empathy-ledger'
-      }
+        platform: 'empathy-ledger',
+      },
     };
 
     return Buffer.from(JSON.stringify(backup));
@@ -325,12 +336,12 @@ class BackupSystem {
           const { data } = await this.supabase.storage
             .from(bucket.name)
             .download(file.name);
-          
+
           return {
             name: file.name,
             size: file.metadata?.size || 0,
             contentType: file.metadata?.mimetype,
-            data: await this.streamToBuffer(data)
+            data: await this.streamToBuffer(data),
           };
         })
       );
@@ -386,7 +397,10 @@ class BackupSystem {
       const backupData = await this.downloadFromS3(metadata.location);
 
       // Decrypt backup
-      const decrypted = await this.decryptData(backupData, metadata.encryptionKey);
+      const decrypted = await this.decryptData(
+        backupData,
+        metadata.encryptionKey
+      );
 
       // Verify checksum
       if (this.calculateChecksum(backupData) !== metadata.checksum) {
@@ -417,10 +431,12 @@ class BackupSystem {
 
       console.log('✅ Restore completed successfully');
       await this.sendNotification('restore_success', { backupId, targetTime });
-
     } catch (error) {
       console.error('❌ Restore failed:', error);
-      await this.sendNotification('restore_failed', { backupId, error: error.message });
+      await this.sendNotification('restore_failed', {
+        backupId,
+        error: error.message,
+      });
       throw error;
     }
   }
@@ -434,13 +450,13 @@ class BackupSystem {
     // Restore database
     const restoreCommand = `psql ${this.config.supabase.databaseUrl}`;
     const restore = exec(restoreCommand);
-    
+
     // Pipe backup data to psql
     const stream = Readable.from(backup.database);
     stream.pipe(restore.stdin!);
 
     await new Promise((resolve, reject) => {
-      restore.on('exit', (code) => {
+      restore.on('exit', code => {
         if (code === 0) resolve(void 0);
         else reject(new Error(`Restore failed with code ${code}`));
       });
@@ -462,12 +478,12 @@ class BackupSystem {
 
       // Restore files
       await Promise.all(
-        (files as any[]).map(async (file) => {
+        (files as any[]).map(async file => {
           await this.supabase.storage
             .from(bucketName)
             .upload(file.name, file.data, {
               contentType: file.contentType,
-              upsert: true
+              upsert: true,
             });
         })
       );
@@ -500,10 +516,12 @@ class BackupSystem {
         await this.updateBackupMetadata(backup);
 
         console.log(`✅ Backup ${backup.id} verified`);
-
       } catch (error) {
         console.error(`❌ Backup ${backup.id} verification failed:`, error);
-        await this.sendNotification('backup_verification_failed', { backup, error: error.message });
+        await this.sendNotification('backup_verification_failed', {
+          backup,
+          error: error.message,
+        });
       }
     }
   }
@@ -518,17 +536,28 @@ class BackupSystem {
     const backups = await this.getAllBackups();
 
     for (const backup of backups) {
-      const age = Math.floor((now.getTime() - backup.startTime.getTime()) / (1000 * 60 * 60 * 24));
+      const age = Math.floor(
+        (now.getTime() - backup.startTime.getTime()) / (1000 * 60 * 60 * 24)
+      );
       let shouldDelete = false;
 
       // Apply retention policy
       if (age > this.config.retention.yearly * 365) {
         shouldDelete = true;
-      } else if (age > this.config.retention.monthly * 30 && !this.isMonthlyBackup(backup)) {
+      } else if (
+        age > this.config.retention.monthly * 30 &&
+        !this.isMonthlyBackup(backup)
+      ) {
         shouldDelete = true;
-      } else if (age > this.config.retention.weekly * 7 && !this.isWeeklyBackup(backup)) {
+      } else if (
+        age > this.config.retention.weekly * 7 &&
+        !this.isWeeklyBackup(backup)
+      ) {
         shouldDelete = true;
-      } else if (age > this.config.retention.daily && !this.isDailyBackup(backup)) {
+      } else if (
+        age > this.config.retention.daily &&
+        !this.isDailyBackup(backup)
+      ) {
         shouldDelete = true;
       }
 
@@ -542,9 +571,15 @@ class BackupSystem {
   /**
    * Encrypt data
    */
-  private async encryptData(data: Buffer): Promise<{ encrypted: Buffer; key: string }> {
+  private async encryptData(
+    data: Buffer
+  ): Promise<{ encrypted: Buffer; key: string }> {
     const salt = randomBytes(32);
-    const key = (await scryptAsync(this.config.encryption.password, salt, this.config.encryption.keyLength)) as Buffer;
+    const key = (await scryptAsync(
+      this.config.encryption.password,
+      salt,
+      this.config.encryption.keyLength
+    )) as Buffer;
     const iv = randomBytes(16);
 
     const cipher = createCipheriv(this.config.encryption.algorithm, key, iv);
@@ -555,7 +590,7 @@ class BackupSystem {
 
     return {
       encrypted: combined,
-      key: salt.toString('hex')
+      key: salt.toString('hex'),
     };
   }
 
@@ -564,13 +599,21 @@ class BackupSystem {
    */
   private async decryptData(data: Buffer, saltHex: string): Promise<Buffer> {
     const salt = Buffer.from(saltHex, 'hex');
-    const key = (await scryptAsync(this.config.encryption.password, salt, this.config.encryption.keyLength)) as Buffer;
-    
+    const key = (await scryptAsync(
+      this.config.encryption.password,
+      salt,
+      this.config.encryption.keyLength
+    )) as Buffer;
+
     // Extract iv and encrypted data
     const iv = data.slice(32, 48);
     const encrypted = data.slice(48);
 
-    const decipher = createDecipheriv(this.config.encryption.algorithm, key, iv);
+    const decipher = createDecipheriv(
+      this.config.encryption.algorithm,
+      key,
+      iv
+    );
     return Buffer.concat([decipher.update(encrypted), decipher.final()]);
   }
 
@@ -591,7 +634,7 @@ class BackupSystem {
       Key: key,
       Body: data,
       ServerSideEncryption: 'AES256',
-      StorageClass: 'GLACIER_IR' // Use Glacier for long-term storage
+      StorageClass: 'GLACIER_IR', // Use Glacier for long-term storage
     });
 
     await this.s3Client.send(command);
@@ -603,7 +646,7 @@ class BackupSystem {
   private async downloadFromS3(key: string): Promise<Buffer> {
     const command = new GetObjectCommand({
       Bucket: this.config.s3.bucket,
-      Key: key
+      Key: key,
     });
 
     const response = await this.s3Client.send(command);
@@ -632,22 +675,22 @@ class BackupSystem {
   }
 
   private async storeBackupMetadata(metadata: BackupMetadata): Promise<void> {
-    await this.supabase
-      .from('backup.backup_history')
-      .insert({
-        id: metadata.id,
-        backup_type: metadata.type,
-        backup_location: metadata.location,
-        backup_size_bytes: metadata.size,
-        tables_included: metadata.tables,
-        started_at: metadata.startTime,
-        completed_at: metadata.endTime,
-        status: metadata.status,
-        error_message: metadata.error
-      });
+    await this.supabase.from('backup.backup_history').insert({
+      id: metadata.id,
+      backup_type: metadata.type,
+      backup_location: metadata.location,
+      backup_size_bytes: metadata.size,
+      tables_included: metadata.tables,
+      started_at: metadata.startTime,
+      completed_at: metadata.endTime,
+      status: metadata.status,
+      error_message: metadata.error,
+    });
   }
 
-  private async getBackupMetadata(backupId: string): Promise<BackupMetadata | null> {
+  private async getBackupMetadata(
+    backupId: string
+  ): Promise<BackupMetadata | null> {
     const { data } = await this.supabase
       .from('backup.backup_history')
       .select('*')
@@ -662,7 +705,7 @@ class BackupSystem {
       .from('backup.backup_history')
       .update({
         status: metadata.status,
-        error_message: metadata.error
+        error_message: metadata.error,
       })
       .eq('id', metadata.id);
   }
@@ -703,10 +746,12 @@ class BackupSystem {
 
   private async deleteBackup(backup: BackupMetadata): Promise<void> {
     // Delete from S3
-    await this.s3Client.send(new DeleteObjectCommand({
-      Bucket: this.config.s3.bucket,
-      Key: backup.location
-    }));
+    await this.s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: this.config.s3.bucket,
+        Key: backup.location,
+      })
+    );
 
     // Update database record
     await this.supabase
@@ -732,7 +777,9 @@ class BackupSystem {
     await this.supabase.rpc('create_restore_point', { name: restorePointName });
   }
 
-  private async verifyRestoration(originalBackup: BackupMetadata): Promise<void> {
+  private async verifyRestoration(
+    originalBackup: BackupMetadata
+  ): Promise<void> {
     // Compare table counts
     const currentTables = await this.getTableList();
     if (currentTables.length !== originalBackup.tables.length) {
@@ -742,18 +789,19 @@ class BackupSystem {
     // Additional verification logic...
   }
 
-  private async logBackupEvent(event: string, metadata: BackupMetadata): Promise<void> {
+  private async logBackupEvent(
+    event: string,
+    metadata: BackupMetadata
+  ): Promise<void> {
     console.log(`📝 Backup ${event}: ${metadata.id}`);
-    
-    await this.supabase
-      .from('audit.audit_log')
-      .insert({
-        table_name: 'backup_system',
-        record_id: metadata.id,
-        action: event.toUpperCase(),
-        new_data: metadata,
-        changed_at: new Date()
-      });
+
+    await this.supabase.from('audit.audit_log').insert({
+      table_name: 'backup_system',
+      record_id: metadata.id,
+      action: event.toUpperCase(),
+      new_data: metadata,
+      changed_at: new Date(),
+    });
   }
 
   private async sendNotification(type: string, data: any): Promise<void> {
@@ -762,7 +810,7 @@ class BackupSystem {
       await fetch(this.config.notifications.webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, data, timestamp: new Date() })
+        body: JSON.stringify({ type, data, timestamp: new Date() }),
       });
     }
 
@@ -773,12 +821,10 @@ class BackupSystem {
   private async restoreIncrementalBackup(backup: any): Promise<void> {
     // First restore the base backup
     await this.restoreFromBackup(backup.baseBackupId);
-    
+
     // Then apply incremental changes
     for (const [table, changes] of Object.entries(backup.changes)) {
-      await this.supabase
-        .from(table)
-        .upsert(changes as any[]);
+      await this.supabase.from(table).upsert(changes as any[]);
     }
   }
 
@@ -793,34 +839,34 @@ export const backupConfigTemplate: BackupConfig = {
   supabase: {
     url: process.env.SUPABASE_URL!,
     serviceKey: process.env.SUPABASE_SERVICE_KEY!,
-    databaseUrl: process.env.DATABASE_URL!
+    databaseUrl: process.env.DATABASE_URL!,
   },
   s3: {
     region: process.env.AWS_REGION || 'us-east-1',
     bucket: process.env.BACKUP_BUCKET!,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
   encryption: {
     algorithm: 'aes-256-gcm',
     keyLength: 32,
-    password: process.env.BACKUP_ENCRYPTION_PASSWORD!
+    password: process.env.BACKUP_ENCRYPTION_PASSWORD!,
   },
   schedule: {
     full: '0 2 * * *', // Daily at 2 AM
     incremental: '0 */6 * * *', // Every 6 hours
-    verification: '0 4 * * *' // Daily at 4 AM
+    verification: '0 4 * * *', // Daily at 4 AM
   },
   retention: {
     daily: 7,
     weekly: 4,
     monthly: 12,
-    yearly: 5
+    yearly: 5,
   },
   notifications: {
     webhookUrl: process.env.BACKUP_WEBHOOK_URL || '',
-    emailRecipients: (process.env.BACKUP_EMAIL_RECIPIENTS || '').split(',')
-  }
+    emailRecipients: (process.env.BACKUP_EMAIL_RECIPIENTS || '').split(','),
+  },
 };
 
 // Disaster Recovery Procedures
@@ -834,7 +880,13 @@ export class DisasterRecovery {
   /**
    * Execute disaster recovery plan
    */
-  async executeRecoveryPlan(scenario: 'data_corruption' | 'data_loss' | 'ransomware' | 'regional_failure'): Promise<void> {
+  async executeRecoveryPlan(
+    scenario:
+      | 'data_corruption'
+      | 'data_loss'
+      | 'ransomware'
+      | 'regional_failure'
+  ): Promise<void> {
     console.log(`🚨 Executing disaster recovery plan for: ${scenario}`);
 
     switch (scenario) {

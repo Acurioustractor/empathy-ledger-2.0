@@ -13,11 +13,13 @@ export default async function PlatformAdminLayout({
 
   try {
     const supabase = await createServerClient();
-    
+
     // Check authentication
-    const { data: { user: authUser } } = await supabase.auth.getUser();
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser();
     user = authUser;
-    
+
     if (!user) {
       redirect('/auth/sign-in?redirectTo=/admin/platform');
     }
@@ -33,7 +35,11 @@ export default async function PlatformAdminLayout({
       profile = userProfile;
     }
 
-    if (!profile || (profile.platform_role !== 'super_admin' && profile.platform_role !== 'platform_manager')) {
+    if (
+      !profile ||
+      (profile.platform_role !== 'super_admin' &&
+        profile.platform_role !== 'platform_manager')
+    ) {
       redirect('/admin?error=insufficient_permissions');
     }
   } catch (error) {
@@ -64,7 +70,7 @@ export default async function PlatformAdminLayout({
                 </span>
               )}
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-500">
                 {user?.email || 'platform-admin@empathyledger.org'}
@@ -131,9 +137,7 @@ export default async function PlatformAdminLayout({
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {children}
-      </main>
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</main>
     </div>
   );
 }

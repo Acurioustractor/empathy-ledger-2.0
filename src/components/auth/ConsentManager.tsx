@@ -21,41 +21,50 @@ const CONSENT_ITEMS: ConsentItem[] = [
   {
     type: 'data_collection',
     title: 'Data Collection & Processing',
-    description: 'Allow us to collect and process your profile information and stories for platform functionality.',
+    description:
+      'Allow us to collect and process your profile information and stories for platform functionality.',
     required: true,
-    defaultValue: true
+    defaultValue: true,
   },
   {
     type: 'ai_analysis',
     title: 'AI-Powered Insights',
-    description: 'Enable AI analysis of your stories to generate community insights and help organizations understand impact. All analysis is privacy-preserving.',
+    description:
+      'Enable AI analysis of your stories to generate community insights and help organizations understand impact. All analysis is privacy-preserving.',
     required: false,
-    defaultValue: true
+    defaultValue: true,
   },
   {
     type: 'research_participation',
     title: 'Research Participation',
-    description: 'Allow researchers to include your anonymized stories in academic studies. You will be fairly compensated for any value created.',
+    description:
+      'Allow researchers to include your anonymized stories in academic studies. You will be fairly compensated for any value created.',
     required: false,
-    defaultValue: false
+    defaultValue: false,
   },
   {
     type: 'sharing',
     title: 'Story Sharing',
-    description: 'Allow your stories to be shared by others (with proper attribution) to amplify community voices and create awareness.',
+    description:
+      'Allow your stories to be shared by others (with proper attribution) to amplify community voices and create awareness.',
     required: false,
-    defaultValue: true
+    defaultValue: true,
   },
   {
     type: 'marketing',
     title: 'Platform Updates',
-    description: 'Receive occasional updates about new features, community highlights, and platform improvements.',
+    description:
+      'Receive occasional updates about new features, community highlights, and platform improvements.',
     required: false,
-    defaultValue: false
-  }
+    defaultValue: false,
+  },
 ];
 
-export default function ConsentManager({ userId, onConsentComplete, showTitle = true }: ConsentManagerProps) {
+export default function ConsentManager({
+  userId,
+  onConsentComplete,
+  showTitle = true,
+}: ConsentManagerProps) {
   const [consents, setConsents] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     CONSENT_ITEMS.forEach(item => {
@@ -71,14 +80,14 @@ export default function ConsentManager({ userId, onConsentComplete, showTitle = 
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    
+
     try {
       // Record each consent
       await Promise.all(
         Object.entries(consents).map(([type, given]) =>
           recordConsent(userId, type as ConsentRecord['consent_type'], given, {
             ip_address: '127.0.0.1', // Would get real IP in production
-            user_agent: navigator.userAgent
+            user_agent: navigator.userAgent,
           })
         )
       );
@@ -100,14 +109,18 @@ export default function ConsentManager({ userId, onConsentComplete, showTitle = 
             Privacy Preferences
           </h2>
           <p className="text-gray-600 font-light">
-            Help us understand how you'd like your data to be used. You can change these preferences anytime.
+            Help us understand how you'd like your data to be used. You can
+            change these preferences anytime.
           </p>
         </div>
       )}
 
       <div className="space-y-6">
-        {CONSENT_ITEMS.map((item) => (
-          <div key={item.type} className="bg-white border border-gray-200 rounded-2xl p-6">
+        {CONSENT_ITEMS.map(item => (
+          <div
+            key={item.type}
+            className="bg-white border border-gray-200 rounded-2xl p-6"
+          >
             <div className="flex items-start justify-between">
               <div className="flex-1 pr-4">
                 <div className="flex items-center gap-3 mb-2">
@@ -122,17 +135,20 @@ export default function ConsentManager({ userId, onConsentComplete, showTitle = 
                   {item.description}
                 </p>
               </div>
-              
+
               <div className="flex-shrink-0">
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     checked={consents[item.type]}
-                    onChange={(e) => handleConsentChange(item.type, e.target.checked)}
+                    onChange={e =>
+                      handleConsentChange(item.type, e.target.checked)
+                    }
                     disabled={item.required}
                     className="sr-only peer"
                   />
-                  <div className={`
+                  <div
+                    className={`
                     relative w-11 h-6 rounded-full peer 
                     peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300
                     ${item.required ? 'bg-gray-400' : 'bg-gray-200'}
@@ -141,7 +157,8 @@ export default function ConsentManager({ userId, onConsentComplete, showTitle = 
                     after:bg-white after:border-gray-300 after:border after:rounded-full 
                     after:h-5 after:w-5 after:transition-all
                     ${consents[item.type] ? 'peer-checked:bg-blue-600' : ''}
-                  `}></div>
+                  `}
+                  ></div>
                 </label>
               </div>
             </div>
@@ -151,10 +168,14 @@ export default function ConsentManager({ userId, onConsentComplete, showTitle = 
 
       {/* Indigenous Data Sovereignty Notice */}
       <div className="mt-8 p-6 bg-amber-50 border border-amber-200 rounded-2xl">
-        <h3 className="font-normal text-amber-900 mb-2">🌱 Indigenous Data Sovereignty</h3>
+        <h3 className="font-normal text-amber-900 mb-2">
+          🌱 Indigenous Data Sovereignty
+        </h3>
         <p className="text-sm text-amber-800 font-light leading-relaxed">
-          Our platform operates on Indigenous data sovereignty principles. Your stories are living entities that belong to you. 
-          We act as custodians, not owners, ensuring cultural protocols are respected and community value is preserved.
+          Our platform operates on Indigenous data sovereignty principles. Your
+          stories are living entities that belong to you. We act as custodians,
+          not owners, ensuring cultural protocols are respected and community
+          value is preserved.
         </p>
       </div>
 
@@ -162,7 +183,9 @@ export default function ConsentManager({ userId, onConsentComplete, showTitle = 
       <div className="mt-6 p-6 bg-gray-50 rounded-2xl">
         <h3 className="font-normal text-gray-900 mb-2">📋 Your Rights</h3>
         <div className="text-sm text-gray-600 font-light space-y-1">
-          <p>• You can withdraw consent at any time from your privacy settings</p>
+          <p>
+            • You can withdraw consent at any time from your privacy settings
+          </p>
           <p>• You can export all your data in a portable format</p>
           <p>• You can request complete account deletion</p>
           <p>• You maintain ownership of all your stories and content</p>
@@ -182,9 +205,20 @@ export default function ConsentManager({ userId, onConsentComplete, showTitle = 
       {/* Footer Note */}
       <p className="text-xs text-center text-gray-500 font-light mt-6">
         By using Empathy Ledger, you agree to our{' '}
-        <a href="/privacy" className="text-blue-600 hover:text-blue-800 no-underline">Privacy Policy</a>{' '}
+        <a
+          href="/privacy"
+          className="text-blue-600 hover:text-blue-800 no-underline"
+        >
+          Privacy Policy
+        </a>{' '}
         and{' '}
-        <a href="/terms" className="text-blue-600 hover:text-blue-800 no-underline">Terms of Service</a>.
+        <a
+          href="/terms"
+          className="text-blue-600 hover:text-blue-800 no-underline"
+        >
+          Terms of Service
+        </a>
+        .
       </p>
     </div>
   );

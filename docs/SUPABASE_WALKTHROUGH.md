@@ -1,6 +1,6 @@
 # Empathy Ledger: Supabase Implementation Walkthrough
 
-*Step-by-step guide to test and validate the complete platform*
+_Step-by-step guide to test and validate the complete platform_
 
 ---
 
@@ -18,19 +18,22 @@
 **Go to Table Editor** and confirm these tables exist:
 
 #### Core Tables ✅
+
 - [ ] `profiles` - User profiles and settings
-- [ ] `stories` - Story content and metadata  
+- [ ] `stories` - Story content and metadata
 - [ ] `communities` - Community definitions
 - [ ] `community_members` - User-community relationships
 - [ ] `organizations` - Organization data
 
 #### Privacy Tables ✅
+
 - [ ] `consent_records` - User consent tracking
 - [ ] `audit_logs` - Privacy action logging
 - [ ] `data_export_requests` - GDPR export requests
 - [ ] `deletion_requests` - Account deletion requests
 
 #### Analytics Tables ✅
+
 - [ ] `organization_insights` - Cached analytics data
 - [ ] `value_transactions` - Compensation tracking
 - [ ] `policy_impacts` - Policy influence records
@@ -41,22 +44,22 @@
 
 ```sql
 -- Test 1: Check if RLS is enabled
-SELECT schemaname, tablename, rowsecurity 
-FROM pg_tables 
-WHERE schemaname = 'public' 
+SELECT schemaname, tablename, rowsecurity
+FROM pg_tables
+WHERE schemaname = 'public'
   AND rowsecurity = true;
 
 -- Test 2: Verify functions exist
-SELECT routine_name, routine_type 
-FROM information_schema.routines 
-WHERE routine_schema = 'public' 
-  AND routine_name LIKE '%privacy%' 
+SELECT routine_name, routine_type
+FROM information_schema.routines
+WHERE routine_schema = 'public'
+  AND routine_name LIKE '%privacy%'
   OR routine_name LIKE '%consent%';
 
 -- Test 3: Check indexes for performance
-SELECT indexname, tablename 
-FROM pg_indexes 
-WHERE schemaname = 'public' 
+SELECT indexname, tablename
+FROM pg_indexes
+WHERE schemaname = 'public'
 ORDER BY tablename;
 ```
 
@@ -141,8 +144,8 @@ We'll create this through the application, but here's the SQL for reference:
 ```sql
 -- This will be created when user signs up through the app
 -- But you can check the structure:
-SELECT column_name, data_type, is_nullable 
-FROM information_schema.columns 
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns
 WHERE table_name = 'profiles';
 ```
 
@@ -155,7 +158,7 @@ WHERE table_name = 'profiles';
 **Test Scenario: Sarah Thompson, Community Worker**
 
 1. **Open your application** in browser (http://localhost:3000)
-2. **Navigate to Sign Up** 
+2. **Navigate to Sign Up**
 3. **Create account with:**
    - Email: `sarah.thompson.test@gmail.com`
    - Password: `CommunityStories2024!`
@@ -167,7 +170,7 @@ WHERE table_name = 'profiles';
 
 4. **Complete privacy preferences:**
    - ✅ Data collection & processing
-   - ✅ AI-powered insights  
+   - ✅ AI-powered insights
    - ❌ Research participation (initially)
    - ✅ Story sharing
    - ❌ Platform updates
@@ -179,7 +182,7 @@ WHERE table_name = 'profiles';
 ```
 Title: "Finding Community Support During Crisis"
 
-Content: "Last year, when my family faced an unexpected financial crisis, I discovered the incredible power of community support networks in inner Melbourne. 
+Content: "Last year, when my family faced an unexpected financial crisis, I discovered the incredible power of community support networks in inner Melbourne.
 
 What started as a desperate search for emergency assistance became a journey of connection, resilience, and hope. Through our local community center, I met other parents facing similar challenges. We formed an informal support group that became a lifeline.
 
@@ -203,27 +206,27 @@ After submission, verify in Supabase:
 
 ```sql
 -- Check if story was created
-SELECT 
+SELECT
   id,
   title,
   category,
   privacy_level,
   status,
   created_at
-FROM stories 
+FROM stories
 WHERE contributor_id = (
   SELECT id FROM profiles WHERE email = 'sarah.thompson.test@gmail.com'
 )
 ORDER BY created_at DESC;
 
 -- Check AI analysis was applied
-SELECT 
+SELECT
   id,
   sentiment_score,
   emotion_scores,
   themes,
   language_detected
-FROM stories 
+FROM stories
 WHERE title LIKE '%Community Support%';
 ```
 
@@ -233,19 +236,19 @@ WHERE title LIKE '%Community Support%';
 
 ```sql
 -- Check user's privacy settings
-SELECT 
+SELECT
   email,
   privacy_settings,
   notification_preferences
-FROM profiles 
+FROM profiles
 WHERE email = 'sarah.thompson.test@gmail.com';
 
 -- Check consent records
-SELECT 
+SELECT
   consent_type,
   consent_given,
   consent_date
-FROM consent_records 
+FROM consent_records
 WHERE user_id = (
   SELECT id FROM profiles WHERE email = 'sarah.thompson.test@gmail.com'
 );
@@ -271,7 +274,7 @@ WHERE user_id = (
 ```sql
 -- Add some reactions to Sarah's story
 INSERT INTO story_reactions (story_id, user_id, reaction_type)
-SELECT 
+SELECT
   s.id,
   p.id,
   'heart'
@@ -281,7 +284,7 @@ WHERE s.title LIKE '%Community Support%'
 
 -- Add a comment
 INSERT INTO story_comments (story_id, user_id, content, is_anonymous)
-SELECT 
+SELECT
   s.id,
   p.id,
   'Thank you for sharing this. Your story gives me hope as someone going through a similar situation.',
@@ -291,8 +294,8 @@ WHERE s.title LIKE '%Community Support%'
   AND p.email = 'community.member.test@gmail.com';
 
 -- Update engagement counts
-UPDATE stories 
-SET 
+UPDATE stories
+SET
   view_count = 45,
   reaction_count = reaction_count + 1,
   comment_count = comment_count + 1
@@ -320,11 +323,11 @@ WHERE title LIKE '%Community Support%';
 
 ```sql
 -- Check privacy settings were updated
-SELECT privacy_settings FROM profiles 
+SELECT privacy_settings FROM profiles
 WHERE email = 'sarah.thompson.test@gmail.com';
 
 -- Check audit log recorded the change
-SELECT action, details, timestamp FROM audit_logs 
+SELECT action, details, timestamp FROM audit_logs
 WHERE user_id = (SELECT id FROM profiles WHERE email = 'sarah.thompson.test@gmail.com')
 ORDER BY timestamp DESC;
 ```
@@ -336,8 +339,8 @@ ORDER BY timestamp DESC;
 3. **Check audit log:**
 
 ```sql
-SELECT * FROM audit_logs 
-WHERE action = 'data_exported' 
+SELECT * FROM audit_logs
+WHERE action = 'data_exported'
   AND user_id = (SELECT id FROM profiles WHERE email = 'sarah.thompson.test@gmail.com');
 ```
 
@@ -351,7 +354,7 @@ WHERE action = 'data_exported'
 2. **Update their role in database:**
 
 ```sql
-UPDATE profiles 
+UPDATE profiles
 SET role = 'organization_admin'
 WHERE email = 'admin.melbourne@gmail.com';
 ```
@@ -430,7 +433,7 @@ INSERT INTO value_transactions (
 SELECT title, privacy_level FROM stories WHERE privacy_level = 'public';
 
 -- This should return community stories for community members
-SELECT s.title, s.privacy_level 
+SELECT s.title, s.privacy_level
 FROM stories s
 JOIN community_members cm ON s.community_id = cm.community_id
 WHERE cm.user_id = (SELECT id FROM profiles WHERE email = 'community.member.test@gmail.com');
@@ -475,7 +478,7 @@ INSERT INTO stories (
 
 ```sql
 -- Find stories with overlapping themes
-SELECT 
+SELECT
   s1.title as story1,
   s2.title as story2,
   array_length(array(SELECT unnest(s1.themes) INTERSECT SELECT unnest(s2.themes)), 1) as shared_themes
@@ -509,8 +512,9 @@ ORDER BY shared_themes DESC;
 ### Step 2: Browser Compatibility
 
 **Test on multiple browsers:**
+
 - ✅ Chrome
-- ✅ Firefox  
+- ✅ Firefox
 - ✅ Safari
 - ✅ Edge
 
@@ -520,13 +524,13 @@ ORDER BY shared_themes DESC;
 
 ```sql
 -- Check database performance
-EXPLAIN ANALYZE SELECT * FROM stories 
-WHERE privacy_level = 'public' 
-ORDER BY created_at DESC 
+EXPLAIN ANALYZE SELECT * FROM stories
+WHERE privacy_level = 'public'
+ORDER BY created_at DESC
 LIMIT 20;
 
 -- Check index usage
-SELECT 
+SELECT
   schemaname,
   tablename,
   indexname,
@@ -558,12 +562,12 @@ SELECT privacy_settings FROM profiles WHERE email != 'sarah.thompson.test@gmail.
 
 ```sql
 -- Check recent privacy actions
-SELECT 
+SELECT
   user_id,
   action,
   resource_type,
   timestamp
-FROM audit_logs 
+FROM audit_logs
 WHERE timestamp > NOW() - INTERVAL '1 day'
 ORDER BY timestamp DESC;
 ```
@@ -577,13 +581,13 @@ ORDER BY timestamp DESC;
 
 ```sql
 -- Check user was anonymized
-SELECT email, display_name, anonymized_at 
-FROM profiles 
+SELECT email, display_name, anonymized_at
+FROM profiles
 WHERE email LIKE 'anonymized_%@empathyledger.local';
 
 -- Check story was anonymized but preserved
-SELECT title, content, anonymized_at 
-FROM stories 
+SELECT title, content, anonymized_at
+FROM stories
 WHERE anonymized_at IS NOT NULL;
 ```
 
@@ -597,7 +601,7 @@ WHERE anonymized_at IS NOT NULL;
 
 ```sql
 -- Check story metrics
-SELECT 
+SELECT
   COUNT(*) as total_stories,
   COUNT(*) FILTER (WHERE status = 'approved') as published_stories,
   AVG(view_count) as avg_views,
@@ -605,10 +609,10 @@ SELECT
 FROM stories;
 
 -- Check user engagement
-SELECT 
+SELECT
   COUNT(DISTINCT user_id) as active_users,
   COUNT(*) as total_reactions
-FROM story_reactions 
+FROM story_reactions
 WHERE created_at > NOW() - INTERVAL '30 days';
 ```
 
@@ -616,12 +620,12 @@ WHERE created_at > NOW() - INTERVAL '30 days';
 
 ```sql
 -- Check value calculations
-SELECT 
+SELECT
   transaction_type,
   SUM(amount_cents) as total_cents,
   COUNT(*) as transaction_count,
   AVG(amount_cents) as avg_compensation
-FROM value_transactions 
+FROM value_transactions
 WHERE status = 'completed'
 GROUP BY transaction_type;
 ```
@@ -630,7 +634,7 @@ GROUP BY transaction_type;
 
 ```sql
 -- Ensure all users have consent records
-SELECT 
+SELECT
   p.email,
   COUNT(cr.id) as consent_records
 FROM profiles p
@@ -639,10 +643,10 @@ GROUP BY p.email
 HAVING COUNT(cr.id) = 0; -- Should return no results
 
 -- Check data retention compliance
-SELECT 
+SELECT
   COUNT(*) as users_requesting_deletion,
   COUNT(*) FILTER (WHERE deletion_requested_at < NOW() - INTERVAL '30 days') as overdue_deletions
-FROM profiles 
+FROM profiles
 WHERE deletion_requested_at IS NOT NULL;
 ```
 
@@ -651,6 +655,7 @@ WHERE deletion_requested_at IS NOT NULL;
 ## ✅ **VALIDATION CHECKLIST**
 
 ### Core Functionality ✅
+
 - [ ] User registration and authentication
 - [ ] Story submission with media
 - [ ] Privacy controls working
@@ -660,6 +665,7 @@ WHERE deletion_requested_at IS NOT NULL;
 - [ ] Community features functional
 
 ### Privacy & Security ✅
+
 - [ ] Row Level Security enforcing permissions
 - [ ] Audit logging capturing all actions
 - [ ] Data export working
@@ -668,6 +674,7 @@ WHERE deletion_requested_at IS NOT NULL;
 - [ ] GDPR compliance verified
 
 ### Performance & Reliability ✅
+
 - [ ] Database queries optimized
 - [ ] Application loading quickly
 - [ ] Mobile responsive
@@ -675,6 +682,7 @@ WHERE deletion_requested_at IS NOT NULL;
 - [ ] Error handling graceful
 
 ### Business Features ✅
+
 - [ ] Value tracking accurate
 - [ ] Analytics meaningful
 - [ ] Relationships mapped correctly
@@ -695,4 +703,4 @@ WHERE deletion_requested_at IS NOT NULL;
 
 ---
 
-*Remember: This platform demonstrates your expertise in Supabase, privacy-first design, and community-centered technology. Every test validates your position as a thought leader in ethical tech.*
+_Remember: This platform demonstrates your expertise in Supabase, privacy-first design, and community-centered technology. Every test validates your position as a thought leader in ethical tech._

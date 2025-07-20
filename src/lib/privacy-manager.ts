@@ -46,7 +46,7 @@ export function calculatePermissions(
   const settings = target_user.privacy_settings;
   const is_self = context.viewer_id === target_user.id;
   const is_admin = context.viewer_role === 'platform_admin';
-  
+
   // Self and admin have full access
   if (is_self || is_admin) {
     return {
@@ -58,7 +58,7 @@ export function calculatePermissions(
       can_see_analytics: true,
       can_use_for_research: true,
       can_ai_analyze: true,
-      can_share_externally: true
+      can_share_externally: true,
     };
   }
 
@@ -67,31 +67,33 @@ export function calculatePermissions(
     return {
       can_view_profile: settings.show_profile === 'public',
       can_view_stories: settings.show_stories === 'public',
-      can_view_location: settings.show_location && settings.show_profile === 'public',
-      can_view_age_range: settings.show_age_range && settings.show_profile === 'public',
+      can_view_location:
+        settings.show_location && settings.show_profile === 'public',
+      can_view_age_range:
+        settings.show_age_range && settings.show_profile === 'public',
       can_contact_user: false,
       can_see_analytics: false,
       can_use_for_research: false,
       can_ai_analyze: false,
-      can_share_externally: false
+      can_share_externally: false,
     };
   }
 
   // Authenticated user permissions
   const viewer_in_same_community = hasSharedCommunity(
-    target_user.id, 
+    target_user.id,
     context.viewer_id,
     context.viewer_communities || []
   );
 
   const viewer_in_same_org = context.viewer_organization === target_user.id; // Simplified
 
-  const can_view_profile = 
+  const can_view_profile =
     settings.show_profile === 'public' ||
     (settings.show_profile === 'community' && viewer_in_same_community) ||
     (settings.show_profile === 'organization' && viewer_in_same_org);
 
-  const can_view_stories = 
+  const can_view_stories =
     settings.show_stories === 'public' ||
     (settings.show_stories === 'community' && viewer_in_same_community) ||
     (settings.show_stories === 'organization' && viewer_in_same_org);
@@ -105,7 +107,7 @@ export function calculatePermissions(
     can_see_analytics: false, // Restricted to self/admin
     can_use_for_research: settings.allow_research_participation,
     can_ai_analyze: true, // Platform-level setting
-    can_share_externally: context.resource_privacy_level === 'public'
+    can_share_externally: context.resource_privacy_level === 'public',
   };
 }
 
@@ -113,8 +115,8 @@ export function calculatePermissions(
  * Check if two users share any communities
  */
 function hasSharedCommunity(
-  user1_id: string, 
-  user2_id: string, 
+  user1_id: string,
+  user2_id: string,
   viewer_communities: string[]
 ): boolean {
   // This would be enhanced with actual community membership check
@@ -168,13 +170,14 @@ export async function exportUserData(userId: string): Promise<{
         requested_at: new Date().toISOString(),
         user_id: userId,
         export_version: '1.0.0',
-        compliance_note: 'This export contains all personal data stored by Empathy Ledger'
+        compliance_note:
+          'This export contains all personal data stored by Empathy Ledger',
       },
       profile_data: profile,
       story_data: stories,
       interaction_data: {
         reactions: reactions,
-        comments: comments
+        comments: comments,
       },
       privacy_settings: profile.privacy_settings,
       summary: {
@@ -182,8 +185,8 @@ export async function exportUserData(userId: string): Promise<{
         total_reactions: reactions?.length || 0,
         total_comments: comments?.length || 0,
         account_created: profile.created_at,
-        last_active: profile.last_active_at
-      }
+        last_active: profile.last_active_at,
+      },
     };
 
     return { data: exportData, error: null };
@@ -195,7 +198,10 @@ export async function exportUserData(userId: string): Promise<{
 /**
  * Anonymize user data (soft deletion)
  */
-export async function anonymizeUserData(userId: string, reason?: string): Promise<{
+export async function anonymizeUserData(
+  userId: string,
+  reason?: string
+): Promise<{
   success: boolean;
   error: any;
 }> {
@@ -213,7 +219,7 @@ export async function anonymizeUserData(userId: string, reason?: string): Promis
         languages_spoken: null,
         is_active: false,
         anonymized_at: new Date().toISOString(),
-        anonymization_reason: reason || 'User requested data deletion'
+        anonymization_reason: reason || 'User requested data deletion',
       })
       .eq('id', userId);
 
@@ -228,7 +234,7 @@ export async function anonymizeUserData(userId: string, reason?: string): Promis
         contributor_background: null,
         content: '[Story content anonymized at user request]',
         title: 'Anonymous Story',
-        anonymized_at: new Date().toISOString()
+        anonymized_at: new Date().toISOString(),
       })
       .eq('contributor_id', userId);
 
@@ -250,7 +256,12 @@ export async function anonymizeUserData(userId: string, reason?: string): Promis
 
 export interface ConsentRecord {
   user_id: string;
-  consent_type: 'data_collection' | 'ai_analysis' | 'research_participation' | 'marketing' | 'sharing';
+  consent_type:
+    | 'data_collection'
+    | 'ai_analysis'
+    | 'research_participation'
+    | 'marketing'
+    | 'sharing';
   consent_given: boolean;
   consent_date: string;
   consent_version: string;
@@ -269,18 +280,16 @@ export async function recordConsent(
   metadata?: Partial<ConsentRecord>
 ): Promise<{ success: boolean; error: any }> {
   try {
-    const { error } = await supabase
-      .from('consent_records')
-      .insert({
-        user_id: userId,
-        consent_type: consentType,
-        consent_given: consentGiven,
-        consent_date: new Date().toISOString(),
-        consent_version: '1.0.0',
-        ip_address: metadata?.ip_address,
-        user_agent: metadata?.user_agent,
-        withdrawal_date: consentGiven ? null : new Date().toISOString()
-      });
+    const { error } = await supabase.from('consent_records').insert({
+      user_id: userId,
+      consent_type: consentType,
+      consent_given: consentGiven,
+      consent_date: new Date().toISOString(),
+      consent_version: '1.0.0',
+      ip_address: metadata?.ip_address,
+      user_agent: metadata?.user_agent,
+      withdrawal_date: consentGiven ? null : new Date().toISOString(),
+    });
 
     if (error) throw error;
 
@@ -308,9 +317,11 @@ export async function checkConsent(
 
     if (error) throw error;
 
-    const hasConsent = data && data.length > 0 && 
-                      data[0].consent_given && 
-                      !data[0].withdrawal_date;
+    const hasConsent =
+      data &&
+      data.length > 0 &&
+      data[0].consent_given &&
+      !data[0].withdrawal_date;
 
     return { hasConsent: !!hasConsent, error: null };
   } catch (error) {
@@ -343,15 +354,13 @@ export async function logPrivacyAction(
   details?: any
 ): Promise<void> {
   try {
-    await supabase
-      .from('audit_logs')
-      .insert({
-        user_id: userId,
-        action,
-        resource_type: resourceType,
-        details,
-        timestamp: new Date().toISOString()
-      });
+    await supabase.from('audit_logs').insert({
+      user_id: userId,
+      action,
+      resource_type: resourceType,
+      details,
+      timestamp: new Date().toISOString(),
+    });
   } catch (error) {
     console.error('Failed to log privacy action:', error);
   }
@@ -369,15 +378,19 @@ export function validatePrivacySettings(
   updates: Partial<PrivacySettings>
 ): { valid: boolean; sanitized: PrivacySettings; errors: string[] } {
   const errors: string[] = [];
-  
+
   const sanitized: PrivacySettings = {
     show_profile: updates.show_profile || currentSettings.show_profile,
     show_stories: updates.show_stories || currentSettings.show_stories,
     show_location: updates.show_location ?? currentSettings.show_location,
     show_age_range: updates.show_age_range ?? currentSettings.show_age_range,
     allow_contact: updates.allow_contact ?? currentSettings.allow_contact,
-    allow_research_participation: updates.allow_research_participation ?? currentSettings.allow_research_participation,
-    data_retention_preference: updates.data_retention_preference || currentSettings.data_retention_preference
+    allow_research_participation:
+      updates.allow_research_participation ??
+      currentSettings.allow_research_participation,
+    data_retention_preference:
+      updates.data_retention_preference ||
+      currentSettings.data_retention_preference,
   };
 
   // Validation rules
@@ -401,6 +414,6 @@ export function validatePrivacySettings(
   return {
     valid: errors.length === 0,
     sanitized,
-    errors
+    errors,
   };
 }

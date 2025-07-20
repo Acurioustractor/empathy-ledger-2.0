@@ -9,6 +9,7 @@ This guide walks you through setting up each external service for your Empathy L
 **Why Resend?** Modern, reliable, developer-friendly, great deliverability
 
 **Setup Steps:**
+
 1. Go to [resend.com](https://resend.com) and sign up
 2. Verify your email domain (or use their free domain for testing)
 3. Generate API key in dashboard
@@ -27,6 +28,7 @@ This guide walks you through setting up each external service for your Empathy L
 **Why Cloudinary?** Complete media platform with image/video optimization, transformations, CDN
 
 **Setup Steps:**
+
 1. Go to [cloudinary.com](https://cloudinary.com) and sign up
 2. Get your credentials from the dashboard
 3. Add to `.env.local`:
@@ -46,6 +48,7 @@ This guide walks you through setting up each external service for your Empathy L
 **Why Cloudflare?** Free SSL, CDN, DNS management, DDoS protection
 
 **Setup Steps:**
+
 1. Go to [cloudflare.com](https://cloudflare.com) and sign up
 2. Add your domain and update nameservers
 3. Generate API token with Zone permissions
@@ -67,6 +70,7 @@ This guide walks you through setting up each external service for your Empathy L
 **Why Stripe?** Most flexible payment platform, excellent for marketplaces, great developer tools
 
 **Setup Steps:**
+
 1. Go to [stripe.com](https://stripe.com) and create account
 2. Complete business verification
 3. Get API keys from dashboard
@@ -87,6 +91,7 @@ This guide walks you through setting up each external service for your Empathy L
 **Why Algolia?** Instant search, excellent for story discovery, faceted search
 
 **Setup Steps:**
+
 1. Go to [algolia.com](https://algolia.com) and sign up
 2. Create a new application
 3. Get API keys from dashboard
@@ -105,6 +110,7 @@ This guide walks you through setting up each external service for your Empathy L
 ### 🛡️ **6. Content Moderation - OpenAI + Perspective**
 
 **OpenAI Moderation API**
+
 1. Go to [platform.openai.com](https://platform.openai.com)
 2. Generate API key
 3. Add to `.env.local`:
@@ -113,6 +119,7 @@ This guide walks you through setting up each external service for your Empathy L
    ```
 
 **Google Perspective API**
+
 1. Go to [perspectiveapi.com](https://perspectiveapi.com)
 2. Get API key through Google Cloud Console
 3. Add to `.env.local`:
@@ -129,6 +136,7 @@ This guide walks you through setting up each external service for your Empathy L
 **Why PostHog?** Privacy-first analytics, self-hostable, feature flags
 
 **Setup Steps:**
+
 1. Go to [posthog.com](https://posthog.com) and sign up
 2. Get project API key
 3. Add to `.env.local`:
@@ -147,6 +155,7 @@ This guide walks you through setting up each external service for your Empathy L
 **Why Sentry?** Best error tracking, performance monitoring, release tracking
 
 **Setup Steps:**
+
 1. Go to [sentry.io](https://sentry.io) and sign up
 2. Create a new project for Next.js
 3. Get DSN from project settings
@@ -167,6 +176,7 @@ This guide walks you through setting up each external service for your Empathy L
 **Why AWS S3?** Reliable, scalable, integrates with everything
 
 **Setup Steps:**
+
 1. Create AWS account at [aws.amazon.com](https://aws.amazon.com)
 2. Create S3 bucket for backups
 3. Create IAM user with S3 permissions
@@ -185,11 +195,13 @@ This guide walks you through setting up each external service for your Empathy L
 ## 🎯 **QUICK START: ESSENTIAL SERVICES**
 
 ### **For Immediate Development:**
+
 1. **Resend** - Email (free tier)
 2. **Cloudinary** - Media (free tier)
 3. **Cloudflare** - Domains (free tier)
 
 ### **Commands to Update Environment:**
+
 ```bash
 # Copy the new comprehensive template
 cp env-secure-template.txt .env.local
@@ -202,6 +214,7 @@ node scripts/env-security-check.js
 ```
 
 ### **Testing Your Setup:**
+
 ```bash
 # Test email
 curl -X POST "https://api.resend.com/emails" \
@@ -222,10 +235,12 @@ curl https://api.stripe.com/v1/customers \
 ## 💰 **COST BREAKDOWN**
 
 ### **Development (Free Tiers):**
+
 - **Total: $0/month**
 - All services have generous free tiers for development
 
 ### **Small Production (1,000 users):**
+
 - Email: $20/month (Resend)
 - Media: $0/month (Cloudinary free tier)
 - Domains: $0/month (Cloudflare free)
@@ -233,6 +248,7 @@ curl https://api.stripe.com/v1/customers \
 - **Total: ~$20/month**
 
 ### **Medium Production (10,000 users):**
+
 - Email: $20/month
 - Media: $89/month (Cloudinary)
 - Domains: $20/month (Cloudflare Pro)
@@ -257,14 +273,17 @@ curl https://api.stripe.com/v1/customers \
 ## 🆘 **NEED HELP?**
 
 ### **Service-Specific Support:**
+
 - **Resend**: [resend.com/docs](https://resend.com/docs)
 - **Cloudinary**: [cloudinary.com/documentation](https://cloudinary.com/documentation)
 - **Stripe**: [stripe.com/docs](https://stripe.com/docs)
 - **Algolia**: [algolia.com/doc](https://algolia.com/doc)
 
 ### **Integration Issues:**
+
 Check the platform's error logs and ensure:
+
 1. API keys are correctly formatted
 2. Services are properly configured
 3. Rate limits aren't exceeded
-4. Required permissions are granted 
+4. Required permissions are granted

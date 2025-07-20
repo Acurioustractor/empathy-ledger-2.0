@@ -1,7 +1,7 @@
 // @ts-nocheck - Component prop interfaces need proper type definitions
 /**
  * Project Embed Management Page
- * 
+ *
  * Philosophy: Organizations control how their stories are shared
  * beyond the platform while maintaining sovereignty principles.
  */
@@ -28,7 +28,7 @@ export default function ProjectEmbedPage({ params }: ProjectEmbedPageProps) {
     limit: 3,
     storyId: '',
     customDomain: false,
-    allowedDomains: [] as string[]
+    allowedDomains: [] as string[],
   });
 
   const [project, setProject] = useState<any>(null);
@@ -83,26 +83,33 @@ export default function ProjectEmbedPage({ params }: ProjectEmbedPageProps) {
             Story Embedding
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl">
-            Share your community stories on external websites while maintaining full sovereignty 
-            and consent controls. Only stories with public sharing consent can be embedded.
+            Share your community stories on external websites while maintaining
+            full sovereignty and consent controls. Only stories with public
+            sharing consent can be embedded.
           </p>
         </div>
 
         {/* Sovereignty Notice */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-          <h3 className="text-lg font-semibold text-blue-900 mb-3">🛡️ Sovereignty & Consent Protection</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">
+            🛡️ Sovereignty & Consent Protection
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
             <div>
-              <strong>Consent Required:</strong> Only stories with explicit public sharing consent are embeddable
+              <strong>Consent Required:</strong> Only stories with explicit
+              public sharing consent are embeddable
             </div>
             <div>
-              <strong>Storyteller Control:</strong> Rights and ownership remain with individual storytellers
+              <strong>Storyteller Control:</strong> Rights and ownership remain
+              with individual storytellers
             </div>
             <div>
-              <strong>Community Governance:</strong> Organizations control which domains can embed their stories
+              <strong>Community Governance:</strong> Organizations control which
+              domains can embed their stories
             </div>
             <div>
-              <strong>Brand Preservation:</strong> Widgets maintain your community branding and attribution
+              <strong>Brand Preservation:</strong> Widgets maintain your
+              community branding and attribution
             </div>
           </div>
         </div>
@@ -127,10 +134,7 @@ export default function ProjectEmbedPage({ params }: ProjectEmbedPageProps) {
 
           {/* Preview Panel */}
           <div className="space-y-8">
-            <EmbedPreview
-              projectId={projectId}
-              config={embedConfig}
-            />
+            <EmbedPreview projectId={projectId} config={embedConfig} />
 
             {/* Usage Statistics */}
             <EmbedUsageStats projectId={projectId} />
@@ -155,7 +159,7 @@ function EmbedUsageStats({ projectId }: EmbedUsageStatsProps) {
     totalEmbeds: 0,
     totalViews: 0,
     topDomains: [] as string[],
-    embedEnabledStories: 0
+    embedEnabledStories: 0,
   });
 
   useEffect(() => {
@@ -164,38 +168,52 @@ function EmbedUsageStats({ projectId }: EmbedUsageStatsProps) {
       totalEmbeds: 12,
       totalViews: 1847,
       topDomains: ['community.org', 'newsletter.com', 'blog.example.org'],
-      embedEnabledStories: 8
+      embedEnabledStories: 8,
     });
   }, [projectId]);
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Embedding Statistics</h3>
-      
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Embedding Statistics
+      </h3>
+
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="text-center p-4 bg-blue-50 rounded-lg">
-          <div className="text-2xl font-bold text-blue-600">{stats.totalEmbeds}</div>
+          <div className="text-2xl font-bold text-blue-600">
+            {stats.totalEmbeds}
+          </div>
           <div className="text-sm text-blue-700">Active Embeds</div>
         </div>
         <div className="text-center p-4 bg-green-50 rounded-lg">
-          <div className="text-2xl font-bold text-green-600">{stats.totalViews}</div>
+          <div className="text-2xl font-bold text-green-600">
+            {stats.totalViews}
+          </div>
           <div className="text-sm text-green-700">Total Views</div>
         </div>
       </div>
 
       <div className="space-y-4">
         <div>
-          <h4 className="font-medium text-gray-900 mb-2">Stories Available for Embedding</h4>
+          <h4 className="font-medium text-gray-900 mb-2">
+            Stories Available for Embedding
+          </h4>
           <div className="text-sm text-gray-600">
-            {stats.embedEnabledStories} stories have public sharing consent enabled
+            {stats.embedEnabledStories} stories have public sharing consent
+            enabled
           </div>
         </div>
 
         <div>
-          <h4 className="font-medium text-gray-900 mb-2">Top Embedding Domains</h4>
+          <h4 className="font-medium text-gray-900 mb-2">
+            Top Embedding Domains
+          </h4>
           <div className="space-y-1">
             {stats.topDomains.map((domain, index) => (
-              <div key={domain} className="text-sm text-gray-600 flex items-center">
+              <div
+                key={domain}
+                className="text-sm text-gray-600 flex items-center"
+              >
                 <span className="w-4 text-gray-400">{index + 1}.</span>
                 <span>{domain}</span>
               </div>
@@ -210,32 +228,56 @@ function EmbedUsageStats({ projectId }: EmbedUsageStatsProps) {
 function EmbedDocumentation() {
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Embedding Documentation</h3>
-      
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Embedding Documentation
+      </h3>
+
       <div className="space-y-6 text-sm text-gray-700">
         <div>
           <h4 className="font-medium text-gray-900 mb-2">Widget Types</h4>
           <ul className="space-y-2">
-            <li><strong>Story Cards:</strong> Grid layout displaying multiple stories with excerpts</li>
-            <li><strong>Story Carousel:</strong> Rotating display of featured stories</li>
-            <li><strong>Story List:</strong> Compact list format for sidebar placement</li>
-            <li><strong>Featured Story:</strong> Single story highlight with full content</li>
+            <li>
+              <strong>Story Cards:</strong> Grid layout displaying multiple
+              stories with excerpts
+            </li>
+            <li>
+              <strong>Story Carousel:</strong> Rotating display of featured
+              stories
+            </li>
+            <li>
+              <strong>Story List:</strong> Compact list format for sidebar
+              placement
+            </li>
+            <li>
+              <strong>Featured Story:</strong> Single story highlight with full
+              content
+            </li>
           </ul>
         </div>
 
         <div>
           <h4 className="font-medium text-gray-900 mb-2">Embedding Options</h4>
           <ul className="space-y-2">
-            <li><strong>HTML:</strong> Direct HTML code for copy-paste embedding</li>
-            <li><strong>Iframe:</strong> Secure iframe with automatic updates</li>
-            <li><strong>JSON API:</strong> Raw data for custom implementations</li>
+            <li>
+              <strong>HTML:</strong> Direct HTML code for copy-paste embedding
+            </li>
+            <li>
+              <strong>Iframe:</strong> Secure iframe with automatic updates
+            </li>
+            <li>
+              <strong>JSON API:</strong> Raw data for custom implementations
+            </li>
           </ul>
         </div>
 
         <div>
-          <h4 className="font-medium text-gray-900 mb-2">Sovereignty Compliance</h4>
+          <h4 className="font-medium text-gray-900 mb-2">
+            Sovereignty Compliance
+          </h4>
           <ul className="space-y-2">
-            <li>• Only stories with explicit public sharing consent are embeddable</li>
+            <li>
+              • Only stories with explicit public sharing consent are embeddable
+            </li>
             <li>• Storyteller attribution is always maintained</li>
             <li>• Community branding and sovereignty notices are preserved</li>
             <li>• Organizations can restrict embedding to specific domains</li>
@@ -248,7 +290,9 @@ function EmbedDocumentation() {
             <li>• Widgets are responsive and mobile-friendly</li>
             <li>• CORS headers allow cross-origin embedding</li>
             <li>• Widgets automatically update when new stories are added</li>
-            <li>• All embedded content respects community cultural protocols</li>
+            <li>
+              • All embedded content respects community cultural protocols
+            </li>
           </ul>
         </div>
       </div>

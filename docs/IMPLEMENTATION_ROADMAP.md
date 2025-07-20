@@ -7,6 +7,7 @@ Transform Empathy Ledger from a multi-project system to a true multi-tenant plat
 ## Week 1: Foundation & God Mode (Priority: Critical)
 
 ### Day 1-2: Database Schema Evolution
+
 ```sql
 -- 1. Add platform admin capabilities
 ALTER TABLE profiles ADD COLUMN platform_role TEXT DEFAULT 'user';
@@ -25,7 +26,7 @@ CREATE TABLE platform_audit_log (
 );
 
 -- 3. Enhance projects table for tenant features
-ALTER TABLE projects 
+ALTER TABLE projects
 ADD COLUMN subscription_tier TEXT DEFAULT 'community',
 ADD COLUMN subscription_status TEXT DEFAULT 'active',
 ADD COLUMN modules_enabled JSONB DEFAULT '{"story_core": true}',
@@ -62,6 +63,7 @@ CREATE TABLE project_modules (
 ### Day 3-4: Platform Admin Dashboard
 
 **File:** `app/admin/platform/page.tsx`
+
 ```typescript
 // Core admin dashboard with god mode controls
 export default function PlatformAdminDashboard() {
@@ -76,6 +78,7 @@ export default function PlatformAdminDashboard() {
 ```
 
 **File:** `app/admin/platform/projects/page.tsx`
+
 ```typescript
 // Project management interface
 // List all projects with health indicators
@@ -83,6 +86,7 @@ export default function PlatformAdminDashboard() {
 ```
 
 ### Day 5: RLS Policies for Platform Admins
+
 ```sql
 -- Create policies for platform admins
 CREATE POLICY "Platform admins can view all projects"
@@ -127,31 +131,32 @@ export const StoryCoreModule: Module = {
   defaultConfig: {
     submission_methods: ['web', 'sms', 'whatsapp'],
     consent_flow: 'standard',
-    auto_transcribe: true
+    auto_transcribe: true,
   },
-  
+
   async onEnable(projectId: string, config: any) {
     // Module initialization logic
   },
-  
+
   components: {
     settings: StoryCoreSettings,
     dashboard: StoryCoreDashboard,
     menu: [
       { label: 'Submit Story', href: '/stories/new' },
-      { label: 'My Stories', href: '/stories' }
-    ]
-  }
+      { label: 'My Stories', href: '/stories' },
+    ],
+  },
 };
 ```
 
 ### Day 8-9: Module Registry & Management
 
 **File:** `lib/modules/registry.ts`
+
 ```typescript
 class ModuleRegistry {
   private modules = new Map<string, Module>();
-  
+
   // Register all modules
   constructor() {
     this.register(StoryCoreModule);
@@ -159,12 +164,12 @@ class ModuleRegistry {
     this.register(CommunityAnalyticsModule);
     // ... more modules
   }
-  
+
   async getProjectModules(projectId: string) {
     // Fetch enabled modules for project
     // Return configured module instances
   }
-  
+
   async enableModule(projectId: string, moduleKey: string, config?: any) {
     // Enable module for project
     // Run module.onEnable()
@@ -178,6 +183,7 @@ export const moduleRegistry = new ModuleRegistry();
 ### Day 10: Module UI Components
 
 **File:** `app/[projectSlug]/settings/modules/page.tsx`
+
 ```typescript
 // Module management interface for project admins
 export default function ModulesSettings() {
@@ -193,6 +199,7 @@ export default function ModulesSettings() {
 ### Day 11-12: Dynamic Theming System
 
 **File:** `lib/themes/theme-provider.tsx`
+
 ```typescript
 export function ThemeProvider({ children, project }) {
   const theme = useMemo(() => ({
@@ -206,7 +213,7 @@ export function ThemeProvider({ children, project }) {
       body: project.branding?.body_font || 'Inter'
     }
   }), [project]);
-  
+
   return (
     <ThemeContext.Provider value={theme}>
       <style jsx global>{`
@@ -225,6 +232,7 @@ export function ThemeProvider({ children, project }) {
 ### Day 13-14: Onboarding Flow
 
 **File:** `app/onboarding/page.tsx`
+
 ```typescript
 // Guided onboarding for new projects
 export default function OnboardingFlow() {
@@ -234,9 +242,9 @@ export default function OnboardingFlow() {
     { id: 'philosophy', component: PhilosophyStep },
     { id: 'modules', component: ModulesStep },
     { id: 'team', component: TeamStep },
-    { id: 'first-story', component: FirstStoryStep }
+    { id: 'first-story', component: FirstStoryStep },
   ];
-  
+
   // Track progress
   // Save configurations
   // Celebrate milestones
@@ -248,7 +256,7 @@ export default function OnboardingFlow() {
 ```sql
 -- Insert onboarding templates
 INSERT INTO onboarding_templates (name, organization_type, default_modules, steps) VALUES
-('Indigenous Organization', 'indigenous_org', 
+('Indigenous Organization', 'indigenous_org',
   ARRAY['story_core', 'cultural_protocols', 'consent_privacy'],
   '[
     {"id": "welcome", "title": "Welcome to Your Sovereignty Journey"},
@@ -271,50 +279,52 @@ INSERT INTO onboarding_templates (name, organization_type, default_modules, step
 ### Day 16-17: Automated Reporting Module
 
 **File:** `lib/modules/report-automation.ts`
+
 ```typescript
 export const ReportAutomationModule: Module = {
   key: 'report_automation',
   name: 'Automated Reports',
   category: 'analytics',
   minimumTier: 'organization',
-  
+
   defaultConfig: {
     templates: ['quarterly', 'annual'],
     auto_include_stories: true,
-    stakeholder_access: false
+    stakeholder_access: false,
   },
-  
+
   async generateReport(projectId: string, template: string) {
     // Gather data
     // Apply template
     // Generate PDF/DOCX
     // Send to stakeholders
-  }
+  },
 };
 ```
 
 ### Day 18-19: Platform Monitoring
 
 **File:** `lib/monitoring/health-checks.ts`
+
 ```typescript
 // Automated health monitoring
 export async function checkProjectHealth(projectId: string) {
   const metrics = await getProjectMetrics(projectId);
-  
+
   return {
     status: determineHealthStatus(metrics),
     alerts: generateAlerts(metrics),
-    recommendations: generateRecommendations(metrics)
+    recommendations: generateRecommendations(metrics),
   };
 }
 
 // Run periodically via cron
 export async function platformHealthCheck() {
   const projects = await getAllProjects();
-  
+
   for (const project of projects) {
     const health = await checkProjectHealth(project.id);
-    
+
     if (health.status === 'critical') {
       await notifyPlatformAdmins(project, health);
     }
@@ -327,7 +337,7 @@ export async function platformHealthCheck() {
 ```sql
 -- Create materialized views for performance
 CREATE MATERIALIZED VIEW project_metrics AS
-SELECT 
+SELECT
     p.id as project_id,
     p.name,
     p.subscription_tier,
@@ -353,6 +363,7 @@ $$ LANGUAGE plpgsql;
 ## Immediate Next Steps (This Week)
 
 ### 1. Set Up Development Environment
+
 ```bash
 # Create feature branch
 git checkout -b feature/platform-admin-system
@@ -363,6 +374,7 @@ npm install react-hook-form       # For onboarding forms
 ```
 
 ### 2. Create Initial Migration
+
 ```bash
 # Generate migration for platform features
 supabase migration new add_platform_admin_features
@@ -373,12 +385,14 @@ supabase db push
 ```
 
 ### 3. Build Minimal Admin Dashboard
+
 - Create `/app/admin/platform` route
 - Add authentication check for platform_role
 - Display basic metrics
 - Add project list with impersonate action
 
 ### 4. Test with Existing Projects
+
 - Mark yourself as super_admin in database
 - Access platform dashboard
 - View existing projects as tenants
@@ -387,24 +401,28 @@ supabase db push
 ## Success Metrics
 
 ### Week 1 Success
+
 - [ ] Platform admin can log in and see all projects
 - [ ] Platform audit log captures admin actions
 - [ ] Basic project health metrics visible
 - [ ] Can impersonate project admin
 
 ### Week 2 Success
+
 - [ ] At least 3 core modules extracted
 - [ ] Module enable/disable working
 - [ ] Module configuration UI functional
 - [ ] Existing features work through modules
 
 ### Week 3 Success
+
 - [ ] Projects can customize branding
 - [ ] Onboarding flow guides new projects
 - [ ] First project completes onboarding
 - [ ] White-label theme applied correctly
 
 ### Week 4 Success
+
 - [ ] Report module generates first report
 - [ ] Health monitoring alerts working
 - [ ] Performance optimizations in place
@@ -413,18 +431,21 @@ supabase db push
 ## Risk Mitigation
 
 ### Data Migration
+
 - Keep existing schema intact
 - Add new tables/columns only
 - Test thoroughly with existing data
 - Have rollback plan ready
 
 ### User Impact
+
 - Changes transparent to existing users
 - No disruption to current projects
 - Gradual rollout of new features
 - Clear communication about benefits
 
 ### Technical Debt
+
 - Document all architectural decisions
 - Write tests for critical paths
 - Keep modules loosely coupled

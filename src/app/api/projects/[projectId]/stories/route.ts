@@ -1,6 +1,6 @@
 /**
  * Project-Specific Stories API
- * 
+ *
  * Philosophy: Each project maintains sovereignty over their stories while
  * adhering to the universal principles of community ownership and respect.
  */
@@ -15,36 +15,47 @@ export async function GET(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
-        { error: 'Authentication required', philosophy: 'Stories belong to their tellers and require authenticated access' },
+        {
+          error: 'Authentication required',
+          philosophy:
+            'Stories belong to their tellers and require authenticated access',
+        },
         { status: 401 }
       );
     }
 
     const url = new URL(request.url);
-    const privacy_levels = url.searchParams.get('privacy_levels')?.split(',') || ['public'];
+    const privacy_levels = url.searchParams
+      .get('privacy_levels')
+      ?.split(',') || ['public'];
     const limit = parseInt(url.searchParams.get('limit') || '20');
     const offset = parseInt(url.searchParams.get('offset') || '0');
-    const include_analysis = url.searchParams.get('include_analysis') === 'true';
+    const include_analysis =
+      url.searchParams.get('include_analysis') === 'true';
 
     // Get project stories with sovereignty filtering
-    const { stories, total_count, error } = await projectOperations.getProjectStories(
-      params.projectId,
-      user.id,
-      {
+    const { stories, total_count, error } =
+      await projectOperations.getProjectStories(params.projectId, user.id, {
         privacy_levels,
         limit,
         offset,
-        include_analysis
-      }
-    );
+        include_analysis,
+      });
 
     if (error) {
       return NextResponse.json(
-        { error, sovereignty_note: 'Access to stories is controlled by community consent and cultural protocols' },
+        {
+          error,
+          sovereignty_note:
+            'Access to stories is controlled by community consent and cultural protocols',
+        },
         { status: 403 }
       );
     }
@@ -57,30 +68,30 @@ export async function GET(
           storyteller_owns: true,
           consent_respected: true,
           cultural_protocols_honored: true,
-          community_controlled: true
-        }
+          community_controlled: true,
+        },
       })),
       pagination: {
         total_count,
         limit,
         offset,
-        has_more: total_count > offset + limit
+        has_more: total_count > offset + limit,
       },
       sovereignty_principles: {
         narrative_ownership: 'All stories remain owned by their tellers',
         consent_granular: 'Each story has individual consent settings',
         cultural_protocols: 'Community protocols are automatically respected',
-        value_sharing: 'Value created from stories flows back to communities'
-      }
+        value_sharing: 'Value created from stories flows back to communities',
+      },
     };
 
     return NextResponse.json(response_data);
   } catch (error: any) {
     return NextResponse.json(
-      { 
-        error: 'Internal server error', 
+      {
+        error: 'Internal server error',
         message: error.message,
-        sovereignty_note: 'Even errors respect community privacy and dignity'
+        sovereignty_note: 'Even errors respect community privacy and dignity',
       },
       { status: 500 }
     );
@@ -93,7 +104,10 @@ export async function POST(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -123,9 +137,10 @@ export async function POST(
     // Validate sovereignty requirements
     if (!story_data.consent_settings) {
       return NextResponse.json(
-        { 
+        {
           error: 'Consent settings required',
-          sovereignty_note: 'Every story must have explicit consent settings to respect storyteller autonomy'
+          sovereignty_note:
+            'Every story must have explicit consent settings to respect storyteller autonomy',
         },
         { status: 400 }
       );
@@ -146,36 +161,42 @@ export async function POST(
       consent_settings: {
         // Ensure minimum consent requirements
         allowAnalysis: story_data.consent_settings.allowAnalysis || false,
-        allowCommunitySharing: story_data.consent_settings.allowCommunitySharing || false,
-        allowPublicSharing: story_data.consent_settings.allowPublicSharing || false,
+        allowCommunitySharing:
+          story_data.consent_settings.allowCommunitySharing || false,
+        allowPublicSharing:
+          story_data.consent_settings.allowPublicSharing || false,
         allowResearch: story_data.consent_settings.allowResearch || false,
-        allowValueCreation: story_data.consent_settings.allowValueCreation || false,
-        allowCrossCommunityConnection: story_data.consent_settings.allowCrossCommunityConnection || false,
+        allowValueCreation:
+          story_data.consent_settings.allowValueCreation || false,
+        allowCrossCommunityConnection:
+          story_data.consent_settings.allowCrossCommunityConnection || false,
         allowPolicyUse: story_data.consent_settings.allowPolicyUse || false,
         allowMediaUse: story_data.consent_settings.allowMediaUse || false,
-        ...story_data.consent_settings
+        ...story_data.consent_settings,
       },
       cultural_protocols: {
         // Inherit project-level protocols
         ...project?.cultural_protocols,
         // Allow story-specific overrides
-        ...story_data.cultural_protocols
+        ...story_data.cultural_protocols,
       },
       status: 'pending', // All stories start as pending for review
-      submitted_at: new Date().toISOString()
+      submitted_at: new Date().toISOString(),
     };
 
     // Insert the story
     const { data: new_story, error: insert_error } = await supabase
       .from('stories')
       .insert(sovereignty_compliant_story)
-      .select(`
+      .select(
+        `
         *,
         storyteller:storyteller_id (
           full_name,
           community_affiliation
         )
-      `)
+      `
+      )
       .single();
 
     if (insert_error) {
@@ -192,15 +213,16 @@ export async function POST(
         consent_settings_respected: true,
         cultural_protocols_applied: true,
         community_sovereignty_preserved: true,
-        value_sharing_enabled: story_data.consent_settings.allowValueCreation
+        value_sharing_enabled: story_data.consent_settings.allowValueCreation,
       },
       next_steps: {
-        review_process: 'Your story will be reviewed according to community protocols',
+        review_process:
+          'Your story will be reviewed according to community protocols',
         consent_control: 'You can update your consent settings at any time',
-        community_benefit: 'If you chose to allow value creation, any benefits will flow back to your community'
-      }
+        community_benefit:
+          'If you chose to allow value creation, any benefits will flow back to your community',
+      },
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },

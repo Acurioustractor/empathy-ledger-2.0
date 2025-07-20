@@ -13,7 +13,8 @@ export default async function ModulesPage() {
     // Get all platform modules
     const { data: moduleData } = await supabase
       .from('platform_modules')
-      .select(`
+      .select(
+        `
         *,
         project_modules(
           project_id,
@@ -22,7 +23,8 @@ export default async function ModulesPage() {
           last_used,
           usage_count
         )
-      `)
+      `
+      )
       .order('category', { ascending: true })
       .order('name', { ascending: true })
       .catch(() => ({ data: [] }));

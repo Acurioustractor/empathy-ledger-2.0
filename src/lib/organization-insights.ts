@@ -159,19 +159,24 @@ export async function generateOrganizationInsights(
     // Check permissions
     const hasPermission = await checkUserPermission(userId, 'access_analytics');
     if (!hasPermission) {
-      return { insights: null, error: { message: 'Unauthorized to access analytics' } };
+      return {
+        insights: null,
+        error: { message: 'Unauthorized to access analytics' },
+      };
     }
 
     // Get organization stories for the period
     const { data: stories, error: storiesError } = await supabase
       .from('stories')
-      .select(`
+      .select(
+        `
         *,
         profiles:contributor_id (
           age_range,
           location_general
         )
-      `)
+      `
+      )
       .eq('organization_id', organizationId)
       .gte('created_at', periodStart)
       .lte('created_at', periodEnd);
@@ -192,13 +197,25 @@ export async function generateOrganizationInsights(
       period_start: periodStart,
       period_end: periodEnd,
       story_metrics: generateStoryMetrics(stories || []),
-      community_metrics: await generateCommunityMetrics(organizationId, periodStart, periodEnd),
+      community_metrics: await generateCommunityMetrics(
+        organizationId,
+        periodStart,
+        periodEnd
+      ),
       impact_metrics: generateImpactMetrics(stories || []),
       sentiment_analysis: generateSentimentAnalysis(stories || []),
       theme_analysis: generateThemeAnalysis(stories || []),
-      value_creation: await generateValueCreationMetrics(organizationId, periodStart, periodEnd),
-      policy_influence: await generatePolicyInfluenceMetrics(organizationId, periodStart, periodEnd),
-      generated_at: new Date().toISOString()
+      value_creation: await generateValueCreationMetrics(
+        organizationId,
+        periodStart,
+        periodEnd
+      ),
+      policy_influence: await generatePolicyInfluenceMetrics(
+        organizationId,
+        periodStart,
+        periodEnd
+      ),
+      generated_at: new Date().toISOString(),
     };
 
     // Store insights for caching
@@ -218,29 +235,38 @@ function generateStoryMetrics(stories: any[]): StoryMetrics {
   const privacyCounts: Record<string, number> = {};
   const geoCounts: Record<string, number> = {};
   const ageCounts: Record<string, number> = {};
-  
-  let textOnly = 0, withAudio = 0, withVideo = 0, withImages = 0;
+
+  let textOnly = 0,
+    withAudio = 0,
+    withVideo = 0,
+    withImages = 0;
 
   stories.forEach(story => {
     // Category distribution
     categoryCounts[story.category] = (categoryCounts[story.category] || 0) + 1;
-    
+
     // Privacy level distribution
-    privacyCounts[story.privacy_level] = (privacyCounts[story.privacy_level] || 0) + 1;
-    
+    privacyCounts[story.privacy_level] =
+      (privacyCounts[story.privacy_level] || 0) + 1;
+
     // Geographic distribution
     const location = story.profiles?.location_general || 'Unknown';
     geoCounts[location] = (geoCounts[location] || 0) + 1;
-    
+
     // Age distribution
     const ageRange = story.profiles?.age_range || 'Unknown';
     ageCounts[ageRange] = (ageCounts[ageRange] || 0) + 1;
-    
+
     // Media distribution
     if (story.audio_url) withAudio++;
     if (story.video_url) withVideo++;
     if (story.image_urls && story.image_urls.length > 0) withImages++;
-    if (!story.audio_url && !story.video_url && (!story.image_urls || story.image_urls.length === 0)) textOnly++;
+    if (
+      !story.audio_url &&
+      !story.video_url &&
+      (!story.image_urls || story.image_urls.length === 0)
+    )
+      textOnly++;
   });
 
   return {
@@ -248,9 +274,14 @@ function generateStoryMetrics(stories: any[]): StoryMetrics {
     new_stories: stories.length, // All stories in period are "new"
     stories_by_category: categoryCounts,
     stories_by_privacy_level: privacyCounts,
-    media_distribution: { text_only: textOnly, with_audio: withAudio, with_video: withVideo, with_images: withImages },
+    media_distribution: {
+      text_only: textOnly,
+      with_audio: withAudio,
+      with_video: withVideo,
+      with_images: withImages,
+    },
     geographic_distribution: geoCounts,
-    age_distribution: ageCounts
+    age_distribution: ageCounts,
   };
 }
 
@@ -271,10 +302,25 @@ async function generateCommunityMetrics(
     retention_rate: 0.84,
     community_health_score: 0.79,
     top_contributors: [
-      { id: '1', display_name: 'Sarah M.', story_count: 12, engagement_score: 0.95 },
-      { id: '2', display_name: 'James L.', story_count: 8, engagement_score: 0.87 },
-      { id: '3', display_name: 'Maria R.', story_count: 15, engagement_score: 0.82 }
-    ]
+      {
+        id: '1',
+        display_name: 'Sarah M.',
+        story_count: 12,
+        engagement_score: 0.95,
+      },
+      {
+        id: '2',
+        display_name: 'James L.',
+        story_count: 8,
+        engagement_score: 0.87,
+      },
+      {
+        id: '3',
+        display_name: 'Maria R.',
+        story_count: 15,
+        engagement_score: 0.82,
+      },
+    ],
   };
 }
 
@@ -282,21 +328,36 @@ async function generateCommunityMetrics(
  * Generate impact metrics from stories
  */
 function generateImpactMetrics(stories: any[]): ImpactMetrics {
-  const totalViews = stories.reduce((sum, story) => sum + (story.view_count || 0), 0);
-  const totalReactions = stories.reduce((sum, story) => sum + (story.reaction_count || 0), 0);
-  const totalShares = stories.reduce((sum, story) => sum + (story.share_count || 0), 0);
-  const avgImpactScore = stories.reduce((sum, story) => sum + (story.impact_score || 0), 0) / stories.length;
+  const totalViews = stories.reduce(
+    (sum, story) => sum + (story.view_count || 0),
+    0
+  );
+  const totalReactions = stories.reduce(
+    (sum, story) => sum + (story.reaction_count || 0),
+    0
+  );
+  const totalShares = stories.reduce(
+    (sum, story) => sum + (story.share_count || 0),
+    0
+  );
+  const avgImpactScore =
+    stories.reduce((sum, story) => sum + (story.impact_score || 0), 0) /
+    stories.length;
 
   return {
     total_views: totalViews,
     total_reactions: totalReactions,
     total_shares: totalShares,
-    stories_cited_in_research: stories.filter(s => s.cited_in_reports > 0).length,
-    policy_references: stories.reduce((sum, story) => sum + (story.cited_in_reports || 0), 0),
+    stories_cited_in_research: stories.filter(s => s.cited_in_reports > 0)
+      .length,
+    policy_references: stories.reduce(
+      (sum, story) => sum + (story.cited_in_reports || 0),
+      0
+    ),
     media_mentions: 23, // Mock data
     social_reach: totalViews * 2.3, // Mock calculation
     community_response_rate: 0.73,
-    average_story_impact_score: avgImpactScore || 0
+    average_story_impact_score: avgImpactScore || 0,
   };
 }
 
@@ -304,9 +365,12 @@ function generateImpactMetrics(stories: any[]): ImpactMetrics {
  * Generate sentiment analysis
  */
 function generateSentimentAnalysis(stories: any[]): SentimentAnalysis {
-  const sentiments = stories.map(s => s.sentiment_score || 0.5).filter(s => s > 0);
-  const avgSentiment = sentiments.reduce((sum, s) => sum + s, 0) / sentiments.length || 0.5;
-  
+  const sentiments = stories
+    .map(s => s.sentiment_score || 0.5)
+    .filter(s => s > 0);
+  const avgSentiment =
+    sentiments.reduce((sum, s) => sum + s, 0) / sentiments.length || 0.5;
+
   const positive = sentiments.filter(s => s > 0.6).length;
   const negative = sentiments.filter(s => s < 0.4).length;
   const neutral = sentiments.length - positive - negative;
@@ -316,7 +380,7 @@ function generateSentimentAnalysis(stories: any[]): SentimentAnalysis {
     sentiment_distribution: {
       positive: positive / sentiments.length,
       neutral: neutral / sentiments.length,
-      negative: negative / sentiments.length
+      negative: negative / sentiments.length,
     },
     emotion_breakdown: {
       joy: 0.23,
@@ -324,18 +388,28 @@ function generateSentimentAnalysis(stories: any[]): SentimentAnalysis {
       frustration: 0.28,
       anger: 0.12,
       sadness: 0.18,
-      determination: 0.41
+      determination: 0.41,
     },
     sentiment_trends: [
       { period: '2024-01', sentiment: 0.45 },
       { period: '2024-02', sentiment: 0.52 },
       { period: '2024-03', sentiment: 0.48 },
-      { period: '2024-04', sentiment: 0.56 }
+      { period: '2024-04', sentiment: 0.56 },
     ],
     critical_issues: [
-      { theme: 'healthcare access', sentiment: 0.21, story_count: 34, urgency_score: 0.87 },
-      { theme: 'housing affordability', sentiment: 0.19, story_count: 28, urgency_score: 0.82 }
-    ]
+      {
+        theme: 'healthcare access',
+        sentiment: 0.21,
+        story_count: 34,
+        urgency_score: 0.87,
+      },
+      {
+        theme: 'housing affordability',
+        sentiment: 0.19,
+        story_count: 28,
+        urgency_score: 0.82,
+      },
+    ],
   };
 }
 
@@ -344,7 +418,7 @@ function generateSentimentAnalysis(stories: any[]): SentimentAnalysis {
  */
 function generateThemeAnalysis(stories: any[]): ThemeAnalysis {
   const themeCounts: Record<string, number> = {};
-  
+
   stories.forEach(story => {
     (story.themes || []).forEach((theme: string) => {
       themeCounts[theme] = (themeCounts[theme] || 0) + 1;
@@ -352,30 +426,40 @@ function generateThemeAnalysis(stories: any[]): ThemeAnalysis {
   });
 
   const topThemes = Object.entries(themeCounts)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([, a], [, b]) => b - a)
     .slice(0, 10)
     .map(([theme, count]) => ({
       theme,
       story_count: count,
       growth_rate: Math.random() * 0.4 - 0.1, // Mock growth rate
       urgency_score: Math.random() * 0.8 + 0.2,
-      sentiment: Math.random() * 0.6 + 0.2
+      sentiment: Math.random() * 0.6 + 0.2,
     }));
 
   return {
     top_themes: topThemes,
     emerging_themes: [
       { theme: 'climate anxiety', story_count: 12, growth_velocity: 0.89 },
-      { theme: 'digital divide', story_count: 8, growth_velocity: 0.73 }
+      { theme: 'digital divide', story_count: 8, growth_velocity: 0.73 },
     ],
     theme_connections: [
-      { theme1: 'housing', theme2: 'mental health', correlation_strength: 0.68, story_overlap: 23 },
-      { theme1: 'employment', theme2: 'education', correlation_strength: 0.71, story_overlap: 31 }
+      {
+        theme1: 'housing',
+        theme2: 'mental health',
+        correlation_strength: 0.68,
+        story_overlap: 23,
+      },
+      {
+        theme1: 'employment',
+        theme2: 'education',
+        correlation_strength: 0.71,
+        story_overlap: 31,
+      },
     ],
     geographic_theme_distribution: {
-      'Melbourne': { 'housing': 45, 'healthcare': 32, 'transport': 28 },
-      'Sydney': { 'housing': 67, 'employment': 41, 'education': 35 }
-    }
+      Melbourne: { housing: 45, healthcare: 32, transport: 28 },
+      Sydney: { housing: 67, employment: 41, education: 35 },
+    },
   };
 }
 
@@ -394,17 +478,33 @@ async function generateValueCreationMetrics(
       research_compensation: 45230.12,
       policy_influence: 32890.45,
       media_licensing: 18760.23,
-      consulting_insights: 30570.09
+      consulting_insights: 30570.09,
     },
     value_distributed_to_storytellers: 89215.62,
     average_compensation_per_story: 234.78,
     pending_value_distribution: 38235.27,
     value_creation_trends: [
-      { period: '2024-01', value_created: 28450.12, value_distributed: 19915.08 },
-      { period: '2024-02', value_created: 31290.45, value_distributed: 21903.32 },
-      { period: '2024-03', value_created: 35120.78, value_distributed: 24584.55 },
-      { period: '2024-04', value_created: 32589.54, value_distributed: 22812.67 }
-    ]
+      {
+        period: '2024-01',
+        value_created: 28450.12,
+        value_distributed: 19915.08,
+      },
+      {
+        period: '2024-02',
+        value_created: 31290.45,
+        value_distributed: 21903.32,
+      },
+      {
+        period: '2024-03',
+        value_created: 35120.78,
+        value_distributed: 24584.55,
+      },
+      {
+        period: '2024-04',
+        value_created: 32589.54,
+        value_distributed: 22812.67,
+      },
+    ],
   };
 }
 
@@ -430,16 +530,16 @@ async function generatePolicyInfluenceMetrics(
         date: '2024-03-15',
         stories_cited: 34,
         influence_level: 'high',
-        outcome: 'Increased funding for social housing by $200M'
+        outcome: 'Increased funding for social housing by $200M',
       },
       {
         policy_name: 'Mental Health Services Reform',
         date: '2024-02-28',
         stories_cited: 28,
         influence_level: 'medium',
-        outcome: 'Extended community mental health programs'
-      }
-    ]
+        outcome: 'Extended community mental health programs',
+      },
+    ],
   };
 }
 
@@ -448,15 +548,13 @@ async function generatePolicyInfluenceMetrics(
  */
 async function storeInsights(insights: OrganizationInsights): Promise<void> {
   try {
-    await supabase
-      .from('organization_insights')
-      .insert({
-        organization_id: insights.organization_id,
-        period_start: insights.period_start,
-        period_end: insights.period_end,
-        insights_data: insights,
-        generated_at: insights.generated_at
-      });
+    await supabase.from('organization_insights').insert({
+      organization_id: insights.organization_id,
+      period_start: insights.period_start,
+      period_end: insights.period_end,
+      insights_data: insights,
+      generated_at: insights.generated_at,
+    });
   } catch (error) {
     console.error('Error storing insights:', error);
   }
@@ -508,21 +606,30 @@ export async function getInsightsSummary(
 
     // Get latest insights
     const endDate = new Date().toISOString();
-    const startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(); // Last 30 days
+    const startDate = new Date(
+      Date.now() - 30 * 24 * 60 * 60 * 1000
+    ).toISOString(); // Last 30 days
 
-    const { insights } = await getCachedInsights(organizationId, startDate, endDate);
-    
+    const { insights } = await getCachedInsights(
+      organizationId,
+      startDate,
+      endDate
+    );
+
     if (!insights) {
       // Generate fresh insights if none cached
       const { insights: freshInsights } = await generateOrganizationInsights(
-        organizationId, 
-        startDate, 
-        endDate, 
+        organizationId,
+        startDate,
+        endDate,
         userId
       );
-      
+
       if (!freshInsights) {
-        return { summary: null, error: { message: 'Failed to generate insights' } };
+        return {
+          summary: null,
+          error: { message: 'Failed to generate insights' },
+        };
       }
 
       return { summary: createInsightsSummary(freshInsights), error: null };
@@ -545,15 +652,15 @@ function createInsightsSummary(insights: OrganizationInsights) {
       active_members: insights.community_metrics.active_storytellers,
       total_impact: insights.impact_metrics.average_story_impact_score,
       value_created: insights.value_creation.total_value_created,
-      sentiment: insights.sentiment_analysis.overall_sentiment
+      sentiment: insights.sentiment_analysis.overall_sentiment,
     },
     highlights: [
       `${insights.story_metrics.new_stories} new stories shared`,
       `${insights.community_metrics.new_members} new community members joined`,
       `$${insights.value_creation.value_distributed_to_storytellers.toLocaleString()} distributed to storytellers`,
-      `${insights.policy_influence.policies_influenced} policies influenced`
+      `${insights.policy_influence.policies_influenced} policies influenced`,
     ],
     urgent_issues: insights.sentiment_analysis.critical_issues.slice(0, 3),
-    top_themes: insights.theme_analysis.top_themes.slice(0, 5)
+    top_themes: insights.theme_analysis.top_themes.slice(0, 5),
   };
 }

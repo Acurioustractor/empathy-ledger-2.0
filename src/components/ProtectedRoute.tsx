@@ -1,6 +1,6 @@
 /**
  * Protected Route Component for Community Authentication
- * 
+ *
  * Philosophy: Access control should feel like community membership, not corporate gatekeeping.
  * This component ensures users feel welcomed while maintaining appropriate access controls.
  */
@@ -19,18 +19,14 @@ interface ProtectedRouteProps {
   allowedRoles?: string[];
 }
 
-function CommunityProtectedRoute({ 
-  children, 
+function CommunityProtectedRoute({
+  children,
   requireAuth = true,
   requireCompletedProfile = false,
-  allowedRoles = []
+  allowedRoles = [],
 }: ProtectedRouteProps) {
-  const { 
-    isSignedIn, 
-    hasCompletedProfile, 
-    needsProfileSetup, 
-    role 
-  } = useCommunityMember();
+  const { isSignedIn, hasCompletedProfile, needsProfileSetup, role } =
+    useCommunityMember();
   const router = useRouter();
   const [showProfileSetup, setShowProfileSetup] = useState(false);
 
@@ -42,7 +38,11 @@ function CommunityProtectedRoute({
     }
 
     // Show profile setup if user is signed in but needs to complete profile
-    if (isSignedIn && needsProfileSetup && (requireCompletedProfile || requireAuth)) {
+    if (
+      isSignedIn &&
+      needsProfileSetup &&
+      (requireCompletedProfile || requireAuth)
+    ) {
       setShowProfileSetup(true);
       return;
     }
@@ -57,16 +57,31 @@ function CommunityProtectedRoute({
 
     // Hide profile setup if all conditions are met
     setShowProfileSetup(false);
-  }, [isSignedIn, hasCompletedProfile, needsProfileSetup, role, requireAuth, requireCompletedProfile, allowedRoles, router]);
+  }, [
+    isSignedIn,
+    hasCompletedProfile,
+    needsProfileSetup,
+    role,
+    requireAuth,
+    requireCompletedProfile,
+    allowedRoles,
+    router,
+  ]);
 
   // Loading state
   if (isSignedIn === undefined) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--muted)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: 'var(--muted)' }}
+      >
         <div className="text-center">
-          <div 
+          <div
             className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center text-xl animate-pulse"
-            style={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)' }}
+            style={{
+              backgroundColor: 'var(--primary)',
+              color: 'var(--primary-foreground)',
+            }}
           >
             🌱
           </div>
@@ -86,18 +101,23 @@ function CommunityProtectedRoute({
   // Show profile setup
   if (showProfileSetup) {
     return (
-      <CommunityProfileSetup 
+      <CommunityProfileSetup
         onComplete={() => {
           setShowProfileSetup(false);
           // Refresh the page to update user data
           window.location.reload();
-        }} 
+        }}
       />
     );
   }
 
   // Check role permissions (after profile is complete)
-  if (allowedRoles.length > 0 && isSignedIn && hasCompletedProfile && !allowedRoles.includes(role)) {
+  if (
+    allowedRoles.length > 0 &&
+    isSignedIn &&
+    hasCompletedProfile &&
+    !allowedRoles.includes(role)
+  ) {
     return null; // Redirecting
   }
 

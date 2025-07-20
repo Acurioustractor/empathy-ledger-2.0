@@ -1,6 +1,6 @@
 /**
  * Embed Code Generator Component
- * 
+ *
  * Philosophy: Simple, copy-paste embedding that maintains
  * sovereignty and consent at every level.
  */
@@ -24,19 +24,26 @@ interface EmbedCodeGeneratorProps {
   project: any;
 }
 
-export function EmbedCodeGenerator({ projectId, config, project }: EmbedCodeGeneratorProps) {
-  const [selectedFormat, setSelectedFormat] = useState<'html' | 'iframe' | 'json'>('html');
+export function EmbedCodeGenerator({
+  projectId,
+  config,
+  project,
+}: EmbedCodeGeneratorProps) {
+  const [selectedFormat, setSelectedFormat] = useState<
+    'html' | 'iframe' | 'json'
+  >('html');
   const [copied, setCopied] = useState(false);
 
   const generateEmbedCode = () => {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://empathyledger.org';
-    
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL || 'https://empathyledger.org';
+
     const params = new URLSearchParams({
       project_id: projectId,
       type: config.widgetType,
       theme: config.theme,
       limit: config.limit.toString(),
-      format: selectedFormat
+      format: selectedFormat,
     });
 
     if (config.storyId) {
@@ -96,10 +103,14 @@ export function EmbedCodeGenerator({ projectId, config, project }: EmbedCodeGene
 -->`;
   };
 
-  const generateIframeEmbed = (baseUrl: string, params: URLSearchParams, projectId: string) => {
+  const generateIframeEmbed = (
+    baseUrl: string,
+    params: URLSearchParams,
+    projectId: string
+  ) => {
     const iframeUrl = `${baseUrl}/embed/iframe?${params.toString()}`;
     const height = config.widgetType === 'featured_story' ? '500' : '400';
-    
+
     return `<!-- Empathy Ledger Story Widget (Iframe) -->
 <iframe 
   src="${iframeUrl}"
@@ -208,15 +219,17 @@ fetch('${baseUrl}/api/embed/stories?${params.toString()}')
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Embed Code Generator</h3>
-      
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Embed Code Generator
+      </h3>
+
       {/* Format Selection */}
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Embed Format
         </label>
         <div className="flex gap-2">
-          {(['html', 'iframe', 'json'] as const).map((format) => (
+          {(['html', 'iframe', 'json'] as const).map(format => (
             <button
               key={format}
               onClick={() => setSelectedFormat(format)}
@@ -230,11 +243,14 @@ fetch('${baseUrl}/api/embed/stories?${params.toString()}')
             </button>
           ))}
         </div>
-        
+
         <div className="mt-2 text-xs text-gray-500">
-          {selectedFormat === 'html' && 'Self-contained HTML with inline JavaScript'}
-          {selectedFormat === 'iframe' && 'Secure iframe with automatic updates'}
-          {selectedFormat === 'json' && 'Raw JSON data for custom implementations'}
+          {selectedFormat === 'html' &&
+            'Self-contained HTML with inline JavaScript'}
+          {selectedFormat === 'iframe' &&
+            'Secure iframe with automatic updates'}
+          {selectedFormat === 'json' &&
+            'Raw JSON data for custom implementations'}
         </div>
       </div>
 
@@ -243,12 +259,12 @@ fetch('${baseUrl}/api/embed/stories?${params.toString()}')
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Generated Embed Code
         </label>
-        
+
         <div className="relative">
           <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto max-h-96 overflow-y-auto">
             <code>{generateEmbedCode()}</code>
           </pre>
-          
+
           <button
             onClick={copyToClipboard}
             className={`absolute top-2 right-2 px-3 py-1 text-xs rounded transition-colors ${
@@ -273,7 +289,7 @@ fetch('${baseUrl}/api/embed/stories?${params.toString()}')
               <p>• No external dependencies required</p>
             </>
           )}
-          
+
           {selectedFormat === 'iframe' && (
             <>
               <p>• Most secure option with automatic content updates</p>
@@ -281,7 +297,7 @@ fetch('${baseUrl}/api/embed/stories?${params.toString()}')
               <p>• Fallback content for browsers without iframe support</p>
             </>
           )}
-          
+
           {selectedFormat === 'json' && (
             <>
               <p>• Full control over styling and layout</p>
@@ -289,21 +305,28 @@ fetch('${baseUrl}/api/embed/stories?${params.toString()}')
               <p>• Handle errors and loading states as needed</p>
             </>
           )}
-          
-          <p><strong>Sovereignty:</strong> All formats respect storyteller consent and community protocols</p>
+
+          <p>
+            <strong>Sovereignty:</strong> All formats respect storyteller
+            consent and community protocols
+          </p>
         </div>
       </div>
 
       {/* Domain Restrictions Notice */}
       {config.allowedDomains.length > 0 && (
         <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <h4 className="font-medium text-yellow-800 mb-2">🔒 Domain Restrictions Active</h4>
+          <h4 className="font-medium text-yellow-800 mb-2">
+            🔒 Domain Restrictions Active
+          </h4>
           <p className="text-sm text-yellow-700">
             This widget will only work on the following domains:
           </p>
           <ul className="text-sm text-yellow-700 mt-1">
-            {config.allowedDomains.map((domain) => (
-              <li key={domain} className="ml-4">• {domain}</li>
+            {config.allowedDomains.map(domain => (
+              <li key={domain} className="ml-4">
+                • {domain}
+              </li>
             ))}
           </ul>
         </div>

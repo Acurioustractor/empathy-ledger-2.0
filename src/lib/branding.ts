@@ -1,6 +1,6 @@
 /**
  * Project Branding and White-Label System
- * 
+ *
  * Philosophy: Organizations maintain visual sovereignty and cultural identity
  * while building on the empathy ledger foundation.
  */
@@ -14,23 +14,23 @@ export interface BrandingConfig {
   accent_color?: string;
   background_color?: string;
   text_color?: string;
-  
+
   // Typography
   font_family: string;
   heading_font?: string;
   body_font?: string;
-  
+
   // Logo and imagery
   logo_url?: string;
   favicon_url?: string;
   hero_image_url?: string;
   background_pattern?: string;
-  
+
   // Custom styling
   custom_css?: string;
   border_radius?: string;
   shadow_style?: string;
-  
+
   // Cultural design elements
   cultural_patterns?: {
     enabled: boolean;
@@ -38,11 +38,11 @@ export interface BrandingConfig {
     pattern_url?: string;
     cultural_significance?: string;
   };
-  
+
   // Layout preferences
   layout_style?: 'modern' | 'traditional' | 'minimal' | 'community-focused';
   navigation_style?: 'horizontal' | 'sidebar' | 'mobile-first';
-  
+
   // Content presentation
   story_card_style?: 'card' | 'list' | 'masonry' | 'traditional';
   insight_presentation?: 'dashboard' | 'narrative' | 'visual';
@@ -79,9 +79,9 @@ export class BrandingManager {
   /**
    * Get project branding configuration
    */
-  async getProjectBranding(project_id: string): Promise<{ 
-    branding?: BrandingConfig; 
-    domain?: DomainConfig; 
+  async getProjectBranding(project_id: string): Promise<{
+    branding?: BrandingConfig;
+    domain?: DomainConfig;
     whitelabel?: WhiteLabelConfig;
     error?: string;
   }> {
@@ -97,15 +97,16 @@ export class BrandingManager {
       }
 
       // Extract branding configuration
-      const branding_config = project.branding_config || this.getDefaultBranding();
-      
+      const branding_config =
+        project.branding_config || this.getDefaultBranding();
+
       // Extract domain configuration
       const domain_config: DomainConfig = {
         custom_domain: project.custom_domain,
         subdomain: this.generateSubdomain(project_id),
         domain_verified: project.domain_verified || false,
         ssl_configured: project.domain_verified || false, // SSL follows domain verification
-        dns_configured: project.domain_verified || false
+        dns_configured: project.domain_verified || false,
       };
 
       // Extract white-label configuration
@@ -113,19 +114,19 @@ export class BrandingManager {
         platform_name: project.settings?.platform_name || 'Community Stories',
         tagline: project.settings?.tagline,
         about_text: project.settings?.about_text,
-        contact_email: project.settings?.contact_email || 'stories@organization.org',
+        contact_email:
+          project.settings?.contact_email || 'stories@organization.org',
         social_links: project.settings?.social_links || {},
         footer_text: project.settings?.footer_text,
         privacy_policy_url: project.settings?.privacy_policy_url,
-        terms_of_service_url: project.settings?.terms_of_service_url
+        terms_of_service_url: project.settings?.terms_of_service_url,
       };
 
       return {
         branding: branding_config,
         domain: domain_config,
-        whitelabel: whitelabel_config
+        whitelabel: whitelabel_config,
       };
-
     } catch (error: any) {
       return { error: error.message };
     }
@@ -135,7 +136,7 @@ export class BrandingManager {
    * Update project branding with sovereignty validation
    */
   async updateProjectBranding(
-    project_id: string, 
+    project_id: string,
     user_id: string,
     updates: {
       branding?: Partial<BrandingConfig>;
@@ -154,7 +155,10 @@ export class BrandingManager {
         .single();
 
       if (!membership || !['owner', 'admin'].includes(membership.role)) {
-        return { success: false, error: 'Insufficient permissions to update branding' };
+        return {
+          success: false,
+          error: 'Insufficient permissions to update branding',
+        };
       }
 
       // Get current configuration
@@ -173,10 +177,12 @@ export class BrandingManager {
 
       // Update branding configuration
       if (updates.branding) {
-        const validated_branding = this.validateBrandingConfig(updates.branding);
+        const validated_branding = this.validateBrandingConfig(
+          updates.branding
+        );
         project_updates.branding_config = {
           ...current_project.branding_config,
-          ...validated_branding
+          ...validated_branding,
         };
       }
 
@@ -184,7 +190,7 @@ export class BrandingManager {
       if (updates.whitelabel) {
         project_updates.settings = {
           ...current_project.settings,
-          ...updates.whitelabel
+          ...updates.whitelabel,
         };
       }
 
@@ -204,7 +210,10 @@ export class BrandingManager {
           .single();
 
         if (existing_domain) {
-          return { success: false, error: 'Domain already in use by another project' };
+          return {
+            success: false,
+            error: 'Domain already in use by another project',
+          };
         }
 
         project_updates.custom_domain = updates.domain.custom_domain;
@@ -216,7 +225,7 @@ export class BrandingManager {
         .from('projects')
         .update({
           ...project_updates,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', project_id);
 
@@ -226,11 +235,13 @@ export class BrandingManager {
 
       // If custom domain was updated, initiate verification process
       if (updates.domain?.custom_domain) {
-        await this.initiateDomainVerification(project_id, updates.domain.custom_domain);
+        await this.initiateDomainVerification(
+          project_id,
+          updates.domain.custom_domain
+        );
       }
 
       return { success: true };
-
     } catch (error: any) {
       return { success: false, error: error.message };
     }
@@ -300,7 +311,7 @@ export class BrandingManager {
     content: string
   ): string {
     const branded_css = this.generateBrandingCSS(branding);
-    
+
     return `
     <!DOCTYPE html>
     <html lang="en">
@@ -327,9 +338,10 @@ export class BrandingManager {
       <!-- Header -->
       <header class="bg-brand-primary text-white shadow-lg">
         <div class="container mx-auto px-4 py-6 flex items-center justify-between">
-          ${branding.logo_url ? 
-            `<img src="${branding.logo_url}" alt="${whitelabel.platform_name}" class="h-10 w-auto">` : 
-            `<h1 class="text-2xl font-bold font-brand-heading">${whitelabel.platform_name}</h1>`
+          ${
+            branding.logo_url
+              ? `<img src="${branding.logo_url}" alt="${whitelabel.platform_name}" class="h-10 w-auto">`
+              : `<h1 class="text-2xl font-bold font-brand-heading">${whitelabel.platform_name}</h1>`
           }
           ${whitelabel.tagline ? `<p class="text-sm opacity-90">${whitelabel.tagline}</p>` : ''}
         </div>
@@ -384,7 +396,7 @@ export class BrandingManager {
       layout_style: 'modern',
       navigation_style: 'horizontal',
       story_card_style: 'card',
-      insight_presentation: 'dashboard'
+      insight_presentation: 'dashboard',
     };
   }
 
@@ -393,14 +405,19 @@ export class BrandingManager {
     return `project-${project_id.slice(0, 8)}`;
   }
 
-  private validateBrandingConfig(branding: Partial<BrandingConfig>): Partial<BrandingConfig> {
+  private validateBrandingConfig(
+    branding: Partial<BrandingConfig>
+  ): Partial<BrandingConfig> {
     const validated: Partial<BrandingConfig> = {};
 
     // Validate colors (ensure they're valid hex/rgb/hsl)
     if (branding.primary_color && this.isValidColor(branding.primary_color)) {
       validated.primary_color = branding.primary_color;
     }
-    if (branding.secondary_color && this.isValidColor(branding.secondary_color)) {
+    if (
+      branding.secondary_color &&
+      this.isValidColor(branding.secondary_color)
+    ) {
       validated.secondary_color = branding.secondary_color;
     }
 
@@ -415,9 +432,21 @@ export class BrandingManager {
     }
 
     // Copy other safe properties
-    ['accent_color', 'background_color', 'text_color', 'heading_font', 'body_font', 
-     'favicon_url', 'hero_image_url', 'border_radius', 'shadow_style', 
-     'layout_style', 'navigation_style', 'story_card_style', 'insight_presentation'].forEach(prop => {
+    [
+      'accent_color',
+      'background_color',
+      'text_color',
+      'heading_font',
+      'body_font',
+      'favicon_url',
+      'hero_image_url',
+      'border_radius',
+      'shadow_style',
+      'layout_style',
+      'navigation_style',
+      'story_card_style',
+      'insight_presentation',
+    ].forEach(prop => {
       if (branding[prop as keyof BrandingConfig]) {
         (validated as any)[prop] = branding[prop as keyof BrandingConfig];
       }
@@ -428,9 +457,12 @@ export class BrandingManager {
       validated.cultural_patterns = {
         enabled: !!branding.cultural_patterns.enabled,
         pattern_type: branding.cultural_patterns.pattern_type,
-        pattern_url: this.isValidUrl(branding.cultural_patterns.pattern_url || '') ? 
-          branding.cultural_patterns.pattern_url : undefined,
-        cultural_significance: branding.cultural_patterns.cultural_significance
+        pattern_url: this.isValidUrl(
+          branding.cultural_patterns.pattern_url || ''
+        )
+          ? branding.cultural_patterns.pattern_url
+          : undefined,
+        cultural_significance: branding.cultural_patterns.cultural_significance,
       };
     }
 
@@ -444,7 +476,8 @@ export class BrandingManager {
 
   private isValidColor(color: string): boolean {
     // Basic color validation for hex, rgb, hsl
-    const colorRegex = /^(#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{3}|rgb\(.*\)|rgba\(.*\)|hsl\(.*\)|hsla\(.*\))$/;
+    const colorRegex =
+      /^(#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{3}|rgb\(.*\)|rgba\(.*\)|hsl\(.*\)|hsla\(.*\))$/;
     return colorRegex.test(color);
   }
 
@@ -458,20 +491,27 @@ export class BrandingManager {
   }
 
   private isValidDomain(domain: string): boolean {
-    const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+    const domainRegex =
+      /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
     return domainRegex.test(domain);
   }
 
   private sanitizeCSS(css: string): string {
     // Basic CSS sanitization - remove dangerous properties
-    const dangerous_properties = ['expression', 'javascript:', 'vbscript:', '@import', 'behavior'];
+    const dangerous_properties = [
+      'expression',
+      'javascript:',
+      'vbscript:',
+      '@import',
+      'behavior',
+    ];
     let sanitized = css;
-    
+
     dangerous_properties.forEach(prop => {
       const regex = new RegExp(prop, 'gi');
       sanitized = sanitized.replace(regex, '');
     });
-    
+
     return sanitized;
   }
 
@@ -521,28 +561,41 @@ export class BrandingManager {
 
   private generateSocialLinks(social_links: Record<string, string>): string {
     const links = [];
-    
+
     if (social_links.website) {
-      links.push(`<a href="${social_links.website}" class="text-brand-primary hover:underline">Website</a>`);
+      links.push(
+        `<a href="${social_links.website}" class="text-brand-primary hover:underline">Website</a>`
+      );
     }
     if (social_links.facebook) {
-      links.push(`<a href="${social_links.facebook}" class="text-brand-primary hover:underline">Facebook</a>`);
+      links.push(
+        `<a href="${social_links.facebook}" class="text-brand-primary hover:underline">Facebook</a>`
+      );
     }
     if (social_links.twitter) {
-      links.push(`<a href="${social_links.twitter}" class="text-brand-primary hover:underline">Twitter</a>`);
+      links.push(
+        `<a href="${social_links.twitter}" class="text-brand-primary hover:underline">Twitter</a>`
+      );
     }
     if (social_links.instagram) {
-      links.push(`<a href="${social_links.instagram}" class="text-brand-primary hover:underline">Instagram</a>`);
+      links.push(
+        `<a href="${social_links.instagram}" class="text-brand-primary hover:underline">Instagram</a>`
+      );
     }
-    
+
     return links.join('');
   }
 
-  private async initiateDomainVerification(project_id: string, domain: string): Promise<void> {
+  private async initiateDomainVerification(
+    project_id: string,
+    domain: string
+  ): Promise<void> {
     // This would integrate with a domain verification service
     // For now, we'll log the verification request
-    console.log(`Domain verification initiated for ${domain} on project ${project_id}`);
-    
+    console.log(
+      `Domain verification initiated for ${domain} on project ${project_id}`
+    );
+
     // In a real implementation, this would:
     // 1. Generate DNS records for verification
     // 2. Create SSL certificates

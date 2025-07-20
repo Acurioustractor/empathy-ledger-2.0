@@ -1,6 +1,6 @@
 /**
  * Project Members Management API
- * 
+ *
  * Philosophy: Community membership requires cultural protocols and consent,
  * with role-based access that respects community hierarchies.
  */
@@ -16,7 +16,10 @@ export async function GET(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -42,13 +45,15 @@ export async function GET(
     }
 
     const url = new URL(request.url);
-    const include_permissions = url.searchParams.get('include_permissions') === 'true';
+    const include_permissions =
+      url.searchParams.get('include_permissions') === 'true';
     const role_filter = url.searchParams.get('role');
 
     // Build query based on user permissions
     let query = supabase
       .from('project_members')
-      .select(`
+      .select(
+        `
         id,
         role,
         status,
@@ -63,7 +68,8 @@ export async function GET(
           community_affiliation,
           preferred_pronouns
         )
-      `)
+      `
+      )
       .eq('project_id', params.projectId)
       .eq('status', 'active')
       .order('joined_at', { ascending: false });
@@ -79,7 +85,8 @@ export async function GET(
       // @ts-ignore - Complex PostgREST query type inference
       query = supabase
         .from('project_members')
-        .select(`
+        .select(
+          `
           id,
           role,
           joined_at,
@@ -88,7 +95,8 @@ export async function GET(
             full_name,
             community_affiliation
           )
-        `)
+        `
+        )
         .eq('project_id', params.projectId)
         .eq('status', 'active')
         .order('joined_at', { ascending: false });
@@ -97,52 +105,59 @@ export async function GET(
     const { data: members, error } = await query;
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     // Add sovereignty metadata
     // @ts-ignore - Complex member type inference
-    const sovereignty_aware_members = members?.map(member => ({
-      ...member,
-      sovereignty_metadata: {
-        consent_verified: true,
-        cultural_protocols_respected: true,
-        role_community_defined: true,
-        privacy_level: ['owner', 'admin'].includes(membership.role) ? 'full' : 'limited'
-      },
-      community_context: {
-        storyteller: member.role === 'storyteller',
-        community_leader: ['owner', 'admin'].includes(member.role),
-        cultural_responsibilities: member.cultural_responsibilities || {}
-      }
-    })) || [];
+    const sovereignty_aware_members =
+      members?.map(member => ({
+        ...member,
+        sovereignty_metadata: {
+          consent_verified: true,
+          cultural_protocols_respected: true,
+          role_community_defined: true,
+          privacy_level: ['owner', 'admin'].includes(membership.role)
+            ? 'full'
+            : 'limited',
+        },
+        community_context: {
+          storyteller: member.role === 'storyteller',
+          community_leader: ['owner', 'admin'].includes(member.role),
+          cultural_responsibilities: member.cultural_responsibilities || {},
+        },
+      })) || [];
 
     return NextResponse.json({
       members: sovereignty_aware_members,
       membership_stats: {
         total_members: sovereignty_aware_members.length,
-        storytellers: sovereignty_aware_members.filter(m => m.role === 'storyteller').length,
-        community_leaders: sovereignty_aware_members.filter(m => ['owner', 'admin'].includes(m.role)).length,
-        active_contributors: sovereignty_aware_members.filter(m => 
-          new Date(m.joined_at) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-        ).length
+        storytellers: sovereignty_aware_members.filter(
+          m => m.role === 'storyteller'
+        ).length,
+        community_leaders: sovereignty_aware_members.filter(m =>
+          ['owner', 'admin'].includes(m.role)
+        ).length,
+        active_contributors: sovereignty_aware_members.filter(
+          m =>
+            new Date(m.joined_at) >
+            new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+        ).length,
       },
       sovereignty_principles: {
         community_controlled: 'Membership decisions follow community protocols',
-        cultural_respect: 'All members understand and respect cultural guidelines',
+        cultural_respect:
+          'All members understand and respect cultural guidelines',
         consent_based: 'All members have explicitly consented to participate',
-        role_appropriate: 'Roles reflect community structures and responsibilities'
+        role_appropriate:
+          'Roles reflect community structures and responsibilities',
       },
       user_permissions: {
         can_view_full_details: ['owner', 'admin'].includes(membership.role),
         can_invite_members: membership.permissions?.can_invite_members || false,
-        can_manage_roles: membership.role === 'owner'
-      }
+        can_manage_roles: membership.role === 'owner',
+      },
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -157,7 +172,10 @@ export async function POST(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -173,7 +191,8 @@ export async function POST(
       return NextResponse.json(
         {
           error: 'Email and role are required',
-          sovereignty_note: 'Community membership requires clear identity and role definition'
+          sovereignty_note:
+            'Community membership requires clear identity and role definition',
         },
         { status: 400 }
       );
@@ -186,7 +205,8 @@ export async function POST(
         {
           error: 'Invalid role specified',
           valid_roles,
-          sovereignty_note: 'Roles must align with community governance structures'
+          sovereignty_note:
+            'Roles must align with community governance structures',
         },
         { status: 400 }
       );
@@ -201,11 +221,15 @@ export async function POST(
       .eq('status', 'active')
       .single();
 
-    if (!inviter_membership || !inviter_membership.permissions?.can_invite_members) {
+    if (
+      !inviter_membership ||
+      !inviter_membership.permissions?.can_invite_members
+    ) {
       return NextResponse.json(
         {
           error: 'Insufficient permissions to invite members',
-          sovereignty_note: 'Community membership decisions require appropriate authorization'
+          sovereignty_note:
+            'Community membership decisions require appropriate authorization',
         },
         { status: 403 }
       );
@@ -224,7 +248,7 @@ export async function POST(
       return NextResponse.json(
         {
           error: 'Invitation already exists for this email',
-          existing_invitation_id: existing_invitation.id
+          existing_invitation_id: existing_invitation.id,
         },
         { status: 409 }
       );
@@ -234,7 +258,8 @@ export async function POST(
       .from('project_members')
       .select('id')
       .eq('project_id', params.projectId)
-      .eq('user_id', 
+      .eq(
+        'user_id',
         supabase
           .from('users')
           .select('id')
@@ -251,15 +276,15 @@ export async function POST(
     }
 
     // Send invitation using project operations
-    const { success, invited_count, error } = await projectOperations.inviteToProject(
-      params.projectId,
-      user.id,
-      [{
-        email: invitation_data.email,
-        role: invitation_data.role,
-        cultural_training_required: invitation_data.cultural_training_required !== false
-      }]
-    );
+    const { success, invited_count, error } =
+      await projectOperations.inviteToProject(params.projectId, user.id, [
+        {
+          email: invitation_data.email,
+          role: invitation_data.role,
+          cultural_training_required:
+            invitation_data.cultural_training_required !== false,
+        },
+      ]);
 
     if (!success || error) {
       return NextResponse.json(
@@ -283,16 +308,17 @@ export async function POST(
         cultural_protocols_included: true,
         consent_process_initiated: true,
         community_governance_respected: true,
-        invitation_culturally_appropriate: true
+        invitation_culturally_appropriate: true,
       },
       next_steps: {
         email_sent: 'Invitation email sent with cultural guidelines',
         cultural_training: invitation_data.cultural_training_required !== false,
-        consent_required: 'Invitee must explicitly consent to community protocols',
-        community_review: 'Community leaders will validate membership appropriateness'
-      }
+        consent_required:
+          'Invitee must explicitly consent to community protocols',
+        community_review:
+          'Community leaders will validate membership appropriateness',
+      },
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -307,7 +333,10 @@ export async function PUT(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -334,11 +363,15 @@ export async function PUT(
       .eq('status', 'active')
       .single();
 
-    if (!updater_membership || !['owner', 'admin'].includes(updater_membership.role)) {
+    if (
+      !updater_membership ||
+      !['owner', 'admin'].includes(updater_membership.role)
+    ) {
       return NextResponse.json(
         {
           error: 'Insufficient permissions to update member roles',
-          sovereignty_note: 'Role changes require community leadership authorization'
+          sovereignty_note:
+            'Role changes require community leadership authorization',
         },
         { status: 403 }
       );
@@ -359,7 +392,8 @@ export async function PUT(
         return NextResponse.json(
           {
             error: 'Only current owners can assign ownership',
-            sovereignty_note: 'Ownership transfer requires highest level of community authority'
+            sovereignty_note:
+              'Ownership transfer requires highest level of community authority',
           },
           { status: 403 }
         );
@@ -371,18 +405,20 @@ export async function PUT(
       .from('project_members')
       .update({
         ...updates,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq('id', member_id)
       .eq('project_id', params.projectId)
-      .select(`
+      .select(
+        `
         *,
         user:user_id (
           full_name,
           email,
           community_affiliation
         )
-      `)
+      `
+      )
       .single();
 
     if (update_error) {
@@ -398,11 +434,10 @@ export async function PUT(
         community_governance_maintained: true,
         role_change_authorized: true,
         cultural_protocols_preserved: true,
-        audit_trail_created: true
+        audit_trail_created: true,
       },
-      message: 'Member role updated successfully with community oversight'
+      message: 'Member role updated successfully with community oversight',
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },

@@ -15,44 +15,45 @@ export default async function PlatformAdminDashboard() {
     const supabase = await createServerClient();
 
     // Get platform metrics
-    const [
-      { data: stats },
-      { data: projects },
-      { data: activity }
-    ] = await Promise.all([
-      // Basic platform statistics (may not exist during build)
-      supabase.rpc('get_platform_stats').catch(() => ({ data: null })),
-      
-      // Recent projects
-      supabase
-        .from('projects')
-        .select(`
+    const [{ data: stats }, { data: projects }, { data: activity }] =
+      await Promise.all([
+        // Basic platform statistics (may not exist during build)
+        supabase.rpc('get_platform_stats').catch(() => ({ data: null })),
+
+        // Recent projects
+        supabase
+          .from('projects')
+          .select(
+            `
           id,
           name,
           subscription_tier,
           subscription_status,
           created_at,
           updated_at
-        `)
-        .order('created_at', { ascending: false })
-        .limit(5)
-        .catch(() => ({ data: [] })),
-      
-      // Recent audit activity
-      supabase
-        .from('platform_audit_log')
-        .select(`
+        `
+          )
+          .order('created_at', { ascending: false })
+          .limit(5)
+          .catch(() => ({ data: [] })),
+
+        // Recent audit activity
+        supabase
+          .from('platform_audit_log')
+          .select(
+            `
           id,
           action,
           target_type,
           details,
           created_at,
           actor:profiles(display_name, email)
-        `)
-        .order('created_at', { ascending: false })
-        .limit(10)
-        .catch(() => ({ data: [] }))
-    ]);
+        `
+          )
+          .order('created_at', { ascending: false })
+          .limit(10)
+          .catch(() => ({ data: [] })),
+      ]);
 
     platformStats = stats;
     recentProjects = projects || [];
@@ -64,10 +65,12 @@ export default async function PlatformAdminDashboard() {
 
   const metrics = {
     totalProjects: recentProjects?.length || 0,
-    activeProjects: recentProjects?.filter(p => p.subscription_status === 'active').length || 0,
+    activeProjects:
+      recentProjects?.filter(p => p.subscription_status === 'active').length ||
+      0,
     totalStories: 0, // Will be populated by RPC
     totalUsers: 0, // Will be populated by RPC
-    ...platformStats
+    ...platformStats,
   };
 
   return (
@@ -101,7 +104,7 @@ export default async function PlatformAdminDashboard() {
         <div className="lg:col-span-2">
           <RecentActivity activities={recentActivity || []} />
         </div>
-        
+
         <div className="space-y-6">
           {/* Quick Project Actions */}
           <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -141,18 +144,24 @@ export default async function PlatformAdminDashboard() {
               <dl className="mt-4 space-y-3">
                 <div className="flex justify-between">
                   <dt className="text-sm font-medium text-gray-500">Status</dt>
-                  <dd className="text-sm text-green-600 font-semibold">Healthy</dd>
+                  <dd className="text-sm text-green-600 font-semibold">
+                    Healthy
+                  </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm font-medium text-gray-500">Uptime</dt>
                   <dd className="text-sm text-gray-900">99.9%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-sm font-medium text-gray-500">Response Time</dt>
+                  <dt className="text-sm font-medium text-gray-500">
+                    Response Time
+                  </dt>
                   <dd className="text-sm text-gray-900">145ms</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-sm font-medium text-gray-500">Error Rate</dt>
+                  <dt className="text-sm font-medium text-gray-500">
+                    Error Rate
+                  </dt>
                   <dd className="text-sm text-gray-900">0.01%</dd>
                 </div>
               </dl>

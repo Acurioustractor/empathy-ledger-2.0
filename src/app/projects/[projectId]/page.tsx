@@ -1,6 +1,6 @@
 /**
  * Project Homepage - Dynamic White-Label Interface
- * 
+ *
  * Philosophy: Each organization gets a fully branded experience that reflects
  * their identity while maintaining sovereignty principles.
  */
@@ -25,7 +25,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
       <div className="space-y-12">
         {/* Hero Section */}
         <ProjectHeroSection projectId={projectId} />
-        
+
         {/* Community Stats */}
         <section className="container mx-auto px-4">
           <ProjectCommunityStats projectId={projectId} />
@@ -38,12 +38,13 @@ export default function ProjectPage({ params }: ProjectPageProps) {
               Recent Community Stories
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover the experiences and wisdom shared by our community members.
+              Discover the experiences and wisdom shared by our community
+              members.
             </p>
           </div>
           <ProjectStoryCards projectId={projectId} limit={6} />
           <div className="text-center mt-8">
-            <a 
+            <a
               href={`/projects/${projectId}/stories`}
               className="inline-block px-6 py-3 bg-brand-primary text-white rounded-lg font-semibold hover:opacity-90 transition-opacity"
             >
@@ -65,7 +66,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
             </div>
             <ProjectInsightsSummary projectId={projectId} />
             <div className="text-center mt-8">
-              <a 
+              <a
                 href={`/projects/${projectId}/insights`}
                 className="inline-block px-6 py-3 bg-brand-secondary text-white rounded-lg font-semibold hover:opacity-90 transition-opacity"
               >
@@ -95,16 +96,17 @@ function ProjectHeroSection({ projectId }: ProjectHeroSectionProps) {
             Your Voice Creates Change
           </h1>
           <p className="text-xl md:text-2xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Share your story, connect with others, and help build a stronger community together.
+            Share your story, connect with others, and help build a stronger
+            community together.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
+            <a
               href={`/projects/${projectId}/submit`}
               className="inline-block px-8 py-4 bg-white text-brand-primary rounded-lg font-semibold text-lg hover:shadow-xl transition-shadow"
             >
               Share Your Story
             </a>
-            <a 
+            <a
               href={`/projects/${projectId}/stories`}
               className="inline-block px-8 py-4 border-2 border-white text-white rounded-lg font-semibold text-lg hover:bg-white hover:text-brand-primary transition-colors"
             >
@@ -130,29 +132,31 @@ function ProjectCallToAction({ projectId }: ProjectCallToActionProps) {
             Ready to Share Your Story?
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-            Your experience matters. Join our community and help create positive change through the power of storytelling.
+            Your experience matters. Join our community and help create positive
+            change through the power of storytelling.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
+            <a
               href={`/projects/${projectId}/submit`}
               className="inline-block px-8 py-4 bg-white text-brand-primary rounded-lg font-semibold text-lg hover:shadow-xl transition-shadow"
             >
               Get Started
             </a>
-            <a 
+            <a
               href={`/projects/${projectId}/about`}
               className="inline-block px-8 py-4 border-2 border-white text-white rounded-lg font-semibold text-lg hover:bg-white hover:text-brand-primary transition-colors"
             >
               Learn More
             </a>
           </div>
-          
+
           {/* Sovereignty Notice */}
           <div className="mt-8 pt-8 border-t border-white border-opacity-20">
             <p className="text-sm opacity-75 max-w-2xl mx-auto">
-              <strong>Your Data, Your Choice:</strong> You maintain complete control over your story. 
-              Choose how it's shared, who can see it, and how it's used. Community sovereignty and 
-              storyteller empowerment are at the heart of everything we do.
+              <strong>Your Data, Your Choice:</strong> You maintain complete
+              control over your story. Choose how it's shared, who can see it,
+              and how it's used. Community sovereignty and storyteller
+              empowerment are at the heart of everything we do.
             </p>
           </div>
         </div>

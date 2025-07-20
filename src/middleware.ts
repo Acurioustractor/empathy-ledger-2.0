@@ -12,8 +12,8 @@ export async function middleware(request: NextRequest) {
       {
         cookies: {
           getAll: () => request.cookies.getAll(),
-          setAll: (cookiesToSet) => {
-            cookiesToSet.forEach(({ name, value, options }) => 
+          setAll: cookiesToSet => {
+            cookiesToSet.forEach(({ name, value, options }) =>
               response.cookies.set({ name, value, ...options })
             );
           },
@@ -21,7 +21,9 @@ export async function middleware(request: NextRequest) {
       }
     );
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
     // Handle auth routes
     if (request.nextUrl.pathname.startsWith('/auth')) {
@@ -34,7 +36,9 @@ export async function middleware(request: NextRequest) {
 
     // Handle protected routes
     const protectedPaths = ['/submit', '/stories/edit'];
-    const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path));
+    const isProtectedPath = protectedPaths.some(path =>
+      request.nextUrl.pathname.startsWith(path)
+    );
 
     if (isProtectedPath && !session) {
       const redirectUrl = new URL('/auth/sign-in', request.url);
@@ -50,9 +54,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/auth/:path*',
-    '/submit/:path*',
-    '/stories/edit/:path*'
-  ],
+  matcher: ['/auth/:path*', '/submit/:path*', '/stories/edit/:path*'],
 };

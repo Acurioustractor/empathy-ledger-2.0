@@ -11,14 +11,14 @@ export default function CommunityGalleryPage() {
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0">
-          <img 
+          <img
             src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=2400&q=80"
             alt="Community members sharing stories together"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-teal-900/80"></div>
         </div>
-        
+
         <div className="relative z-10 container mx-auto px-4 md:px-6 lg:px-8 text-center text-white">
           <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
             Community
@@ -27,13 +27,25 @@ export default function CommunityGalleryPage() {
             </span>
           </h1>
           <p className="text-xl md:text-2xl mb-12 max-w-4xl mx-auto font-light leading-relaxed">
-            Celebrating the faces, places, and moments that make our community 
+            Celebrating the faces, places, and moments that make our community
             storytelling movement possible across Australia.
           </p>
           <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <SecurityBadge variant="privacy" text="Consent-first sharing" className="backdrop-blur-sm bg-white/10" />
-            <SecurityBadge variant="encryption" text="Privacy-preserving galleries" className="backdrop-blur-sm bg-white/10" />
-            <SecurityBadge variant="certification" text="Community-curated content" className="backdrop-blur-sm bg-white/10" />
+            <SecurityBadge
+              variant="privacy"
+              text="Consent-first sharing"
+              className="backdrop-blur-sm bg-white/10"
+            />
+            <SecurityBadge
+              variant="encryption"
+              text="Privacy-preserving galleries"
+              className="backdrop-blur-sm bg-white/10"
+            />
+            <SecurityBadge
+              variant="certification"
+              text="Community-curated content"
+              className="backdrop-blur-sm bg-white/10"
+            />
           </div>
         </div>
       </section>
@@ -72,10 +84,11 @@ export default function CommunityGalleryPage() {
               Featured: Community Transformation
             </h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              A visual journey through one community's transformation using Empathy Ledger
+              A visual journey through one community's transformation using
+              Empathy Ledger
             </p>
           </div>
-          
+
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-16">
             <div className="grid lg:grid-cols-2">
               <div className="relative">
@@ -106,9 +119,10 @@ export default function CommunityGalleryPage() {
                 200 Stories, 6 Months, Complete Transformation
               </h3>
               <p className="text-lg text-gray-700 mb-6">
-                See how community members in Brisbane used Empathy Ledger to document 
-                their healthcare experiences, leading to a complete redesign of local 
-                health services that now better serve 15,000+ residents.
+                See how community members in Brisbane used Empathy Ledger to
+                document their healthcare experiences, leading to a complete
+                redesign of local health services that now better serve 15,000+
+                residents.
               </p>
               <Button variant="primary" href="/case-studies/brisbane-health">
                 View Full Case Study →
@@ -122,7 +136,6 @@ export default function CommunityGalleryPage() {
       <section className="py-20">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="space-y-20">
-            
             {/* Community Events */}
             <div>
               <div className="text-center mb-12">
@@ -130,10 +143,11 @@ export default function CommunityGalleryPage() {
                   Community Events & Workshops
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Story-sharing sessions, workshops, and community gatherings across Australia
+                  Story-sharing sessions, workshops, and community gatherings
+                  across Australia
                 </p>
               </div>
-              <PhotoGallery 
+              <PhotoGallery
                 title=""
                 layout="masonry"
                 count={12}
@@ -149,10 +163,11 @@ export default function CommunityGalleryPage() {
                   Storyteller Portraits
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  The brave individuals who share their experiences to create positive change
+                  The brave individuals who share their experiences to create
+                  positive change
                 </p>
               </div>
-              <PhotoGallery 
+              <PhotoGallery
                 title=""
                 layout="testimonial"
                 count={9}
@@ -168,12 +183,15 @@ export default function CommunityGalleryPage() {
                   Real-World Impact
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Before and after photos documenting positive changes in communities
+                  Before and after photos documenting positive changes in
+                  communities
                 </p>
               </div>
               <div className="grid lg:grid-cols-3 gap-8">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-6">Healthcare Improvements</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                    Healthcare Improvements
+                  </h3>
                   <div className="space-y-4">
                     <ImagePlaceholder
                       type="photo"
@@ -193,9 +211,11 @@ export default function CommunityGalleryPage() {
                     />
                   </div>
                 </div>
-                
+
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-6">Education Initiatives</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                    Education Initiatives
+                  </h3>
                   <div className="space-y-4">
                     <ImagePlaceholder
                       type="photo"
@@ -215,9 +235,11 @@ export default function CommunityGalleryPage() {
                     />
                   </div>
                 </div>
-                
+
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-6">Policy Changes</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                    Policy Changes
+                  </h3>
                   <div className="space-y-4">
                     <ImagePlaceholder
                       type="photo"
@@ -246,7 +268,7 @@ export default function CommunityGalleryPage() {
       {/* Video Gallery */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
-          <VideoShowcase 
+          <VideoShowcase
             title="Community Video Stories"
             description="Watch the journeys, celebrations, and transformations happening across our communities"
             layout="hero"
@@ -264,14 +286,17 @@ export default function CommunityGalleryPage() {
               Behind the Scenes
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              The people and processes that make privacy-preserving community storytelling possible
+              The people and processes that make privacy-preserving community
+              storytelling possible
             </p>
           </div>
-          
+
           <div className="grid lg:grid-cols-2 gap-16">
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Our Team at Work</h3>
-              <PhotoGallery 
+              <h3 className="text-xl font-bold text-gray-900 mb-6">
+                Our Team at Work
+              </h3>
+              <PhotoGallery
                 title=""
                 layout="grid"
                 count={6}
@@ -279,9 +304,11 @@ export default function CommunityGalleryPage() {
                 className="mb-8"
               />
             </div>
-            
+
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Technology & Security</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">
+                Technology & Security
+              </h3>
               <div className="space-y-6">
                 <ImagePlaceholder
                   type="photo"
@@ -324,16 +351,20 @@ export default function CommunityGalleryPage() {
                 Share Your Community Moments
               </h2>
               <p className="text-lg text-gray-700">
-                Have photos or videos that show the impact of storytelling in your community? 
-                We'd love to feature them in our gallery.
+                Have photos or videos that show the impact of storytelling in
+                your community? We'd love to feature them in our gallery.
               </p>
             </div>
-            
+
             <div className="bg-gradient-to-r from-primary-50 to-teal-50 p-8 rounded-2xl border border-primary-200 mb-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Submission Guidelines</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Submission Guidelines
+              </h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">✓ What We Feature</h4>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    ✓ What We Feature
+                  </h4>
                   <ul className="text-gray-700 space-y-1 text-sm">
                     <li>• Community events and workshops</li>
                     <li>• Storyteller portraits (with permission)</li>
@@ -343,7 +374,9 @@ export default function CommunityGalleryPage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">✓ Our Standards</h4>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    ✓ Our Standards
+                  </h4>
                   <ul className="text-gray-700 space-y-1 text-sm">
                     <li>• Explicit consent from all people featured</li>
                     <li>• High-quality, authentic imagery</li>
@@ -354,13 +387,14 @@ export default function CommunityGalleryPage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="text-center">
               <Button variant="cta" size="lg" href="/submit-media">
                 Submit Photos or Videos
               </Button>
               <p className="text-sm text-gray-500 mt-4">
-                All submissions reviewed for community benefit and privacy compliance
+                All submissions reviewed for community benefit and privacy
+                compliance
               </p>
             </div>
           </div>

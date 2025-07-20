@@ -26,11 +26,20 @@ interface AuditLogTableProps {
   totalCount: number;
 }
 
-export function AuditLogTable({ entries, currentPage, totalPages, totalCount }: AuditLogTableProps) {
+export function AuditLogTable({
+  entries,
+  currentPage,
+  totalPages,
+  totalCount,
+}: AuditLogTableProps) {
   const getActionColor = (action: string) => {
     if (action.includes('created') || action.includes('enabled')) {
       return 'bg-green-100 text-green-800';
-    } else if (action.includes('suspended') || action.includes('disabled') || action.includes('removed')) {
+    } else if (
+      action.includes('suspended') ||
+      action.includes('disabled') ||
+      action.includes('removed')
+    ) {
       return 'bg-red-100 text-red-800';
     } else if (action.includes('updated') || action.includes('changed')) {
       return 'bg-blue-100 text-blue-800';
@@ -52,8 +61,10 @@ export function AuditLogTable({ entries, currentPage, totalPages, totalCount }: 
   const formatTimeAgo = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60)
+    );
+
     if (diffInMinutes < 1) return 'Just now';
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
@@ -76,7 +87,8 @@ export function AuditLogTable({ entries, currentPage, totalPages, totalCount }: 
 
     return (
       <span className="text-xs text-gray-500">
-        {Object.keys(details).length} detail{Object.keys(details).length > 1 ? 's' : ''}
+        {Object.keys(details).length} detail
+        {Object.keys(details).length > 1 ? 's' : ''}
       </span>
     );
   };
@@ -114,7 +126,7 @@ export function AuditLogTable({ entries, currentPage, totalPages, totalCount }: 
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {entries.map((entry) => (
+            {entries.map(entry => (
               <tr key={entry.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -127,21 +139,23 @@ export function AuditLogTable({ entries, currentPage, totalPages, totalCount }: 
                     </span>
                   </div>
                 </td>
-                
+
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-8 w-8">
                       <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
                         <span className="text-xs font-medium text-gray-600">
-                          {entry.actor?.display_name?.charAt(0).toUpperCase() || 
-                           entry.actor?.email?.charAt(0).toUpperCase() || 
-                           '?'}
+                          {entry.actor?.display_name?.charAt(0).toUpperCase() ||
+                            entry.actor?.email?.charAt(0).toUpperCase() ||
+                            '?'}
                         </span>
                       </div>
                     </div>
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {entry.actor?.display_name || entry.actor?.email || 'Unknown'}
+                        {entry.actor?.display_name ||
+                          entry.actor?.email ||
+                          'Unknown'}
                       </div>
                       <div className="text-sm text-gray-500">
                         {entry.actor?.platform_role || 'user'}
@@ -149,7 +163,7 @@ export function AuditLogTable({ entries, currentPage, totalPages, totalCount }: 
                     </div>
                   </div>
                 </td>
-                
+
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {entry.target_type && (
                     <div>
@@ -162,14 +176,18 @@ export function AuditLogTable({ entries, currentPage, totalPages, totalCount }: 
                     </div>
                   )}
                 </td>
-                
+
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <div>
-                    <div className="font-medium">{formatTimeAgo(entry.created_at)}</div>
-                    <div className="text-xs">{formatTime(entry.created_at)}</div>
+                    <div className="font-medium">
+                      {formatTimeAgo(entry.created_at)}
+                    </div>
+                    <div className="text-xs">
+                      {formatTime(entry.created_at)}
+                    </div>
                   </div>
                 </td>
-                
+
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <div className="space-y-1">
                     {renderDetails(entry.details, entry.action)}
@@ -217,7 +235,7 @@ export function AuditLogTable({ entries, currentPage, totalPages, totalCount }: 
             <div className="text-sm text-gray-700">
               Showing page {currentPage} of {totalPages}
             </div>
-            
+
             <div className="flex space-x-2">
               {currentPage > 1 && (
                 <Link
@@ -227,7 +245,7 @@ export function AuditLogTable({ entries, currentPage, totalPages, totalCount }: 
                   Previous
                 </Link>
               )}
-              
+
               {currentPage < totalPages && (
                 <Link
                   href={`?page=${currentPage + 1}`}

@@ -1,6 +1,6 @@
 # Empathy Ledger: Comprehensive User Guide
 
-*Building the world's most privacy-respecting community storytelling platform*
+_Building the world's most privacy-respecting community storytelling platform_
 
 ---
 
@@ -64,24 +64,28 @@ Empathy Ledger is a community knowledge sovereignty platform where storytellers 
 ### Core Components
 
 #### 1. **Storyteller Experience**
+
 - Multi-modal story submission (text, audio, video, images)
 - Personal dashboard with analytics
 - Privacy settings and consent management
 - Story management and editing
 
 #### 2. **Community Features**
+
 - Public story discovery and engagement
 - Filtering by category, theme, and privacy level
 - Reaction system and community comments
 - Story sharing with attribution
 
 #### 3. **Organization Dashboard**
+
 - Comprehensive analytics and insights
 - Value creation and distribution tracking
 - Policy influence monitoring
 - Community health metrics
 
 #### 4. **Privacy & Compliance**
+
 - Granular privacy controls
 - GDPR compliance tools
 - Data export and deletion
@@ -101,17 +105,20 @@ Empathy Ledger is a community knowledge sovereignty platform where storytellers 
 ### Step 1: Environment Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone [your-repo-url]
    cd empathy-ledger
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Create environment file**
+
    ```bash
    cp .env.example .env.local
    ```
@@ -124,17 +131,20 @@ Empathy Ledger is a community knowledge sovereignty platform where storytellers 
 ### Step 2: Database Setup
 
 1. **Run the main schema**
+
    ```sql
    -- Copy and paste contents of supabase/schema.sql
    -- into your Supabase SQL editor
    ```
 
 2. **Add privacy features**
+
    ```sql
    -- Copy and paste contents of supabase/privacy-schema.sql
    ```
 
 3. **Add organization features**
+
    ```sql
    -- Copy and paste contents of supabase/organization-schema.sql
    ```
@@ -152,11 +162,12 @@ Empathy Ledger is a community knowledge sovereignty platform where storytellers 
    - Set appropriate permissions
 
 2. **Configure policies**
+
    ```sql
    -- Allow authenticated users to upload
    CREATE POLICY "Authenticated users can upload" ON storage.objects
    FOR INSERT WITH CHECK (auth.role() = 'authenticated');
-   
+
    -- Allow public read access to published content
    CREATE POLICY "Public read access" ON storage.objects
    FOR SELECT USING (bucket_id = 'media');
@@ -165,6 +176,7 @@ Empathy Ledger is a community knowledge sovereignty platform where storytellers 
 ### Step 4: Initial Configuration
 
 1. **Update next.config.ts**
+
    ```typescript
    // Add your Supabase URL to image domains
    images: {
@@ -172,12 +184,13 @@ Empathy Ledger is a community knowledge sovereignty platform where storytellers 
        {
          protocol: 'https',
          hostname: 'your-project-id.supabase.co',
-       }
-     ]
+       },
+     ];
    }
    ```
 
 2. **Test the application**
+
    ```bash
    npm run dev
    ```
@@ -189,11 +202,13 @@ Empathy Ledger is a community knowledge sovereignty platform where storytellers 
 ### Step 5: Production Deployment
 
 #### Option A: Vercel (Recommended)
+
 1. Connect your GitHub repository to Vercel
 2. Add environment variables in Vercel dashboard
 3. Deploy with automatic CI/CD
 
 #### Option B: Other Platforms
+
 - Ensure Node.js 18+ support
 - Configure environment variables
 - Set up build command: `npm run build`
@@ -206,9 +221,11 @@ Empathy Ledger is a community knowledge sovereignty platform where storytellers 
 ### Platform Administration
 
 #### Admin Dashboard Access
+
 Navigate to `/admin` to access the platform administration tools.
 
 **Features:**
+
 - Supabase health monitoring
 - System status overview
 - User management
@@ -217,21 +234,24 @@ Navigate to `/admin` to access the platform administration tools.
 #### User Management
 
 **Viewing Users:**
+
 ```sql
-SELECT id, email, role, created_at, last_active_at 
-FROM profiles 
+SELECT id, email, role, created_at, last_active_at
+FROM profiles
 WHERE is_active = true
 ORDER BY created_at DESC;
 ```
 
 **Updating User Roles:**
+
 ```sql
-UPDATE profiles 
+UPDATE profiles
 SET role = 'organization_admin'
 WHERE email = 'user@example.com';
 ```
 
 **Available Roles:**
+
 - `storyteller` - Can submit stories and manage personal content
 - `community_moderator` - Can moderate community content
 - `organization_admin` - Can access analytics and manage organization
@@ -241,22 +261,24 @@ WHERE email = 'user@example.com';
 #### Content Moderation
 
 **Review Pending Stories:**
+
 ```sql
 SELECT id, title, contributor_id, created_at
-FROM stories 
+FROM stories
 WHERE status = 'pending'
 ORDER BY created_at ASC;
 ```
 
 **Approve/Reject Stories:**
+
 ```sql
 -- Approve a story
-UPDATE stories 
+UPDATE stories
 SET status = 'approved', reviewed_at = NOW(), reviewed_by = '[admin-id]'
 WHERE id = '[story-id]';
 
 -- Feature a story
-UPDATE stories 
+UPDATE stories
 SET status = 'featured', featured_until = NOW() + INTERVAL '30 days'
 WHERE id = '[story-id]';
 ```
@@ -264,17 +286,19 @@ WHERE id = '[story-id]';
 #### Privacy Management
 
 **Handle Data Export Requests:**
+
 ```sql
 -- View pending export requests
 SELECT * FROM data_export_requests WHERE status = 'pending';
 
 -- Mark request as completed
-UPDATE data_export_requests 
+UPDATE data_export_requests
 SET status = 'completed', completed_at = NOW()
 WHERE id = '[request-id]';
 ```
 
 **Process Deletion Requests:**
+
 ```sql
 -- View pending deletions
 SELECT * FROM deletion_requests WHERE status = 'pending';
@@ -286,9 +310,11 @@ SELECT anonymize_user_data('[user-id]', 'Admin processed deletion request');
 ### Organization Administration
 
 #### Analytics Access
+
 Organizations can access comprehensive analytics through the `/organization` dashboard.
 
 **Key Metrics:**
+
 - Story submission trends
 - Community engagement rates
 - Value creation and distribution
@@ -298,21 +324,23 @@ Organizations can access comprehensive analytics through the `/organization` das
 #### Value Distribution Management
 
 **Track Value Creation:**
+
 ```sql
-SELECT 
+SELECT
   transaction_type,
   SUM(amount_cents) as total_cents,
   COUNT(*) as transaction_count
-FROM value_transactions 
+FROM value_transactions
 WHERE organization_id = '[org-id]'
   AND created_at >= NOW() - INTERVAL '30 days'
 GROUP BY transaction_type;
 ```
 
 **Process Payments:**
+
 ```sql
 -- Mark payment as completed
-UPDATE value_transactions 
+UPDATE value_transactions
 SET status = 'completed', processed_at = NOW()
 WHERE id = '[transaction-id]';
 ```
@@ -320,6 +348,7 @@ WHERE id = '[transaction-id]';
 #### Research Partnership Management
 
 **Create Research Partnership:**
+
 ```sql
 INSERT INTO research_partnerships (
   organization_id,
@@ -343,6 +372,7 @@ INSERT INTO research_partnerships (
 ### Community Management
 
 #### Creating Communities
+
 ```sql
 INSERT INTO communities (
   name,
@@ -362,13 +392,14 @@ INSERT INTO communities (
 ```
 
 #### Managing Memberships
+
 ```sql
 -- Add member to community
 INSERT INTO community_members (community_id, user_id, role)
 VALUES ('[community-id]', '[user-id]', 'member');
 
 -- Promote to moderator
-UPDATE community_members 
+UPDATE community_members
 SET role = 'moderator'
 WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 ```
@@ -380,6 +411,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 ### For Storytellers
 
 #### 1. **Getting Started**
+
 1. Visit the platform homepage
 2. Click "Share Your Story" or "Get Started"
 3. Sign up with email and password
@@ -387,6 +419,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 5. Review and accept consent preferences
 
 #### 2. **Sharing Your First Story**
+
 1. Navigate to "Submit Story" or use dashboard
 2. **Step 1: Tell Your Story**
    - Enter a meaningful title
@@ -406,6 +439,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
    - Submit for community review
 
 #### 3. **Managing Your Stories**
+
 1. Access personal dashboard
 2. View story analytics (views, reactions, impact)
 3. Edit story content or privacy settings
@@ -413,6 +447,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 5. Track any value created from your stories
 
 #### 4. **Engaging with Community**
+
 1. Discover stories through search and filters
 2. React to stories with empathy-focused reactions
 3. Leave supportive comments
@@ -422,6 +457,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 ### For Organizations
 
 #### 1. **Setting Up Your Organization**
+
 1. Create organization admin account
 2. Set up organization profile and branding
 3. Create communities for different focus areas
@@ -429,6 +465,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 5. Set up research partnership frameworks
 
 #### 2. **Gathering Community Stories**
+
 1. Invite community members to join platform
 2. Provide story submission guidelines and support
 3. Create themed story collection campaigns
@@ -436,6 +473,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 5. Ensure cultural safety and support throughout
 
 #### 3. **Analyzing Impact**
+
 1. Access organization dashboard for insights
 2. Generate comprehensive reports
 3. Track policy influence and citations
@@ -443,6 +481,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 5. Measure value creation and distribution
 
 #### 4. **Creating Change**
+
 1. Use story insights to inform advocacy
 2. Share anonymized insights with policymakers
 3. Support storytellers through value distribution
@@ -452,6 +491,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 ### For Researchers
 
 #### 1. **Ethical Research Partnerships**
+
 1. Contact organization through proper channels
 2. Submit research proposal with ethical approval
 3. Negotiate fair compensation for storytellers
@@ -459,6 +499,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 5. Provide clear data usage terms
 
 #### 2. **Accessing Story Data**
+
 1. Receive approved access to relevant stories
 2. Work with anonymized, aggregated data
 3. Follow strict ethical guidelines
@@ -466,6 +507,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 5. Share findings with community first
 
 #### 3. **Giving Back**
+
 1. Compensate storytellers fairly
 2. Share research findings with communities
 3. Support policy advocacy with evidence
@@ -479,6 +521,7 @@ WHERE community_id = '[community-id]' AND user_id = '[user-id]';
 ### AI-Powered Insights
 
 #### Sentiment Analysis
+
 The platform uses privacy-preserving AI to analyze story sentiment and identify trends:
 
 - **Community Mood Tracking**: Monitor overall community sentiment
@@ -487,6 +530,7 @@ The platform uses privacy-preserving AI to analyze story sentiment and identify 
 - **Early Warning System**: Alert to emerging critical issues
 
 #### Content Analysis
+
 - **Theme Extraction**: Automatically identify story themes
 - **Content Warnings**: Flag potentially triggering content
 - **Language Detection**: Support for multiple languages
@@ -495,6 +539,7 @@ The platform uses privacy-preserving AI to analyze story sentiment and identify 
 ### Value Distribution System
 
 #### Automatic Compensation
+
 ```sql
 -- Example: Distribute research participation fee
 INSERT INTO value_transactions (
@@ -515,6 +560,7 @@ INSERT INTO value_transactions (
 ```
 
 #### Transparent Tracking
+
 - All value creation is tracked and attributed
 - Storytellers receive notifications of compensation
 - Organizations can see ROI from story investments
@@ -523,6 +569,7 @@ INSERT INTO value_transactions (
 ### Policy Influence Tracking
 
 #### Citation Monitoring
+
 ```sql
 -- Track when stories influence policy
 INSERT INTO policy_impacts (
@@ -541,6 +588,7 @@ INSERT INTO policy_impacts (
 ```
 
 #### Impact Measurement
+
 - Track policy changes influenced by stories
 - Monitor government engagement
 - Measure legislative outcomes
@@ -549,12 +597,14 @@ INSERT INTO policy_impacts (
 ### Advanced Privacy Features
 
 #### Zero-Knowledge Analytics
+
 - Analyze trends without accessing individual stories
 - Generate insights while preserving anonymity
 - Provide value to organizations without compromising privacy
 - Support research while protecting storytellers
 
 #### Granular Consent Management
+
 - Story-level permissions
 - Time-limited consent
 - Automatic consent expiry
@@ -567,12 +617,14 @@ INSERT INTO policy_impacts (
 ### Indigenous Data Sovereignty
 
 #### CARE Principles Implementation
+
 - **Collective Benefit**: Stories serve community interests
 - **Authority to Control**: Communities control their narratives
 - **Responsibility**: Platform serves community needs
 - **Ethics**: Respectful, reciprocal relationships
 
 #### Cultural Protocols
+
 - Stories treated as living entities
 - Community ownership respected
 - Cultural context preserved
@@ -581,6 +633,7 @@ INSERT INTO policy_impacts (
 ### GDPR Compliance
 
 #### Data Subject Rights
+
 1. **Right to Information**: Clear privacy notices
 2. **Right of Access**: Complete data export functionality
 3. **Right to Rectification**: Easy story editing and correction
@@ -589,6 +642,7 @@ INSERT INTO policy_impacts (
 6. **Right to Object**: Granular consent withdrawal
 
 #### Implementation Example
+
 ```typescript
 // Export user data (GDPR Article 20)
 const exportData = await exportUserData(userId);
@@ -603,12 +657,14 @@ const consentResult = await recordConsent(userId, 'data_collection', false);
 ### Security Measures
 
 #### Data Protection
+
 - Row Level Security on all database tables
 - Encrypted storage for sensitive data
 - Secure authentication with Supabase Auth
 - Audit logging for all privacy-related actions
 
 #### Access Controls
+
 - Role-based permissions system
 - Community-level access controls
 - Time-limited access tokens
@@ -621,19 +677,23 @@ const consentResult = await recordConsent(userId, 'data_collection', false);
 ### Academic Partnerships
 
 #### Universities & Research Institutions
+
 **Value Proposition:**
+
 - Access to rich, contextualized community data
 - Ethical research framework already established
 - Direct community engagement opportunities
 - Real-world impact measurement
 
 **Partnership Models:**
+
 1. **Research Licensing**: Pay-per-story access with fair compensation
 2. **Collaborative Studies**: Co-designed research with communities
 3. **Student Projects**: Supervised research with strict ethical guidelines
 4. **Faculty Partnerships**: Long-term research relationships
 
 **Example Partnership Structure:**
+
 ```
 University Partnership Agreement
 ├── Research Ethics Approval Required
@@ -647,19 +707,23 @@ University Partnership Agreement
 ### Government Partnerships
 
 #### Policy Development Support
+
 **Services Offered:**
+
 - Evidence-based policy recommendations
 - Community consultation facilitation
 - Impact measurement and evaluation
 - Citizen engagement platforms
 
 **Partnership Examples:**
+
 - **Department of Health**: Mental health service design
 - **Department of Education**: Student support program evaluation
 - **Department of Housing**: Affordable housing policy development
 - **Local Councils**: Community service planning
 
 #### Implementation Approach
+
 ```
 Government Partnership Process
 ├── Initial Consultation (free)
@@ -673,19 +737,23 @@ Government Partnership Process
 ### NGO & Community Organization Partnerships
 
 #### Community Empowerment
+
 **Partnership Benefits:**
+
 - Amplify community voices
 - Evidence systemic issues
 - Support advocacy efforts
 - Build community capacity
 
 **Services:**
+
 1. **Platform Hosting**: Free for qualifying organizations
 2. **Story Collection Campaigns**: Guided community engagement
 3. **Advocacy Support**: Data and insights for campaigns
 4. **Capacity Building**: Training and ongoing support
 
 #### Partnership Criteria
+
 - Community-led organization
 - Commitment to storyteller sovereignty
 - Ethical data use practices
@@ -694,20 +762,25 @@ Government Partnership Process
 ### Technology Partnerships
 
 #### Supabase Ecosystem
+
 **Positioning as Supabase Expert:**
+
 - Showcase advanced Supabase capabilities
 - Demonstrate privacy-first implementation
 - Provide consulting for similar projects
 - Contribute to Supabase community
 
 **Consulting Services:**
+
 - Supabase architecture design
 - Privacy compliance implementation
 - Community platform development
 - Indigenous data sovereignty consulting
 
 #### AI & Analytics Partners
+
 **Ethical AI Implementation:**
+
 - Privacy-preserving analytics
 - Bias detection and mitigation
 - Community-centered AI design
@@ -720,24 +793,28 @@ Government Partnership Process
 ### Phase 4: Advanced Platform Features (Next 6 Months)
 
 #### 1. **Enhanced AI Integration**
+
 - **Multilingual Support**: Automatic translation and language detection
 - **Accessibility Features**: Screen reader optimization, easy reading modes
 - **Content Recommendations**: Privacy-preserving story discovery
 - **Trend Prediction**: Early warning systems for emerging issues
 
 #### 2. **Advanced Analytics Dashboard**
+
 - **Real-time Insights**: Live community health monitoring
 - **Predictive Analytics**: Policy impact forecasting
 - **Custom Reporting**: Organization-specific insight generation
 - **API Access**: Third-party integration capabilities
 
 #### 3. **Mobile Application**
+
 - **Native iOS/Android Apps**: Optimized mobile experience
 - **Offline Story Writing**: Continue writing without internet
 - **Push Notifications**: Community engagement alerts
 - **Voice Recording**: Enhanced audio story capture
 
 #### 4. **Blockchain Integration**
+
 - **Story Provenance**: Immutable record of story ownership
 - **Value Distribution**: Transparent compensation tracking
 - **Community Governance**: Decentralized decision making
@@ -746,18 +823,21 @@ Government Partnership Process
 ### Phase 5: Platform Expansion (6-12 Months)
 
 #### 1. **International Expansion**
+
 - **Multi-Language Platform**: Support for 10+ languages
 - **Regional Customization**: Local cultural protocols
 - **Global Best Practices**: International data sovereignty standards
 - **Cross-Cultural Research**: Comparative community studies
 
 #### 2. **Enterprise Features**
+
 - **White-Label Solutions**: Branded platforms for organizations
 - **Advanced Integrations**: CRM, research tools, policy systems
 - **Enterprise Security**: SOC2, ISO27001 compliance
 - **Professional Services**: Implementation and consulting
 
 #### 3. **Research Platform**
+
 - **Academic Portal**: Dedicated researcher interface
 - **Ethical Review Board**: Built-in ethics approval process
 - **Automated Compensation**: Smart contracts for fair payment
@@ -766,18 +846,21 @@ Government Partnership Process
 ### Phase 6: Ecosystem Development (12+ Months)
 
 #### 1. **Platform API**
+
 - **Public API**: Third-party integration capabilities
 - **Developer Portal**: Documentation and tools
 - **Partner Integrations**: Connect with existing systems
 - **Marketplace**: Community-built extensions
 
 #### 2. **Training & Certification**
+
 - **Storyteller Training**: Digital storytelling workshops
 - **Organization Certification**: Best practice standards
 - **Research Ethics Training**: Academic partnership preparation
 - **Community Facilitation**: Leadership development programs
 
 #### 3. **Global Impact Network**
+
 - **International Partnerships**: Connect communities worldwide
 - **Policy Exchange**: Share successful advocacy strategies
 - **Research Collaboration**: Cross-national studies
@@ -786,18 +869,21 @@ Government Partnership Process
 ### Innovation Priorities
 
 #### 1. **Privacy Innovation**
+
 - **Homomorphic Encryption**: Analyze encrypted data
 - **Differential Privacy**: Mathematical privacy guarantees
 - **Federated Learning**: Train AI without centralizing data
 - **Zero-Knowledge Proofs**: Verify insights without revealing data
 
 #### 2. **Community Innovation**
+
 - **VR Storytelling**: Immersive story experiences
 - **Collaborative Stories**: Multi-author narratives
 - **Story Visualization**: Data storytelling tools
 - **Community Mapping**: Geographic story visualization
 
 #### 3. **Impact Innovation**
+
 - **Real-Time Policy Monitoring**: Track government responses
 - **Automated Advocacy**: AI-assisted campaign development
 - **Impact Prediction**: Forecast policy change likelihood
@@ -810,13 +896,16 @@ Government Partnership Process
 ### Building the Partnership Ecosystem
 
 #### 1. **Thought Leadership Positioning**
+
 **Conference Speaking:**
+
 - **Supabase Community Events**: Showcase advanced implementations
 - **Privacy Technology Conferences**: Demonstrate compliance innovation
 - **Indigenous Data Sovereignty Forums**: Share cultural protocol integration
 - **Community Development Conferences**: Present impact measurement tools
 
 **Content Strategy:**
+
 - **Technical Blog Series**: Detailed Supabase implementation guides
 - **Case Study Publications**: Real-world impact stories
 - **Academic Papers**: Research on digital storytelling ethics
@@ -825,6 +914,7 @@ Government Partnership Process
 #### 2. **Strategic Partnership Development**
 
 **University Research Network:**
+
 ```
 Partnership Tier System
 ├── Tier 1: Premier Research Partners ($50K+ annual)
@@ -843,6 +933,7 @@ Partnership Tier System
 ```
 
 **Government Agency Partnerships:**
+
 ```
 Government Engagement Model
 ├── Consultation Phase (Free)
@@ -862,12 +953,14 @@ Government Engagement Model
 #### 3. **Revenue Model Evolution**
 
 **Current Revenue Streams:**
+
 - Platform hosting fees for organizations
 - Research partnership licensing
 - Consulting services for Supabase implementations
 - Training and certification programs
 
 **Future Revenue Opportunities:**
+
 - White-label platform licensing
 - API access for third-party integrations
 - Premium analytics and AI features
@@ -876,12 +969,14 @@ Government Engagement Model
 #### 4. **Community-Centered Growth**
 
 **Storyteller Value Creation:**
+
 - Research participation compensation
 - Speaking opportunity connections
 - Policy advocacy training
 - Community leadership development
 
 **Organization Value Delivery:**
+
 - Evidence-based advocacy support
 - Community engagement expertise
 - Policy impact measurement
@@ -894,18 +989,21 @@ Government Engagement Model
 ### Platform Health Metrics
 
 #### 1. **Community Engagement**
+
 - **Story Submission Rate**: Target 50+ stories/month per active community
 - **User Retention**: 80% monthly active users
 - **Community Growth**: 25% quarterly increase in active storytellers
 - **Engagement Quality**: Average 5+ meaningful reactions per story
 
 #### 2. **Privacy Compliance**
+
 - **Consent Completion Rate**: 95% of users complete privacy preferences
 - **Data Request Response Time**: <48 hours for export/deletion requests
 - **Privacy Violation Reports**: <0.1% of all interactions
 - **Audit Compliance Score**: 100% compliance with all audits
 
 #### 3. **Value Creation**
+
 - **Storyteller Compensation**: $10K+ monthly compensation distributed
 - **Research Partnerships**: 5+ active academic partnerships
 - **Policy Influence**: 10+ policy citations per quarter
@@ -914,18 +1012,21 @@ Government Engagement Model
 ### Impact Measurement
 
 #### 1. **Community Impact**
+
 - **Policy Changes**: Track legislation influenced by platform stories
 - **Service Improvements**: Monitor community service changes
 - **Awareness Campaigns**: Measure story-driven advocacy outcomes
 - **Community Connections**: Track relationships formed through platform
 
 #### 2. **Individual Impact**
+
 - **Storyteller Empowerment**: Survey data on personal growth
 - **Economic Benefits**: Track compensation and opportunity creation
 - **Skill Development**: Measure digital literacy and advocacy skills
 - **Recognition**: Monitor storyteller speaking and leadership opportunities
 
 #### 3. **Systemic Impact**
+
 - **Research Publications**: Track academic papers using platform data
 - **Media Coverage**: Monitor mainstream media story citations
 - **Government Engagement**: Measure policy consultation requests
@@ -938,42 +1039,52 @@ Government Engagement Model
 ### Common Implementation Issues
 
 #### 1. **Supabase Connection Problems**
+
 **Symptoms:**
+
 - Database connection errors
 - Authentication failures
 - Storage upload issues
 
 **Solutions:**
+
 1. Check environment variables in `.env.local`
 2. Verify Supabase project is not paused
 3. Confirm Row Level Security policies
 4. Test API keys and permissions
 
 **Prevention:**
+
 - Use the built-in keep-alive system
 - Monitor Supabase health dashboard
 - Set up automated health checks
 - Consider upgrading to Pro tier for production
 
 #### 2. **Privacy Policy Conflicts**
+
 **Symptoms:**
+
 - Users can see stories they shouldn't
 - Permission errors when accessing content
 - Privacy settings not saving
 
 **Solutions:**
+
 1. Review Row Level Security policies
 2. Check user role assignments
 3. Verify community membership data
 4. Test privacy calculation functions
 
 #### 3. **Performance Issues**
+
 **Symptoms:**
+
 - Slow page loading
 - Database query timeouts
 - High server costs
 
 **Solutions:**
+
 1. Implement query optimization
 2. Add database indexes
 3. Use analytics caching
@@ -982,19 +1093,24 @@ Government Engagement Model
 ### User Support Issues
 
 #### 1. **Story Submission Problems**
+
 **Common Issues:**
+
 - File upload failures
 - Privacy settings confusion
 - Story not appearing after submission
 
 **Support Process:**
+
 1. Check user permissions and role
 2. Verify file size and format requirements
 3. Review moderation queue
 4. Assist with privacy setting selection
 
 #### 2. **Data Export/Deletion Requests**
+
 **GDPR Compliance Process:**
+
 1. Verify user identity
 2. Process request within 30 days
 3. Provide comprehensive data export
@@ -1002,7 +1118,9 @@ Government Engagement Model
 5. Document compliance actions
 
 #### 3. **Privacy Concerns**
+
 **Response Protocol:**
+
 1. Immediate acknowledgment (<24 hours)
 2. Investigation and assessment
 3. Corrective action if needed
@@ -1012,13 +1130,15 @@ Government Engagement Model
 ### Technical Support
 
 #### 1. **Database Issues**
+
 **Backup and Recovery:**
+
 ```sql
 -- Create regular backups
 pg_dump empathy_ledger > backup_$(date +%Y%m%d).sql
 
 -- Monitor database health
-SELECT 
+SELECT
   schemaname,
   tablename,
   n_tup_ins,
@@ -1028,30 +1148,34 @@ FROM pg_stat_user_tables;
 ```
 
 #### 2. **Security Monitoring**
+
 **Audit Log Review:**
+
 ```sql
 -- Check for unusual activity
-SELECT 
+SELECT
   action,
   COUNT(*) as frequency,
   DATE(timestamp) as date
-FROM audit_logs 
+FROM audit_logs
 WHERE timestamp > NOW() - INTERVAL '7 days'
 GROUP BY action, DATE(timestamp)
 ORDER BY frequency DESC;
 ```
 
 #### 3. **Performance Optimization**
+
 **Query Performance:**
+
 ```sql
 -- Identify slow queries
-SELECT 
+SELECT
   query,
   mean_time,
   calls,
   total_time
-FROM pg_stat_statements 
-ORDER BY mean_time DESC 
+FROM pg_stat_statements
+ORDER BY mean_time DESC
 LIMIT 10;
 ```
 
@@ -1067,34 +1191,38 @@ The platform's success depends on maintaining trust with storytellers, deliverin
 
 ---
 
-*For additional support, updates, or partnership inquiries, please contact the Empathy Ledger team through the platform's contact page or reach out directly through established channels.*
+_For additional support, updates, or partnership inquiries, please contact the Empathy Ledger team through the platform's contact page or reach out directly through established channels._
 
 ---
 
 ## Appendix
 
 ### A. Database Schema Reference
+
 - [Complete schema documentation](./supabase/schema.sql)
 - [Privacy schema additions](./supabase/privacy-schema.sql)
 - [Organization features](./supabase/organization-schema.sql)
 
 ### B. API Documentation
+
 - [Authentication endpoints](./docs/api/auth.md)
 - [Story management API](./docs/api/stories.md)
 - [Analytics API](./docs/api/analytics.md)
 
 ### C. Legal & Compliance
+
 - [Privacy policy template](./docs/legal/privacy-policy.md)
 - [Terms of service template](./docs/legal/terms-of-service.md)
 - [GDPR compliance checklist](./docs/legal/gdpr-checklist.md)
 
 ### D. Training Materials
+
 - [Storyteller onboarding guide](./docs/training/storyteller-guide.md)
 - [Organization admin training](./docs/training/admin-guide.md)
 - [Community facilitator handbook](./docs/training/facilitator-guide.md)
 
 ---
 
-*Last updated: $(date)*  
-*Version: 1.0.0*  
-*Platform: Empathy Ledger v2.0*
+_Last updated: $(date)_  
+_Version: 1.0.0_  
+_Platform: Empathy Ledger v2.0_

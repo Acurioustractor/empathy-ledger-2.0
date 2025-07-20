@@ -4,16 +4,19 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { 
-  getStoryById, 
-  addStoryReaction, 
+import {
+  getStoryById,
+  addStoryReaction,
   removeStoryReaction,
   addStoryComment,
-  type Story 
+  type Story,
 } from '@/lib/supabase-stories';
 import { getCurrentSession } from '@/lib/supabase-auth';
 import MediaDisplay from '@/components/ui/MediaDisplay';
-import { placeholderImages, placeholderBlurDataURLs } from '@/lib/supabase-media';
+import {
+  placeholderImages,
+  placeholderBlurDataURLs,
+} from '@/lib/supabase-media';
 
 interface StoryDetailViewProps {
   storyId: string;
@@ -24,7 +27,7 @@ const REACTION_TYPES = [
   { type: 'support', emoji: '🤝', label: 'Support' },
   { type: 'strength', emoji: '💪', label: 'Strength' },
   { type: 'hope', emoji: '🌟', label: 'Hope' },
-  { type: 'solidarity', emoji: '✊', label: 'Solidarity' }
+  { type: 'solidarity', emoji: '✊', label: 'Solidarity' },
 ];
 
 export default function StoryDetailView({ storyId }: StoryDetailViewProps) {
@@ -47,8 +50,11 @@ export default function StoryDetailView({ storyId }: StoryDetailViewProps) {
       const session = await getCurrentSession();
       setUser(session.user);
 
-      const { story: loadedStory, error } = await getStoryById(storyId, session.user?.id);
-      
+      const { story: loadedStory, error } = await getStoryById(
+        storyId,
+        session.user?.id
+      );
+
       if (error) {
         if (error.code === 'PGRST116') {
           // Story not found or no permission
@@ -61,7 +67,7 @@ export default function StoryDetailView({ storyId }: StoryDetailViewProps) {
         // Load user reactions for this story
         // This would be a separate API call in a real implementation
         setUserReactions([]);
-        
+
         // Load comments for this story
         // This would be a separate API call in a real implementation
         setComments(generateDemoComments());
@@ -95,18 +101,26 @@ export default function StoryDetailView({ storyId }: StoryDetailViewProps) {
         // Remove reaction
         await removeStoryReaction(story.id, user.id, reactionType);
         setUserReactions(prev => prev.filter(r => r !== reactionType));
-        setStory(prev => prev ? { 
-          ...prev, 
-          reaction_count: Math.max(0, prev.reaction_count - 1) 
-        } : null);
+        setStory(prev =>
+          prev
+            ? {
+                ...prev,
+                reaction_count: Math.max(0, prev.reaction_count - 1),
+              }
+            : null
+        );
       } else {
         // Add reaction
         await addStoryReaction(story.id, user.id, reactionType);
         setUserReactions(prev => [...prev, reactionType]);
-        setStory(prev => prev ? { 
-          ...prev, 
-          reaction_count: prev.reaction_count + 1 
-        } : null);
+        setStory(prev =>
+          prev
+            ? {
+                ...prev,
+                reaction_count: prev.reaction_count + 1,
+              }
+            : null
+        );
       }
     } catch (error) {
       console.error('Error handling reaction:', error);
@@ -134,20 +148,24 @@ export default function StoryDetailView({ storyId }: StoryDetailViewProps) {
         user_id: user.id,
         profiles: {
           display_name: user.user_metadata?.display_name || 'Anonymous',
-          avatar_url: null
+          avatar_url: null,
         },
         created_at: new Date().toISOString(),
-        is_anonymous: false
+        is_anonymous: false,
       };
 
       setComments(prev => [newCommentObj, ...prev]);
       setNewComment('');
-      
+
       // Update story comment count
-      setStory(prev => prev ? { 
-        ...prev, 
-        comment_count: prev.comment_count + 1 
-      } : null);
+      setStory(prev =>
+        prev
+          ? {
+              ...prev,
+              comment_count: prev.comment_count + 1,
+            }
+          : null
+      );
     } catch (error) {
       console.error('Error submitting comment:', error);
       alert('Failed to submit comment. Please try again.');
@@ -167,7 +185,7 @@ export default function StoryDetailView({ storyId }: StoryDetailViewProps) {
     return new Date(dateString).toLocaleDateString('en-AU', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -191,7 +209,12 @@ The community center recently received council funding to expand their programs,
 
 I often think about families who might be where we were three years ago. Community support programs aren't just nice-to-have services – they're essential infrastructure for healthy, thriving neighborhoods. They transform individual struggles into collective strength, and they deserve investment and recognition at every level of government.`,
       category: 'community',
-      themes: ['community support', 'single parenting', 'housing challenges', 'social connection'],
+      themes: [
+        'community support',
+        'single parenting',
+        'housing challenges',
+        'social connection',
+      ],
       tags: ['community', 'parenting', 'support', 'belonging'],
       privacy_level: 'public',
       can_be_shared: true,
@@ -201,12 +224,12 @@ I often think about families who might be where we were three years ago. Communi
       profiles: {
         display_name: 'Sarah M.',
         avatar_url: null,
-        bio: 'Parent, community advocate, marketing professional'
+        bio: 'Parent, community advocate, marketing professional',
       },
       communities: {
         name: 'Melbourne Families Network',
         slug: 'melbourne-families',
-        description: 'Supporting families in Melbourne\'s inner suburbs'
+        description: "Supporting families in Melbourne's inner suburbs",
       },
       view_count: 567,
       share_count: 34,
@@ -223,8 +246,8 @@ I often think about families who might be where we were three years ago. Communi
       emotion_scores: {
         hope: 0.85,
         gratitude: 0.92,
-        determination: 0.74
-      }
+        determination: 0.74,
+      },
     };
   };
 
@@ -232,37 +255,40 @@ I often think about families who might be where we were three years ago. Communi
     return [
       {
         id: '1',
-        content: 'Thank you for sharing this. Your story gives me hope as someone going through a similar situation right now.',
+        content:
+          'Thank you for sharing this. Your story gives me hope as someone going through a similar situation right now.',
         user_id: 'demo-commenter-1',
         profiles: {
           display_name: 'Alex T.',
-          avatar_url: null
+          avatar_url: null,
         },
         created_at: '2024-01-16T09:15:00Z',
-        is_anonymous: false
+        is_anonymous: false,
       },
       {
         id: '2',
-        content: 'Community centers like this are so important. I work in local government and stories like yours help us advocate for more funding.',
+        content:
+          'Community centers like this are so important. I work in local government and stories like yours help us advocate for more funding.',
         user_id: 'demo-commenter-2',
         profiles: {
           display_name: 'Jordan K.',
-          avatar_url: null
+          avatar_url: null,
         },
         created_at: '2024-01-16T14:20:00Z',
-        is_anonymous: false
+        is_anonymous: false,
       },
       {
         id: '3',
-        content: 'This resonates deeply. We need more recognition of how community support transforms lives. Your daughter is lucky to grow up in such an environment.',
+        content:
+          'This resonates deeply. We need more recognition of how community support transforms lives. Your daughter is lucky to grow up in such an environment.',
         user_id: 'demo-commenter-3',
         profiles: {
           display_name: 'Community Worker',
-          avatar_url: null
+          avatar_url: null,
         },
         created_at: '2024-01-17T11:45:00Z',
-        is_anonymous: true
-      }
+        is_anonymous: true,
+      },
     ];
   };
 
@@ -306,8 +332,18 @@ I often think about families who might be where we were three years ago. Communi
             <div className="flex items-center gap-4 mb-8">
               <Link href="/discover" className="no-underline">
                 <button className="flex items-center gap-2 text-gray-600 hover:text-gray-900 smooth-transition">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
                   </svg>
                   <span className="font-light">Back to Stories</span>
                 </button>
@@ -319,7 +355,7 @@ I often think about families who might be where we were three years ago. Communi
                 <h1 className="text-3xl md:text-4xl font-extralight text-gray-900 mb-6">
                   {story.title}
                 </h1>
-                
+
                 <div className="flex flex-wrap items-center gap-4 mb-8">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
@@ -336,7 +372,7 @@ I often think about families who might be where we were three years ago. Communi
                       </div>
                     </div>
                   </div>
-                  
+
                   {story.communities && (
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-500">in</span>
@@ -351,8 +387,11 @@ I often think about families who might be where we were three years ago. Communi
                   <span className="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-light capitalize">
                     {story.category.replace('_', ' ')}
                   </span>
-                  {story.themes.map((theme) => (
-                    <span key={theme} className="text-sm bg-blue-100 text-blue-600 px-3 py-1 rounded-full font-light">
+                  {story.themes.map(theme => (
+                    <span
+                      key={theme}
+                      className="text-sm bg-blue-100 text-blue-600 px-3 py-1 rounded-full font-light"
+                    >
                       {theme}
                     </span>
                   ))}
@@ -361,30 +400,52 @@ I often think about families who might be where we were three years ago. Communi
 
               <div className="lg:col-span-1">
                 <div className="bg-white border border-gray-200 rounded-3xl p-6 sticky top-8">
-                  <h3 className="font-normal text-gray-900 mb-4">Story Impact</h3>
+                  <h3 className="font-normal text-gray-900 mb-4">
+                    Story Impact
+                  </h3>
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600 font-light">Views</span>
-                      <span className="text-sm font-normal">{story.view_count.toLocaleString()}</span>
+                      <span className="text-sm text-gray-600 font-light">
+                        Views
+                      </span>
+                      <span className="text-sm font-normal">
+                        {story.view_count.toLocaleString()}
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600 font-light">Reactions</span>
-                      <span className="text-sm font-normal">{story.reaction_count}</span>
+                      <span className="text-sm text-gray-600 font-light">
+                        Reactions
+                      </span>
+                      <span className="text-sm font-normal">
+                        {story.reaction_count}
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600 font-light">Comments</span>
-                      <span className="text-sm font-normal">{story.comment_count}</span>
+                      <span className="text-sm text-gray-600 font-light">
+                        Comments
+                      </span>
+                      <span className="text-sm font-normal">
+                        {story.comment_count}
+                      </span>
                     </div>
                     {story.impact_score > 0 && (
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600 font-light">Impact Score</span>
-                        <span className="text-sm font-normal">{story.impact_score.toFixed(1)}/10</span>
+                        <span className="text-sm text-gray-600 font-light">
+                          Impact Score
+                        </span>
+                        <span className="text-sm font-normal">
+                          {story.impact_score.toFixed(1)}/10
+                        </span>
                       </div>
                     )}
                     {story.cited_in_reports > 0 && (
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600 font-light">Research Citations</span>
-                        <span className="text-sm font-normal">{story.cited_in_reports}</span>
+                        <span className="text-sm text-gray-600 font-light">
+                          Research Citations
+                        </span>
+                        <span className="text-sm font-normal">
+                          {story.cited_in_reports}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -402,7 +463,9 @@ I often think about families who might be where we were three years ago. Communi
             <div className="grid lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2">
                 {/* Media */}
-                {(story.image_urls?.length || story.audio_url || story.video_url) && (
+                {(story.image_urls?.length ||
+                  story.audio_url ||
+                  story.video_url) && (
                   <div className="mb-8">
                     {story.image_urls?.length > 0 && (
                       <div className="aspect-video mb-4">
@@ -415,19 +478,29 @@ I often think about families who might be where we were three years ago. Communi
                         />
                       </div>
                     )}
-                    
+
                     {story.audio_url && (
                       <div className="bg-gray-50 rounded-2xl p-6 mb-4">
-                        <h4 className="font-normal text-gray-900 mb-3">Audio Story</h4>
+                        <h4 className="font-normal text-gray-900 mb-3">
+                          Audio Story
+                        </h4>
                         <div className="bg-white rounded-xl p-4 flex items-center gap-4">
                           <button className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 smooth-transition">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M8 5v14l11-7z"/>
+                            <svg
+                              className="w-5 h-5"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M8 5v14l11-7z" />
                             </svg>
                           </button>
                           <div className="flex-1">
-                            <div className="text-sm font-normal text-gray-900 mb-1">Audio Story</div>
-                            <div className="text-xs text-gray-500 font-light">Click to play</div>
+                            <div className="text-sm font-normal text-gray-900 mb-1">
+                              Audio Story
+                            </div>
+                            <div className="text-xs text-gray-500 font-light">
+                              Click to play
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -445,13 +518,16 @@ I often think about families who might be where we were three years ago. Communi
                 {/* Transcription */}
                 {story.transcription && (
                   <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-8">
-                    <h4 className="font-normal text-blue-900 mb-3">Audio Transcription</h4>
+                    <h4 className="font-normal text-blue-900 mb-3">
+                      Audio Transcription
+                    </h4>
                     <p className="text-blue-800 font-light text-sm leading-relaxed">
                       {story.transcription}
                     </p>
                     {story.transcription_confidence && (
                       <p className="text-xs text-blue-600 mt-2">
-                        Transcription confidence: {Math.round(story.transcription_confidence * 100)}%
+                        Transcription confidence:{' '}
+                        {Math.round(story.transcription_confidence * 100)}%
                       </p>
                     )}
                   </div>
@@ -459,9 +535,11 @@ I often think about families who might be where we were three years ago. Communi
 
                 {/* Reactions */}
                 <div className="border-t border-gray-100 pt-8 mb-8">
-                  <h3 className="font-normal text-gray-900 mb-4">React to this story</h3>
+                  <h3 className="font-normal text-gray-900 mb-4">
+                    React to this story
+                  </h3>
                   <div className="flex flex-wrap gap-3">
-                    {REACTION_TYPES.map((reaction) => (
+                    {REACTION_TYPES.map(reaction => (
                       <button
                         key={reaction.type}
                         onClick={() => handleReaction(reaction.type)}
@@ -480,14 +558,16 @@ I often think about families who might be where we were three years ago. Communi
 
                 {/* Comments */}
                 <div className="border-t border-gray-100 pt-8">
-                  <h3 className="font-normal text-gray-900 mb-6">Community Response</h3>
-                  
+                  <h3 className="font-normal text-gray-900 mb-6">
+                    Community Response
+                  </h3>
+
                   {/* Add Comment */}
                   {user ? (
                     <div className="bg-gray-50 rounded-2xl p-6 mb-8">
                       <textarea
                         value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
+                        onChange={e => setNewComment(e.target.value)}
                         placeholder="Share your thoughts, support, or related experience..."
                         rows={4}
                         className="w-full p-3 border border-gray-200 rounded-xl resize-none focus:border-gray-400 focus:outline-none font-light"
@@ -520,17 +600,21 @@ I often think about families who might be where we were three years ago. Communi
 
                   {/* Comments List */}
                   <div className="space-y-6">
-                    {comments.map((comment) => (
+                    {comments.map(comment => (
                       <div key={comment.id} className="flex gap-4">
                         <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
                           <span className="text-xs font-light text-gray-600">
-                            {comment.is_anonymous ? 'A' : comment.profiles.display_name?.charAt(0) || 'U'}
+                            {comment.is_anonymous
+                              ? 'A'
+                              : comment.profiles.display_name?.charAt(0) || 'U'}
                           </span>
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <span className="font-normal text-gray-900 text-sm">
-                              {comment.is_anonymous ? 'Anonymous' : comment.profiles.display_name}
+                              {comment.is_anonymous
+                                ? 'Anonymous'
+                                : comment.profiles.display_name}
                             </span>
                             <span className="text-xs text-gray-500 font-light">
                               {formatDate(comment.created_at)}
@@ -550,7 +634,9 @@ I often think about families who might be where we were three years ago. Communi
                 <div className="space-y-6">
                   {/* Share */}
                   <div className="bg-white border border-gray-200 rounded-3xl p-6">
-                    <h3 className="font-normal text-gray-900 mb-4">Share this story</h3>
+                    <h3 className="font-normal text-gray-900 mb-4">
+                      Share this story
+                    </h3>
                     <button
                       onClick={() => setShowShareModal(true)}
                       className="w-full bg-gray-50 hover:bg-gray-100 text-gray-900 py-2 rounded-full text-sm font-light smooth-transition"
@@ -562,11 +648,16 @@ I often think about families who might be where we were three years ago. Communi
                   {/* More from Community */}
                   {story.communities && (
                     <div className="bg-white border border-gray-200 rounded-3xl p-6">
-                      <h3 className="font-normal text-gray-900 mb-4">More from {story.communities.name}</h3>
+                      <h3 className="font-normal text-gray-900 mb-4">
+                        More from {story.communities.name}
+                      </h3>
                       <p className="text-sm text-gray-600 font-light mb-4">
                         {story.communities.description}
                       </p>
-                      <Link href={`/communities/${story.communities.slug}`} className="no-underline">
+                      <Link
+                        href={`/communities/${story.communities.slug}`}
+                        className="no-underline"
+                      >
                         <button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 py-2 rounded-full text-sm font-light smooth-transition">
                           Explore Community
                         </button>
@@ -584,7 +675,9 @@ I often think about families who might be where we were three years ago. Communi
       {showShareModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-8 max-w-md w-full">
-            <h3 className="text-xl font-normal text-gray-900 mb-4">Share this story</h3>
+            <h3 className="text-xl font-normal text-gray-900 mb-4">
+              Share this story
+            </h3>
             <p className="text-gray-600 font-light mb-6">
               Help spread awareness by sharing this story with others.
             </p>

@@ -6,7 +6,9 @@
  */
 
 console.log('🌱 Database seeding script');
-console.log('💡 This is a placeholder - seeding logic would be implemented here');
+console.log(
+  '💡 This is a placeholder - seeding logic would be implemented here'
+);
 console.log('✅ Seeding check completed');
 
 export default function seedDatabase() {

@@ -1,6 +1,6 @@
 /**
  * Supabase Connection and Schema Validator
- * 
+ *
  * This module provides comprehensive validation of the Supabase setup
  * with proper error handling, logging, and recovery mechanisms.
  */
@@ -36,7 +36,7 @@ interface ComprehensiveValidation {
 
 export class SupabaseValidator {
   private startTime: number = 0;
-  
+
   constructor() {
     this.startTime = Date.now();
   }
@@ -46,7 +46,7 @@ export class SupabaseValidator {
    */
   async validateAll(): Promise<ComprehensiveValidation> {
     console.log('🔍 Starting comprehensive Supabase validation...');
-    
+
     const results: ComprehensiveValidation = {
       timestamp: new Date().toISOString(),
       overall_status: 'failed',
@@ -57,7 +57,7 @@ export class SupabaseValidator {
       rls: await this.validateRLS(),
       multi_tenant: await this.validateMultiTenant(),
       performance: await this.validatePerformance(),
-      recommendations: []
+      recommendations: [],
     };
 
     // Determine overall status
@@ -67,7 +67,7 @@ export class SupabaseValidator {
       results.schema,
       results.rls,
       results.multi_tenant,
-      results.performance
+      results.performance,
     ];
 
     const successCount = validations.filter(v => v.success).length;
@@ -99,7 +99,7 @@ export class SupabaseValidator {
     return {
       supabase_url: supabaseUrl || 'NOT_SET',
       has_anon_key: !!anonKey,
-      has_service_key: !!serviceKey
+      has_service_key: !!serviceKey,
     };
   }
 
@@ -109,9 +109,9 @@ export class SupabaseValidator {
   public async validateConnection(): Promise<ValidationResult> {
     try {
       console.log('📡 Testing basic connection...');
-      
+
       const supabase = await createServerClient();
-      
+
       // Test with a simple query
       const { data, error } = await supabase
         .from('users')
@@ -126,15 +126,15 @@ export class SupabaseValidator {
           recommendations: [
             'Check Supabase URL and API keys',
             'Verify network connectivity',
-            'Ensure Supabase project is active'
-          ]
+            'Ensure Supabase project is active',
+          ],
         };
       }
 
       return {
         success: true,
         message: 'Connection successful',
-        data: { response_time: Date.now() - this.startTime }
+        data: { response_time: Date.now() - this.startTime },
       };
     } catch (error: any) {
       return {
@@ -143,8 +143,8 @@ export class SupabaseValidator {
         error: error.message,
         recommendations: [
           'Check environment variables',
-          'Verify Supabase project configuration'
-        ]
+          'Verify Supabase project configuration',
+        ],
       };
     }
   }
@@ -155,13 +155,13 @@ export class SupabaseValidator {
   private async validateAuthentication(): Promise<ValidationResult> {
     try {
       console.log('🔐 Testing authentication...');
-      
+
       const supabase = await createServerClient();
       const adminClient = await createAdminClient();
 
       // Test anonymous access
       const { data: session } = await supabase.auth.getSession();
-      
+
       // Test admin client
       const { data: adminTest, error: adminError } = await adminClient
         .from('users')
@@ -175,8 +175,8 @@ export class SupabaseValidator {
           error: adminError.message,
           recommendations: [
             'Check SUPABASE_SERVICE_KEY is correct',
-            'Verify service role permissions'
-          ]
+            'Verify service role permissions',
+          ],
         };
       }
 
@@ -185,8 +185,8 @@ export class SupabaseValidator {
         message: 'Authentication working',
         data: {
           has_session: !!session,
-          admin_access: !adminError
-        }
+          admin_access: !adminError,
+        },
       };
     } catch (error: any) {
       return {
@@ -195,8 +195,8 @@ export class SupabaseValidator {
         error: error.message,
         recommendations: [
           'Check authentication configuration',
-          'Verify service role key'
-        ]
+          'Verify service role key',
+        ],
       };
     }
   }
@@ -207,17 +207,17 @@ export class SupabaseValidator {
   public async validateSchema(): Promise<ValidationResult> {
     try {
       console.log('🗄️ Validating database schema...');
-      
+
       const supabase = await createAdminClient();
-      
+
       const requiredTables = [
         'users',
-        'projects', 
+        'projects',
         'stories',
         'story_analysis',
         'community_insights',
         'project_members',
-        'value_events'
+        'value_events',
       ];
 
       const tableStatus = {};
@@ -229,11 +229,11 @@ export class SupabaseValidator {
             .from(table)
             .select('*')
             .limit(1);
-          
+
           tableStatus[table] = {
             exists: !error,
             has_data: data && data.length > 0,
-            error: error?.message
+            error: error?.message,
           };
 
           if (error) {
@@ -243,7 +243,7 @@ export class SupabaseValidator {
           tableStatus[table] = {
             exists: false,
             has_data: false,
-            error: err.message
+            error: err.message,
           };
           missingTables.push(table);
         }
@@ -253,13 +253,18 @@ export class SupabaseValidator {
 
       return {
         success,
-        message: success ? 'Schema validation passed' : `Missing ${missingTables.length} tables`,
+        message: success
+          ? 'Schema validation passed'
+          : `Missing ${missingTables.length} tables`,
         data: { tables: tableStatus },
-        recommendations: missingTables.length > 0 ? [
-          `Create missing tables: ${missingTables.join(', ')}`,
-          'Run database migration scripts',
-          'Check schema deployment'
-        ] : undefined
+        recommendations:
+          missingTables.length > 0
+            ? [
+                `Create missing tables: ${missingTables.join(', ')}`,
+                'Run database migration scripts',
+                'Check schema deployment',
+              ]
+            : undefined,
       };
     } catch (error: any) {
       return {
@@ -268,8 +273,8 @@ export class SupabaseValidator {
         error: error.message,
         recommendations: [
           'Check database permissions',
-          'Verify schema is deployed'
-        ]
+          'Verify schema is deployed',
+        ],
       };
     }
   }
@@ -280,9 +285,9 @@ export class SupabaseValidator {
   private async validateRLS(): Promise<ValidationResult> {
     try {
       console.log('🔒 Testing Row Level Security...');
-      
+
       const supabase = await createServerClient();
-      
+
       // Test without authentication (should be restricted)
       const { data: restrictedData, error: rlsError } = await supabase
         .from('stories')
@@ -290,7 +295,8 @@ export class SupabaseValidator {
         .limit(1);
 
       // Check if RLS is working (should either get empty data or permission error)
-      const rlsWorking = rlsError || (restrictedData && restrictedData.length === 0);
+      const rlsWorking =
+        rlsError || (restrictedData && restrictedData.length === 0);
 
       return {
         success: true,
@@ -298,12 +304,14 @@ export class SupabaseValidator {
         data: {
           rls_enabled: rlsWorking,
           access_without_auth: !rlsWorking,
-          error: rlsError?.message
+          error: rlsError?.message,
         },
-        recommendations: !rlsWorking ? [
-          'Enable Row Level Security policies',
-          'Restrict unauthorized access to sensitive data'
-        ] : undefined
+        recommendations: !rlsWorking
+          ? [
+              'Enable Row Level Security policies',
+              'Restrict unauthorized access to sensitive data',
+            ]
+          : undefined,
       };
     } catch (error: any) {
       return {
@@ -312,8 +320,8 @@ export class SupabaseValidator {
         error: error.message,
         recommendations: [
           'Check RLS policy configuration',
-          'Verify table permissions'
-        ]
+          'Verify table permissions',
+        ],
       };
     }
   }
@@ -324,9 +332,9 @@ export class SupabaseValidator {
   private async validateMultiTenant(): Promise<ValidationResult> {
     try {
       console.log('🏢 Testing multi-tenant functionality...');
-      
+
       const adminClient = await createAdminClient();
-      
+
       // Create test project
       const testProject = {
         name: `Validation Test ${Date.now()}`,
@@ -337,8 +345,8 @@ export class SupabaseValidator {
         metadata: {
           test: true,
           validation: true,
-          created_at: new Date().toISOString()
-        }
+          created_at: new Date().toISOString(),
+        },
       };
 
       const { data: project, error: createError } = await adminClient
@@ -355,8 +363,8 @@ export class SupabaseValidator {
           recommendations: [
             'Check projects table schema',
             'Verify insert permissions',
-            'Check foreign key constraints'
-          ]
+            'Check foreign key constraints',
+          ],
         };
       }
 
@@ -367,7 +375,7 @@ export class SupabaseValidator {
         content: 'This is a test story for validation',
         storyteller_id: '00000000-0000-0000-0000-000000000000',
         privacy_level: 'public',
-        metadata: { test: true }
+        metadata: { test: true },
       };
 
       const { data: story, error: storyError } = await adminClient
@@ -378,16 +386,10 @@ export class SupabaseValidator {
 
       // Clean up test data
       if (story) {
-        await adminClient
-          .from('stories')
-          .delete()
-          .eq('id', story.id);
+        await adminClient.from('stories').delete().eq('id', story.id);
       }
 
-      await adminClient
-        .from('projects')
-        .delete()
-        .eq('id', project.id);
+      await adminClient.from('projects').delete().eq('id', project.id);
 
       return {
         success: true,
@@ -395,8 +397,8 @@ export class SupabaseValidator {
         data: {
           project_created: !!project,
           story_isolation: !storyError,
-          test_project_id: project.id
-        }
+          test_project_id: project.id,
+        },
       };
     } catch (error: any) {
       return {
@@ -406,8 +408,8 @@ export class SupabaseValidator {
         recommendations: [
           'Check project table configuration',
           'Verify foreign key relationships',
-          'Check data isolation policies'
-        ]
+          'Check data isolation policies',
+        ],
       };
     }
   }
@@ -418,11 +420,11 @@ export class SupabaseValidator {
   private async validatePerformance(): Promise<ValidationResult> {
     try {
       console.log('⚡ Testing database performance...');
-      
+
       const supabase = await createAdminClient();
-      
+
       const startTime = Date.now();
-      
+
       // Test query performance
       const { data, error } = await supabase
         .from('projects')
@@ -435,7 +437,7 @@ export class SupabaseValidator {
         return {
           success: false,
           message: 'Performance test failed',
-          error: error.message
+          error: error.message,
         };
       }
 
@@ -447,19 +449,21 @@ export class SupabaseValidator {
         data: {
           query_time_ms: queryTime,
           records_returned: data?.length || 0,
-          performance_grade: performanceGood ? 'good' : 'needs_optimization'
+          performance_grade: performanceGood ? 'good' : 'needs_optimization',
         },
-        recommendations: !performanceGood ? [
-          'Optimize database queries',
-          'Add appropriate indexes',
-          'Consider query optimization'
-        ] : undefined
+        recommendations: !performanceGood
+          ? [
+              'Optimize database queries',
+              'Add appropriate indexes',
+              'Consider query optimization',
+            ]
+          : undefined,
       };
     } catch (error: any) {
       return {
         success: false,
         message: 'Performance validation failed',
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -472,10 +476,10 @@ export async function quickValidation() {
   const validator = new SupabaseValidator();
   const connection = await validator.validateConnection();
   const schema = await validator.validateSchema();
-  
+
   return {
     connection_ok: connection.success,
     schema_ok: schema.success,
-    ready_for_use: connection.success && schema.success
+    ready_for_use: connection.success && schema.success,
   };
 }

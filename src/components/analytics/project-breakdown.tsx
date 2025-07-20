@@ -13,7 +13,9 @@ interface ProjectBreakdownProps {
 export function ProjectBreakdown({ data }: ProjectBreakdownProps) {
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Breakdown</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Project Breakdown
+      </h3>
       <div className="space-y-4">
         {data.map((project, index) => (
           <div key={index} className="p-4 bg-gray-50 rounded-lg">

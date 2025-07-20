@@ -29,7 +29,8 @@ const modules: Module[] = [
   {
     id: 'story-collection',
     name: 'Story Collection Engine',
-    description: 'Secure, user-friendly story submission with multimedia support and privacy controls.',
+    description:
+      'Secure, user-friendly story submission with multimedia support and privacy controls.',
     category: 'core',
     status: 'live',
     icon: '📖',
@@ -38,23 +39,25 @@ const modules: Module[] = [
       'Progressive disclosure privacy controls',
       'Real-time encryption before submission',
       'Cultural protocol integration',
-      'Offline submission capability'
+      'Offline submission capability',
     ],
     useCases: [
       'Individual story sharing',
       'Community listening sessions',
       'Research data collection',
-      'Crisis response gathering'
+      'Crisis response gathering',
     ],
     privacyLevel: 'encrypted',
-    image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     demoUrl: '/demo/story-collection',
-    documentationUrl: '/docs/story-collection'
+    documentationUrl: '/docs/story-collection',
   },
   {
     id: 'privacy-engine',
     name: 'Privacy Preservation Engine',
-    description: 'Advanced cryptographic protection ensuring individual privacy while enabling community insights.',
+    description:
+      'Advanced cryptographic protection ensuring individual privacy while enabling community insights.',
     category: 'core',
     status: 'live',
     icon: '🔒',
@@ -63,23 +66,25 @@ const modules: Module[] = [
       'Differential privacy for aggregations',
       'Zero-knowledge proof generation',
       'Homomorphic encryption support',
-      'GDPR compliance automation'
+      'GDPR compliance automation',
     ],
     useCases: [
       'Sensitive data protection',
       'Research ethics compliance',
       'Legal requirement adherence',
-      'Community trust building'
+      'Community trust building',
     ],
     privacyLevel: 'encrypted',
-    image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     demoUrl: '/demo/privacy-engine',
-    documentationUrl: '/docs/privacy-engine'
+    documentationUrl: '/docs/privacy-engine',
   },
   {
     id: 'insight-generator',
     name: 'Community Insight Generator',
-    description: 'AI-powered pattern recognition that reveals community themes without compromising privacy.',
+    description:
+      'AI-powered pattern recognition that reveals community themes without compromising privacy.',
     category: 'analytics',
     status: 'live',
     icon: '🧠',
@@ -88,23 +93,25 @@ const modules: Module[] = [
       'Theme identification and clustering',
       'Sentiment trend analysis',
       'Geographic pattern mapping',
-      'Impact correlation detection'
+      'Impact correlation detection',
     ],
     useCases: [
       'Policy development insights',
       'Service delivery optimization',
       'Community needs assessment',
-      'Research hypothesis generation'
+      'Research hypothesis generation',
     ],
     privacyLevel: 'aggregate',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     demoUrl: '/demo/insight-generator',
-    documentationUrl: '/docs/insight-generator'
+    documentationUrl: '/docs/insight-generator',
   },
   {
     id: 'story-galaxy',
     name: 'Story Galaxy Visualization',
-    description: 'Interactive 3D network visualization showing story connections and community patterns.',
+    description:
+      'Interactive 3D network visualization showing story connections and community patterns.',
     category: 'analytics',
     status: 'live',
     icon: '🌌',
@@ -113,23 +120,25 @@ const modules: Module[] = [
       'Interactive exploration tools',
       'Theme-based filtering',
       'Geographic clustering',
-      'Impact level mapping'
+      'Impact level mapping',
     ],
     useCases: [
       'Community pattern exploration',
       'Research data visualization',
       'Stakeholder presentations',
-      'Public engagement tools'
+      'Public engagement tools',
     ],
     privacyLevel: 'aggregate',
-    image: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     demoUrl: '/story-galaxy',
-    documentationUrl: '/docs/story-galaxy'
+    documentationUrl: '/docs/story-galaxy',
   },
   {
     id: 'community-governance',
     name: 'Community Governance Portal',
-    description: 'Democratic tools for community decision-making and platform governance.',
+    description:
+      'Democratic tools for community decision-making and platform governance.',
     category: 'governance',
     status: 'beta',
     icon: '🏛️',
@@ -138,23 +147,25 @@ const modules: Module[] = [
       'Proposal submission and review',
       'Community moderation tools',
       'Cultural protocol enforcement',
-      'Consensus-building mechanisms'
+      'Consensus-building mechanisms',
     ],
     useCases: [
       'Platform policy decisions',
       'Community rule setting',
       'Resource allocation votes',
-      'Cultural protocol updates'
+      'Cultural protocol updates',
     ],
     privacyLevel: 'public',
-    image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     demoUrl: '/demo/governance',
-    documentationUrl: '/docs/governance'
+    documentationUrl: '/docs/governance',
   },
   {
     id: 'impact-tracking',
     name: 'Impact Measurement System',
-    description: 'Track real-world outcomes and policy changes driven by community stories.',
+    description:
+      'Track real-world outcomes and policy changes driven by community stories.',
     category: 'analytics',
     status: 'beta',
     icon: '📊',
@@ -163,23 +174,25 @@ const modules: Module[] = [
       'Policy change tracking',
       'Service improvement measurement',
       'Community benefit calculation',
-      'Long-term trend analysis'
+      'Long-term trend analysis',
     ],
     useCases: [
       'Grant reporting',
       'Policy impact assessment',
       'Community value demonstration',
-      'Research outcome tracking'
+      'Research outcome tracking',
     ],
     privacyLevel: 'aggregate',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     demoUrl: '/demo/impact-tracking',
-    documentationUrl: '/docs/impact-tracking'
+    documentationUrl: '/docs/impact-tracking',
   },
   {
     id: 'researcher-toolkit',
     name: 'Ethical Research Toolkit',
-    description: 'Tools for researchers to access community insights while maintaining ethical standards.',
+    description:
+      'Tools for researchers to access community insights while maintaining ethical standards.',
     category: 'integration',
     status: 'beta',
     icon: '🔬',
@@ -188,23 +201,25 @@ const modules: Module[] = [
       'Consent management system',
       'Anonymous data export',
       'Research protocol templates',
-      'Impact sharing requirements'
+      'Impact sharing requirements',
     ],
     useCases: [
       'Academic research projects',
       'Policy development studies',
       'Community health research',
-      'Social impact assessment'
+      'Social impact assessment',
     ],
     privacyLevel: 'aggregate',
-    image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     demoUrl: '/demo/research-toolkit',
-    documentationUrl: '/docs/research-toolkit'
+    documentationUrl: '/docs/research-toolkit',
   },
   {
     id: 'api-gateway',
     name: 'Developer API Gateway',
-    description: 'Secure APIs for third-party integrations and custom applications.',
+    description:
+      'Secure APIs for third-party integrations and custom applications.',
     category: 'integration',
     status: 'live',
     icon: '🔌',
@@ -213,23 +228,25 @@ const modules: Module[] = [
       'GraphQL query interface',
       'Webhook event system',
       'Rate limiting and security',
-      'SDK libraries for major languages'
+      'SDK libraries for major languages',
     ],
     useCases: [
       'Custom application development',
       'Third-party service integration',
       'Data pipeline automation',
-      'Real-time event processing'
+      'Real-time event processing',
     ],
     privacyLevel: 'aggregate',
-    image: 'https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image:
+      'https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     demoUrl: '/demo/api-gateway',
-    documentationUrl: '/docs/api-gateway'
+    documentationUrl: '/docs/api-gateway',
   },
   {
     id: 'indigenous-protocols',
     name: 'Indigenous Data Protocols',
-    description: 'Specialized tools ensuring Indigenous data sovereignty and cultural protocols.',
+    description:
+      'Specialized tools ensuring Indigenous data sovereignty and cultural protocols.',
     category: 'governance',
     status: 'coming-soon',
     icon: '🪃',
@@ -238,65 +255,99 @@ const modules: Module[] = [
       'Indigenous data sovereignty',
       'Elder approval workflows',
       'Sacred knowledge protection',
-      'Community benefit sharing'
+      'Community benefit sharing',
     ],
     useCases: [
       'Indigenous community research',
       'Cultural knowledge preservation',
       'Traditional story collection',
-      'Land rights documentation'
+      'Land rights documentation',
     ],
     privacyLevel: 'encrypted',
-    image: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    documentationUrl: '/docs/indigenous-protocols'
-  }
+    image:
+      'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    documentationUrl: '/docs/indigenous-protocols',
+  },
 ];
 
 const PlatformModules: React.FC<PlatformModulesProps> = ({
   className = '',
   showCategories = true,
-  layout = 'grid'
+  layout = 'grid',
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
 
   const categories = [
     { key: 'all', name: 'All Modules', count: modules.length },
-    { key: 'core', name: 'Core Platform', count: modules.filter(m => m.category === 'core').length },
-    { key: 'analytics', name: 'Analytics', count: modules.filter(m => m.category === 'analytics').length },
-    { key: 'community', name: 'Community', count: modules.filter(m => m.category === 'community').length },
-    { key: 'governance', name: 'Governance', count: modules.filter(m => m.category === 'governance').length },
-    { key: 'integration', name: 'Integration', count: modules.filter(m => m.category === 'integration').length }
+    {
+      key: 'core',
+      name: 'Core Platform',
+      count: modules.filter(m => m.category === 'core').length,
+    },
+    {
+      key: 'analytics',
+      name: 'Analytics',
+      count: modules.filter(m => m.category === 'analytics').length,
+    },
+    {
+      key: 'community',
+      name: 'Community',
+      count: modules.filter(m => m.category === 'community').length,
+    },
+    {
+      key: 'governance',
+      name: 'Governance',
+      count: modules.filter(m => m.category === 'governance').length,
+    },
+    {
+      key: 'integration',
+      name: 'Integration',
+      count: modules.filter(m => m.category === 'integration').length,
+    },
   ];
 
-  const filteredModules = selectedCategory === 'all' 
-    ? modules 
-    : modules.filter(module => module.category === selectedCategory);
+  const filteredModules =
+    selectedCategory === 'all'
+      ? modules
+      : modules.filter(module => module.category === selectedCategory);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'live': return 'green';
-      case 'beta': return 'yellow';
-      case 'coming-soon': return 'gray';
-      default: return 'gray';
+      case 'live':
+        return 'green';
+      case 'beta':
+        return 'yellow';
+      case 'coming-soon':
+        return 'gray';
+      default:
+        return 'gray';
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'live': return 'Live';
-      case 'beta': return 'Beta';
-      case 'coming-soon': return 'Coming Soon';
-      default: return status;
+      case 'live':
+        return 'Live';
+      case 'beta':
+        return 'Beta';
+      case 'coming-soon':
+        return 'Coming Soon';
+      default:
+        return status;
     }
   };
 
   const getPrivacyBadgeVariant = (privacyLevel: string) => {
     switch (privacyLevel) {
-      case 'encrypted': return 'encryption';
-      case 'aggregate': return 'privacy';
-      case 'public': return 'certification';
-      default: return 'privacy';
+      case 'encrypted':
+        return 'encryption';
+      case 'aggregate':
+        return 'privacy';
+      case 'public':
+        return 'certification';
+      default:
+        return 'privacy';
     }
   };
 
@@ -305,7 +356,7 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
       {/* Category Filter */}
       {showCategories && (
         <div className="flex flex-wrap gap-3">
-          {categories.map((category) => (
+          {categories.map(category => (
             <button
               key={category.key}
               onClick={() => setSelectedCategory(category.key)}
@@ -322,12 +373,14 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
       )}
 
       {/* Modules Grid */}
-      <div className={`
+      <div
+        className={`
         ${layout === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8' : ''}
         ${layout === 'list' ? 'space-y-6' : ''}
         ${layout === 'featured' ? 'space-y-12' : ''}
-      `}>
-        {filteredModules.map((module) => (
+      `}
+      >
+        {filteredModules.map(module => (
           <div
             key={module.id}
             className={`
@@ -347,15 +400,21 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
                 `}
               />
               <div className="absolute top-4 left-4 flex items-center space-x-2">
-                <span className={`
+                <span
+                  className={`
                   px-3 py-1 rounded-full text-xs font-medium
-                  ${module.status === 'live' ? 'bg-green-100 text-green-800' :
-                    module.status === 'beta' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'}
-                `}>
+                  ${
+                    module.status === 'live'
+                      ? 'bg-green-100 text-green-800'
+                      : module.status === 'beta'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-gray-100 text-gray-800'
+                  }
+                `}
+                >
                   {getStatusText(module.status)}
                 </span>
-                <SecurityBadge 
+                <SecurityBadge
                   variant={getPrivacyBadgeVariant(module.privacyLevel)}
                   showBackground={true}
                   className="scale-75"
@@ -378,7 +437,9 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
 
                 {/* Key Features */}
                 <div className="mb-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">Key Features</h4>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    Key Features
+                  </h4>
                   <ul className="text-sm text-gray-600 space-y-1">
                     {module.features.slice(0, 3).map((feature, index) => (
                       <li key={index} className="flex items-start">
@@ -399,7 +460,9 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
 
                 {/* Use Cases */}
                 <div className="mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-2">Use Cases</h4>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    Use Cases
+                  </h4>
                   <div className="flex flex-wrap gap-2">
                     {module.useCases.slice(0, 2).map((useCase, index) => (
                       <span
@@ -426,7 +489,11 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
                   </Button>
                 )}
                 {module.documentationUrl && (
-                  <Button variant="secondary" size="sm" href={module.documentationUrl}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    href={module.documentationUrl}
+                  >
                     Documentation
                   </Button>
                 )}
@@ -434,8 +501,18 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
                   onClick={() => setSelectedModule(module)}
                   className="text-gray-500 hover:text-gray-700 p-2"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </button>
               </div>
@@ -454,24 +531,41 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
                   <h2 className="text-3xl font-bold text-gray-900 mb-2">
                     {selectedModule.icon} {selectedModule.name}
                   </h2>
-                  <p className="text-lg text-gray-700">{selectedModule.description}</p>
+                  <p className="text-lg text-gray-700">
+                    {selectedModule.description}
+                  </p>
                 </div>
                 <button
                   onClick={() => setSelectedModule(null)}
                   className="text-gray-500 hover:text-gray-700"
                 >
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">All Features</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    All Features
+                  </h3>
                   <ul className="space-y-2">
                     {selectedModule.features.map((feature, index) => (
-                      <li key={index} className="flex items-start text-gray-700">
+                      <li
+                        key={index}
+                        className="flex items-start text-gray-700"
+                      >
                         <span className="text-primary-500 mr-2">•</span>
                         {feature}
                       </li>
@@ -480,10 +574,15 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Use Cases</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    Use Cases
+                  </h3>
                   <ul className="space-y-2">
                     {selectedModule.useCases.map((useCase, index) => (
-                      <li key={index} className="flex items-start text-gray-700">
+                      <li
+                        key={index}
+                        className="flex items-start text-gray-700"
+                      >
                         <span className="text-teal-500 mr-2">•</span>
                         {useCase}
                       </li>
@@ -495,27 +594,39 @@ const PlatformModules: React.FC<PlatformModulesProps> = ({
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <span className={`
+                    <span
+                      className={`
                       px-3 py-1 rounded-full text-sm font-medium
-                      ${selectedModule.status === 'live' ? 'bg-green-100 text-green-800' :
-                        selectedModule.status === 'beta' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-gray-100 text-gray-800'}
-                    `}>
+                      ${
+                        selectedModule.status === 'live'
+                          ? 'bg-green-100 text-green-800'
+                          : selectedModule.status === 'beta'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-gray-100 text-gray-800'
+                      }
+                    `}
+                    >
                       {getStatusText(selectedModule.status)}
                     </span>
-                    <SecurityBadge 
-                      variant={getPrivacyBadgeVariant(selectedModule.privacyLevel)}
+                    <SecurityBadge
+                      variant={getPrivacyBadgeVariant(
+                        selectedModule.privacyLevel
+                      )}
                       text={`${selectedModule.privacyLevel} data`}
                     />
                   </div>
                   <div className="flex gap-3">
-                    {selectedModule.demoUrl && selectedModule.status !== 'coming-soon' && (
-                      <Button variant="primary" href={selectedModule.demoUrl}>
-                        Try Demo
-                      </Button>
-                    )}
+                    {selectedModule.demoUrl &&
+                      selectedModule.status !== 'coming-soon' && (
+                        <Button variant="primary" href={selectedModule.demoUrl}>
+                          Try Demo
+                        </Button>
+                      )}
                     {selectedModule.documentationUrl && (
-                      <Button variant="secondary" href={selectedModule.documentationUrl}>
+                      <Button
+                        variant="secondary"
+                        href={selectedModule.documentationUrl}
+                      >
                         View Documentation
                       </Button>
                     )}

@@ -1,6 +1,6 @@
 /**
  * Project Branding Management API
- * 
+ *
  * Philosophy: Organizations maintain visual sovereignty and cultural identity
  * while ensuring accessibility and community respect.
  */
@@ -15,7 +15,10 @@ export async function GET(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -42,14 +45,19 @@ export async function GET(
 
     const url = new URL(request.url);
     const include_css = url.searchParams.get('include_css') === 'true';
-    const include_template = url.searchParams.get('include_template') === 'true';
+    const include_template =
+      url.searchParams.get('include_template') === 'true';
 
     // Get branding configuration
-    const { branding, domain, whitelabel, error } = await brandingManager.getProjectBranding(params.projectId);
+    const { branding, domain, whitelabel, error } =
+      await brandingManager.getProjectBranding(params.projectId);
 
     if (error) {
       return NextResponse.json(
-        { error, sovereignty_note: 'Branding access requires project membership' },
+        {
+          error,
+          sovereignty_note: 'Branding access requires project membership',
+        },
         { status: 404 }
       );
     }
@@ -59,20 +67,30 @@ export async function GET(
       domain,
       whitelabel,
       sovereignty_principles: {
-        visual_sovereignty: 'Organizations maintain complete control over their visual identity',
-        cultural_respect: 'Branding can include culturally significant elements and patterns',
-        accessibility_maintained: 'All custom branding meets accessibility standards',
-        community_identity: 'Visual design reflects community values and preferences'
-      }
+        visual_sovereignty:
+          'Organizations maintain complete control over their visual identity',
+        cultural_respect:
+          'Branding can include culturally significant elements and patterns',
+        accessibility_maintained:
+          'All custom branding meets accessibility standards',
+        community_identity:
+          'Visual design reflects community values and preferences',
+      },
     };
 
     // Include generated CSS if requested
     if (include_css && branding) {
-      response_data.generated_css = brandingManager.generateBrandingCSS(branding);
+      response_data.generated_css =
+        brandingManager.generateBrandingCSS(branding);
     }
 
     // Include HTML template if requested and user has admin permissions
-    if (include_template && ['owner', 'admin'].includes(membership.role) && branding && whitelabel) {
+    if (
+      include_template &&
+      ['owner', 'admin'].includes(membership.role) &&
+      branding &&
+      whitelabel
+    ) {
       const sample_content = `
         <div class="container mx-auto px-4 py-8">
           <div class="text-center mb-12">
@@ -100,7 +118,7 @@ export async function GET(
           </div>
         </div>
       `;
-      
+
       response_data.sample_template = brandingManager.generateBrandedTemplate(
         branding,
         whitelabel,
@@ -111,32 +129,87 @@ export async function GET(
     // Add customization options
     response_data.customization_options = {
       color_schemes: [
-        { name: 'Professional', primary: '#2563eb', secondary: '#64748b', accent: '#0ea5e9' },
-        { name: 'Earth Tones', primary: '#B85C38', secondary: '#7A9B76', accent: '#D4A574' },
-        { name: 'Indigenous Heritage', primary: '#8B4513', secondary: '#228B22', accent: '#DAA520' },
-        { name: 'Ocean', primary: '#0ea5e9', secondary: '#06b6d4', accent: '#3b82f6' },
-        { name: 'Forest', primary: '#16a34a', secondary: '#65a30d', accent: '#84cc16' },
-        { name: 'Sunset', primary: '#ea580c', secondary: '#dc2626', accent: '#f59e0b' }
+        {
+          name: 'Professional',
+          primary: '#2563eb',
+          secondary: '#64748b',
+          accent: '#0ea5e9',
+        },
+        {
+          name: 'Earth Tones',
+          primary: '#B85C38',
+          secondary: '#7A9B76',
+          accent: '#D4A574',
+        },
+        {
+          name: 'Indigenous Heritage',
+          primary: '#8B4513',
+          secondary: '#228B22',
+          accent: '#DAA520',
+        },
+        {
+          name: 'Ocean',
+          primary: '#0ea5e9',
+          secondary: '#06b6d4',
+          accent: '#3b82f6',
+        },
+        {
+          name: 'Forest',
+          primary: '#16a34a',
+          secondary: '#65a30d',
+          accent: '#84cc16',
+        },
+        {
+          name: 'Sunset',
+          primary: '#ea580c',
+          secondary: '#dc2626',
+          accent: '#f59e0b',
+        },
       ],
       font_options: [
-        'Inter', 'Roboto', 'Open Sans', 'Poppins', 'Montserrat', 'Lato',
-        'Source Sans Pro', 'Nunito', 'Playfair Display', 'Merriweather'
+        'Inter',
+        'Roboto',
+        'Open Sans',
+        'Poppins',
+        'Montserrat',
+        'Lato',
+        'Source Sans Pro',
+        'Nunito',
+        'Playfair Display',
+        'Merriweather',
       ],
       layout_styles: [
-        { id: 'modern', name: 'Modern', description: 'Clean, contemporary design with cards and grids' },
-        { id: 'traditional', name: 'Traditional', description: 'Classic layout with centered content and formal typography' },
-        { id: 'minimal', name: 'Minimal', description: 'Simple, distraction-free design focusing on content' },
-        { id: 'community-focused', name: 'Community Focused', description: 'Emphasizes community connections and collaboration' }
+        {
+          id: 'modern',
+          name: 'Modern',
+          description: 'Clean, contemporary design with cards and grids',
+        },
+        {
+          id: 'traditional',
+          name: 'Traditional',
+          description:
+            'Classic layout with centered content and formal typography',
+        },
+        {
+          id: 'minimal',
+          name: 'Minimal',
+          description: 'Simple, distraction-free design focusing on content',
+        },
+        {
+          id: 'community-focused',
+          name: 'Community Focused',
+          description: 'Emphasizes community connections and collaboration',
+        },
       ],
       cultural_patterns: {
         available: true,
         note: 'Cultural patterns can be added to reflect community heritage and identity',
-        guidance: 'Ensure patterns are used respectfully and with proper cultural attribution'
-      }
+        guidance:
+          'Ensure patterns are used respectfully and with proper cultural attribution',
+      },
     };
 
     return NextResponse.json(response_data);
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -151,7 +224,10 @@ export async function PUT(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -165,33 +241,41 @@ export async function PUT(
     // Validate update structure
     if (!updates.branding && !updates.whitelabel && !updates.domain) {
       return NextResponse.json(
-        { error: 'At least one of branding, whitelabel, or domain updates required' },
+        {
+          error:
+            'At least one of branding, whitelabel, or domain updates required',
+        },
         { status: 400 }
       );
     }
 
     // Apply branding updates with sovereignty validation
-    const { success, error: update_error } = await brandingManager.updateProjectBranding(
-      params.projectId,
-      user.id,
-      updates
-    );
+    const { success, error: update_error } =
+      await brandingManager.updateProjectBranding(
+        params.projectId,
+        user.id,
+        updates
+      );
 
     if (!success) {
       return NextResponse.json(
-        { 
+        {
           error: update_error,
-          sovereignty_note: 'Branding updates must maintain accessibility and community standards'
+          sovereignty_note:
+            'Branding updates must maintain accessibility and community standards',
         },
         { status: 400 }
       );
     }
 
     // Get updated branding configuration
-    const { branding, domain, whitelabel } = await brandingManager.getProjectBranding(params.projectId);
+    const { branding, domain, whitelabel } =
+      await brandingManager.getProjectBranding(params.projectId);
 
     // Generate updated CSS
-    const updated_css = branding ? brandingManager.generateBrandingCSS(branding) : null;
+    const updated_css = branding
+      ? brandingManager.generateBrandingCSS(branding)
+      : null;
 
     return NextResponse.json({
       branding,
@@ -202,17 +286,19 @@ export async function PUT(
         visual_sovereignty_maintained: true,
         accessibility_standards_met: true,
         cultural_elements_respected: true,
-        community_identity_preserved: true
+        community_identity_preserved: true,
       },
       next_steps: {
         css_deployment: 'Updated CSS can be deployed to your project frontend',
-        domain_verification: domain?.custom_domain && !domain.domain_verified ? 
-          'Custom domain requires DNS verification' : null,
+        domain_verification:
+          domain?.custom_domain && !domain.domain_verified
+            ? 'Custom domain requires DNS verification'
+            : null,
         template_updates: 'Page templates can be regenerated with new branding',
-        testing_recommended: 'Test branding across different devices and accessibility tools'
-      }
+        testing_recommended:
+          'Test branding across different devices and accessibility tools',
+      },
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -227,7 +313,10 @@ export async function POST(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -257,23 +346,22 @@ export async function POST(
     switch (action) {
       case 'generate_template':
         return await this.handleGenerateTemplate(params.projectId, payload);
-      
+
       case 'verify_domain':
         return await this.handleDomainVerification(params.projectId, payload);
-      
+
       case 'test_accessibility':
         return await this.handleAccessibilityTest(params.projectId, payload);
-      
+
       case 'export_branding':
         return await this.handleExportBranding(params.projectId, payload);
-      
+
       default:
         return NextResponse.json(
           { error: 'Unknown action specified' },
           { status: 400 }
         );
     }
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -284,9 +372,13 @@ export async function POST(
 
 // Helper methods for POST actions
 
-async function handleGenerateTemplate(project_id: string, payload: any): Promise<NextResponse> {
-  const { branding, domain, whitelabel } = await brandingManager.getProjectBranding(project_id);
-  
+async function handleGenerateTemplate(
+  project_id: string,
+  payload: any
+): Promise<NextResponse> {
+  const { branding, domain, whitelabel } =
+    await brandingManager.getProjectBranding(project_id);
+
   if (!branding || !whitelabel) {
     return NextResponse.json(
       { error: 'Branding configuration incomplete' },
@@ -311,7 +403,11 @@ async function handleGenerateTemplate(project_id: string, payload: any): Promise
       content = generateHomepageContent(whitelabel);
   }
 
-  const template = brandingManager.generateBrandedTemplate(branding, whitelabel, content);
+  const template = brandingManager.generateBrandedTemplate(
+    branding,
+    whitelabel,
+    content
+  );
 
   return NextResponse.json({
     template,
@@ -319,15 +415,18 @@ async function handleGenerateTemplate(project_id: string, payload: any): Promise
     sovereignty_confirmation: {
       community_branding_applied: true,
       accessibility_standards_met: true,
-      cultural_elements_included: true
-    }
+      cultural_elements_included: true,
+    },
   });
 }
 
-async function handleDomainVerification(project_id: string, payload: any): Promise<NextResponse> {
+async function handleDomainVerification(
+  project_id: string,
+  payload: any
+): Promise<NextResponse> {
   // This would implement actual domain verification
   // For now, return verification instructions
-  
+
   return NextResponse.json({
     verification_status: 'pending',
     dns_records: [
@@ -335,29 +434,33 @@ async function handleDomainVerification(project_id: string, payload: any): Promi
         type: 'CNAME',
         name: payload.domain || 'www',
         value: `${project_id}.empathyledger.org`,
-        ttl: 3600
+        ttl: 3600,
       },
       {
         type: 'TXT',
         name: '_empathy_verify',
         value: `empathy-ledger-verification=${project_id}`,
-        ttl: 3600
-      }
+        ttl: 3600,
+      },
     ],
     instructions: [
       'Add the CNAME record to point your domain to our servers',
       'Add the TXT record for domain verification',
       'DNS changes may take up to 24 hours to propagate',
-      'SSL certificate will be automatically issued upon verification'
+      'SSL certificate will be automatically issued upon verification',
     ],
-    sovereignty_note: 'Domain verification maintains your complete control over your web presence'
+    sovereignty_note:
+      'Domain verification maintains your complete control over your web presence',
   });
 }
 
-async function handleAccessibilityTest(project_id: string, payload: any): Promise<NextResponse> {
+async function handleAccessibilityTest(
+  project_id: string,
+  payload: any
+): Promise<NextResponse> {
   // This would implement accessibility testing
   // For now, return basic accessibility checklist
-  
+
   return NextResponse.json({
     accessibility_score: 95,
     checks_passed: [
@@ -365,23 +468,29 @@ async function handleAccessibilityTest(project_id: string, payload: any): Promis
       'Font sizes are readable (minimum 16px)',
       'Interactive elements have proper focus states',
       'Images have alt text support',
-      'Semantic HTML structure used'
+      'Semantic HTML structure used',
     ],
     recommendations: [
       'Consider adding skip navigation links',
       'Test with screen readers',
-      'Verify keyboard navigation works completely'
+      'Verify keyboard navigation works completely',
     ],
     sovereignty_confirmation: {
-      inclusive_design: 'Branding supports universal access to community stories',
-      cultural_accessibility: 'Design respects different cultural navigation patterns'
-    }
+      inclusive_design:
+        'Branding supports universal access to community stories',
+      cultural_accessibility:
+        'Design respects different cultural navigation patterns',
+    },
   });
 }
 
-async function handleExportBranding(project_id: string, payload: any): Promise<NextResponse> {
-  const { branding, whitelabel } = await brandingManager.getProjectBranding(project_id);
-  
+async function handleExportBranding(
+  project_id: string,
+  payload: any
+): Promise<NextResponse> {
+  const { branding, whitelabel } =
+    await brandingManager.getProjectBranding(project_id);
+
   if (!branding) {
     return NextResponse.json(
       { error: 'Branding configuration not found' },
@@ -400,7 +509,9 @@ async function handleExportBranding(project_id: string, payload: any): Promise<N
       exported_content = JSON.stringify({ branding, whitelabel }, null, 2);
       break;
     case 'scss':
-      exported_content = convertCSStoSCSS(brandingManager.generateBrandingCSS(branding));
+      exported_content = convertCSStoSCSS(
+        brandingManager.generateBrandingCSS(branding)
+      );
       break;
   }
 
@@ -408,7 +519,8 @@ async function handleExportBranding(project_id: string, payload: any): Promise<N
     exported_content,
     format: export_format,
     filename: `${whitelabel?.platform_name || 'project'}-branding.${export_format}`,
-    sovereignty_note: 'Exported branding maintains your visual sovereignty across platforms'
+    sovereignty_note:
+      'Exported branding maintains your visual sovereignty across platforms',
   });
 }
 
@@ -555,5 +667,7 @@ function generateInsightsContent(whitelabel: any): string {
 
 function convertCSStoSCSS(css: string): string {
   // Basic CSS to SCSS conversion
-  return css.replace(/:root\s*{/g, '$').replace(/--([^:]+):\s*([^;]+);/g, '$1: $2;');
+  return css
+    .replace(/:root\s*{/g, '$')
+    .replace(/--([^:]+):\s*([^;]+);/g, '$1: $2;');
 }

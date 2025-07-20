@@ -29,26 +29,28 @@ async function runMigrations() {
 
     // Check if migration is needed
     const migrationsDir = path.join(process.cwd(), 'supabase', 'migrations');
-    
+
     try {
       const files = await fs.readdir(migrationsDir);
       const sqlFiles = files.filter(file => file.endsWith('.sql'));
-      
+
       if (sqlFiles.length === 0) {
         console.log('📝 No migration files found');
         return;
       }
-      
+
       console.log(`📁 Found ${sqlFiles.length} migration files`);
-      console.log('💡 For production migrations, use the Supabase CLI or dashboard');
+      console.log(
+        '💡 For production migrations, use the Supabase CLI or dashboard'
+      );
       console.log('💡 This script is for development reference only');
-      
     } catch (error) {
-      console.log('📁 No migrations directory found - this is expected for initial setup');
+      console.log(
+        '📁 No migrations directory found - this is expected for initial setup'
+      );
     }
 
     console.log('✅ Migration check completed');
-
   } catch (error) {
     console.error('❌ Migration failed:', error);
     process.exit(1);

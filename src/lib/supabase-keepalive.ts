@@ -8,14 +8,17 @@ import { supabase } from './supabase-auth';
 /**
  * Simple health check to keep Supabase active
  */
-export async function healthCheck(): Promise<{ success: boolean; timestamp: string }> {
+export async function healthCheck(): Promise<{
+  success: boolean;
+  timestamp: string;
+}> {
   try {
     // Simple query to keep database active
     const { data, error } = await supabase
       .from('profiles')
       .select('count(*)')
       .limit(1);
-    
+
     if (error) {
       console.error('Health check failed:', error);
       return { success: false, timestamp: new Date().toISOString() };
@@ -35,7 +38,7 @@ export async function healthCheck(): Promise<{ success: boolean; timestamp: stri
 export async function keepAlive(): Promise<void> {
   try {
     await healthCheck();
-    
+
     // Store last keep-alive in localStorage for tracking
     if (typeof window !== 'undefined') {
       localStorage.setItem('supabase_last_keepalive', new Date().toISOString());
@@ -51,10 +54,10 @@ export async function keepAlive(): Promise<void> {
 export function setupKeepAlive(): () => void {
   // Keep alive every 6 hours (free tier pauses after ~1 week)
   const interval = setInterval(keepAlive, 6 * 60 * 60 * 1000);
-  
+
   // Initial keep-alive
   keepAlive();
-  
+
   // Return cleanup function
   return () => clearInterval(interval);
 }
@@ -69,20 +72,21 @@ export async function checkSupabaseStatus(): Promise<{
 }> {
   try {
     const result = await healthCheck();
-    
-    const lastKeepAlive = typeof window !== 'undefined' 
-      ? localStorage.getItem('supabase_last_keepalive') 
-      : null;
+
+    const lastKeepAlive =
+      typeof window !== 'undefined'
+        ? localStorage.getItem('supabase_last_keepalive')
+        : null;
 
     return {
       isActive: result.success,
       lastKeepAlive: lastKeepAlive || undefined,
-      error: result.success ? undefined : 'Health check failed'
+      error: result.success ? undefined : 'Health check failed',
     };
   } catch (error) {
     return {
       isActive: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }

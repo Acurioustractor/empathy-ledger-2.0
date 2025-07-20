@@ -1,7 +1,7 @@
 // @ts-nocheck - Schema interface mismatches need proper type generation
 /**
  * Story Submission Component
- * 
+ *
  * Philosophy: "Share your experience" not "Submit content". This component creates
  * a sacred space for storytellers to share their wisdom while maintaining full
  * sovereignty over their narratives and how they're used.
@@ -36,7 +36,7 @@ const DEFAULT_CONSENT: ConsentSettings = {
   allowValueCreation: false,
   allowCrossCommunityConnection: false,
   allowPolicyUse: false,
-  allowMediaUse: false
+  allowMediaUse: false,
 };
 
 const DEFAULT_CULTURAL_PROTOCOLS: CulturalProtocols = {
@@ -45,13 +45,24 @@ const DEFAULT_CULTURAL_PROTOCOLS: CulturalProtocols = {
   ceremonial_content: false,
   requires_elder_review: false,
   sharing_protocols: [],
-  community_permissions: []
+  community_permissions: [],
 };
 
 const COMMON_THEMES = [
-  'Healing', 'Community Strength', 'Cultural Practice', 'Youth Leadership',
-  'Elder Wisdom', 'Land Connection', 'Justice', 'Education', 'Family',
-  'Tradition', 'Innovation', 'Resilience', 'Connection', 'Identity'
+  'Healing',
+  'Community Strength',
+  'Cultural Practice',
+  'Youth Leadership',
+  'Elder Wisdom',
+  'Land Connection',
+  'Justice',
+  'Education',
+  'Family',
+  'Tradition',
+  'Innovation',
+  'Resilience',
+  'Connection',
+  'Identity',
 ];
 
 interface StorySubmissionProps {
@@ -59,11 +70,15 @@ interface StorySubmissionProps {
   initialData?: Partial<StorySubmissionData>;
 }
 
-export default function StorySubmission({ onSuccess, initialData }: StorySubmissionProps) {
-  const { isSignedIn, communityAffiliation, culturalProtocols } = useCommunityMember();
+export default function StorySubmission({
+  onSuccess,
+  initialData,
+}: StorySubmissionProps) {
+  const { isSignedIn, communityAffiliation, culturalProtocols } =
+    useCommunityMember();
   const supabase = createClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -77,43 +92,49 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
     submission_method: 'web',
     privacy_level: 'private',
     consent_settings: { ...DEFAULT_CONSENT },
-    cultural_protocols: { 
+    cultural_protocols: {
       ...DEFAULT_CULTURAL_PROTOCOLS,
       // Inherit from user's profile if available
-      ...(culturalProtocols || {})
+      ...(culturalProtocols || {}),
     },
     tags: [],
     location: '',
     geographic_region: '',
     story_themes: [],
     personal_quotes: [],
-    ...initialData
+    ...initialData,
   });
 
   const handleInputChange = (field: keyof StorySubmissionData, value: any) => {
     setStoryData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
-  const handleConsentChange = (field: keyof ConsentSettings, value: boolean) => {
+  const handleConsentChange = (
+    field: keyof ConsentSettings,
+    value: boolean
+  ) => {
     setStoryData(prev => ({
       ...prev,
       consent_settings: {
         ...prev.consent_settings,
-        [field]: value
-      }
+        [field]: value,
+      },
     }));
   };
 
-  const handleCulturalProtocolChange = (field: keyof CulturalProtocols, value: any) => {
+  const handleCulturalProtocolChange = (
+    field: keyof CulturalProtocols,
+    value: any
+  ) => {
     setStoryData(prev => ({
       ...prev,
       cultural_protocols: {
         ...prev.cultural_protocols,
-        [field]: value
-      }
+        [field]: value,
+      },
     }));
   };
 
@@ -122,7 +143,7 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
       ...prev,
       story_themes: prev.story_themes.includes(theme)
         ? prev.story_themes.filter(t => t !== theme)
-        : [...prev.story_themes, theme]
+        : [...prev.story_themes, theme],
     }));
   };
 
@@ -130,7 +151,7 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
     if (tag.trim() && !storyData.tags.includes(tag.trim())) {
       setStoryData(prev => ({
         ...prev,
-        tags: [...prev.tags, tag.trim()]
+        tags: [...prev.tags, tag.trim()],
       }));
     }
   };
@@ -138,7 +159,7 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
   const handleTagRemove = (tagToRemove: string) => {
     setStoryData(prev => ({
       ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
+      tags: prev.tags.filter(tag => tag !== tagToRemove),
     }));
   };
 
@@ -148,7 +169,7 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
       const mediaRecorder = new MediaRecorder(stream);
       const chunks: BlobPart[] = [];
 
-      mediaRecorder.ondataavailable = (event) => {
+      mediaRecorder.ondataavailable = event => {
         chunks.push(event.data);
       };
 
@@ -187,9 +208,9 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
 
       if (error) throw error;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('story-audio')
-        .getPublicUrl(data.path);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('story-audio').getPublicUrl(data.path);
 
       return publicUrl;
     } catch (error) {
@@ -228,15 +249,17 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
           geographic_region: storyData.geographic_region,
           story_themes: storyData.story_themes,
           personal_quotes: storyData.personal_quotes,
-          status: 'pending'
+          status: 'pending',
         })
         .select()
         .single();
 
       if (error) throw error;
 
-      setSuccess('Your story has been submitted successfully! Thank you for sharing your wisdom with the community.');
-      
+      setSuccess(
+        'Your story has been submitted successfully! Thank you for sharing your wisdom with the community.'
+      );
+
       // Reset form
       setStoryData({
         title: '',
@@ -249,7 +272,7 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
         location: '',
         geographic_region: '',
         story_themes: [],
-        personal_quotes: []
+        personal_quotes: [],
       });
       setCurrentStep(1);
       setAudioBlob(null);
@@ -274,7 +297,9 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold mb-4">Join Our Community</h2>
-        <p className="text-lg mb-6">Please sign in to share your story with our community.</p>
+        <p className="text-lg mb-6">
+          Please sign in to share your story with our community.
+        </p>
         <a href="/auth/sign-in" className="btn-primary">
           Sign In to Share
         </a>
@@ -286,13 +311,17 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
+        <h1
+          className="text-4xl font-bold mb-4"
+          style={{ color: 'var(--foreground)' }}
+        >
           Share Your Experience
         </h1>
         <p className="text-xl" style={{ color: 'var(--color-storm)' }}>
-          Your story has power. Share it on your terms, with full control over how it's used.
+          Your story has power. Share it on your terms, with full control over
+          how it's used.
         </p>
-        
+
         {/* Progress Indicator */}
         <div className="flex justify-center space-x-2 mt-6">
           {[1, 2, 3, 4].map(num => (
@@ -300,12 +329,16 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
               key={num}
               className="w-3 h-3 rounded-full"
               style={{
-                backgroundColor: num <= currentStep ? 'var(--primary)' : 'var(--color-elder)'
+                backgroundColor:
+                  num <= currentStep ? 'var(--primary)' : 'var(--color-elder)',
               }}
             />
           ))}
         </div>
-        <p className="text-sm mt-2" style={{ color: 'var(--muted-foreground)' }}>
+        <p
+          className="text-sm mt-2"
+          style={{ color: 'var(--muted-foreground)' }}
+        >
           Step {currentStep} of 4
         </p>
       </div>
@@ -315,7 +348,7 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
         {currentStep === 1 && (
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold mb-4">Your Story</h2>
-            
+
             <div>
               <label className="block text-sm font-medium mb-2">
                 Story Title (Optional)
@@ -323,7 +356,7 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
               <input
                 type="text"
                 value={storyData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
+                onChange={e => handleInputChange('title', e.target.value)}
                 className="w-full"
                 placeholder="Give your story a title..."
               />
@@ -335,7 +368,10 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
               </label>
               <div className="space-y-3">
                 {/* Audio Recording Option */}
-                <div className="flex items-center space-x-4 p-3 rounded-lg" style={{ backgroundColor: 'var(--muted)' }}>
+                <div
+                  className="flex items-center space-x-4 p-3 rounded-lg"
+                  style={{ backgroundColor: 'var(--muted)' }}
+                >
                   {!audioRecording ? (
                     <button
                       onClick={startAudioRecording}
@@ -353,9 +389,12 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                       <span>Stop Recording</span>
                     </button>
                   )}
-                  
+
                   {audioBlob && (
-                    <div className="text-sm" style={{ color: 'var(--color-storm)' }}>
+                    <div
+                      className="text-sm"
+                      style={{ color: 'var(--color-storm)' }}
+                    >
                       ✓ Audio recorded successfully
                     </div>
                   )}
@@ -364,13 +403,19 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                 {/* Text Input */}
                 <textarea
                   value={storyData.transcript}
-                  onChange={(e) => handleInputChange('transcript', e.target.value)}
+                  onChange={e =>
+                    handleInputChange('transcript', e.target.value)
+                  }
                   className="w-full h-40"
                   placeholder="Share your experience, wisdom, or knowledge here. This is your space to tell your story in your own words..."
                   required
                 />
-                <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                  Your story will be preserved exactly as you write it. We honor your language and voice.
+                <p
+                  className="text-xs"
+                  style={{ color: 'var(--muted-foreground)' }}
+                >
+                  Your story will be preserved exactly as you write it. We honor
+                  your language and voice.
                 </p>
               </div>
             </div>
@@ -382,7 +427,7 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
               <input
                 type="text"
                 value={storyData.location}
-                onChange={(e) => handleInputChange('location', e.target.value)}
+                onChange={e => handleInputChange('location', e.target.value)}
                 className="w-full"
                 placeholder="Where does your story take place?"
               />
@@ -394,7 +439,10 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {COMMON_THEMES.map(theme => (
-                  <label key={theme} className="flex items-center space-x-2 cursor-pointer">
+                  <label
+                    key={theme}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
                     <input
                       type="checkbox"
                       checked={storyData.story_themes.includes(theme)}
@@ -412,8 +460,10 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
         {/* Step 2: Privacy & Sharing */}
         {currentStep === 2 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold mb-4">Privacy & Sharing Preferences</h2>
-            
+            <h2 className="text-2xl font-semibold mb-4">
+              Privacy & Sharing Preferences
+            </h2>
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-3">
@@ -426,13 +476,16 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                       name="privacy_level"
                       value="private"
                       checked={storyData.privacy_level === 'private'}
-                      onChange={(e) => handleInputChange('privacy_level', e.target.value)}
+                      onChange={e =>
+                        handleInputChange('privacy_level', e.target.value)
+                      }
                       className="mt-1"
                     />
                     <div>
                       <span className="font-medium">Private</span>
                       <p className="text-sm text-muted-foreground">
-                        Only you can see this story. Perfect for personal reflection or when you're not ready to share.
+                        Only you can see this story. Perfect for personal
+                        reflection or when you're not ready to share.
                       </p>
                     </div>
                   </label>
@@ -443,13 +496,16 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                       name="privacy_level"
                       value="community"
                       checked={storyData.privacy_level === 'community'}
-                      onChange={(e) => handleInputChange('privacy_level', e.target.value)}
+                      onChange={e =>
+                        handleInputChange('privacy_level', e.target.value)
+                      }
                       className="mt-1"
                     />
                     <div>
                       <span className="font-medium">Community Members</span>
                       <p className="text-sm text-muted-foreground">
-                        Share with members of your community ({communityAffiliation}). Builds community wisdom.
+                        Share with members of your community (
+                        {communityAffiliation}). Builds community wisdom.
                       </p>
                     </div>
                   </label>
@@ -460,13 +516,16 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                       name="privacy_level"
                       value="public"
                       checked={storyData.privacy_level === 'public'}
-                      onChange={(e) => handleInputChange('privacy_level', e.target.value)}
+                      onChange={e =>
+                        handleInputChange('privacy_level', e.target.value)
+                      }
                       className="mt-1"
                     />
                     <div>
                       <span className="font-medium">Public</span>
                       <p className="text-sm text-muted-foreground">
-                        Share with everyone. Your story can inspire and educate beyond your community.
+                        Share with everyone. Your story can inspire and educate
+                        beyond your community.
                       </p>
                     </div>
                   </label>
@@ -479,11 +538,20 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
         {/* Step 3: Consent & Permissions */}
         {currentStep === 3 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold mb-4">How Can Your Story Be Used?</h2>
-            
-            <div className="p-4 rounded-lg" style={{ backgroundColor: 'var(--muted)' }}>
-              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-                You maintain full control over how your story is used. You can change these permissions at any time.
+            <h2 className="text-2xl font-semibold mb-4">
+              How Can Your Story Be Used?
+            </h2>
+
+            <div
+              className="p-4 rounded-lg"
+              style={{ backgroundColor: 'var(--muted)' }}
+            >
+              <p
+                className="text-sm"
+                style={{ color: 'var(--muted-foreground)' }}
+              >
+                You maintain full control over how your story is used. You can
+                change these permissions at any time.
               </p>
             </div>
 
@@ -492,13 +560,16 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                 <input
                   type="checkbox"
                   checked={storyData.consent_settings.allowAnalysis}
-                  onChange={(e) => handleConsentChange('allowAnalysis', e.target.checked)}
+                  onChange={e =>
+                    handleConsentChange('allowAnalysis', e.target.checked)
+                  }
                   className="mt-1"
                 />
                 <div>
                   <span className="font-medium">AI Analysis</span>
                   <p className="text-sm text-muted-foreground">
-                    Allow respectful AI analysis that preserves your language and identifies community strengths.
+                    Allow respectful AI analysis that preserves your language
+                    and identifies community strengths.
                   </p>
                 </div>
               </label>
@@ -507,13 +578,19 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                 <input
                   type="checkbox"
                   checked={storyData.consent_settings.allowCommunitySharing}
-                  onChange={(e) => handleConsentChange('allowCommunitySharing', e.target.checked)}
+                  onChange={e =>
+                    handleConsentChange(
+                      'allowCommunitySharing',
+                      e.target.checked
+                    )
+                  }
                   className="mt-1"
                 />
                 <div>
                   <span className="font-medium">Community Insights</span>
                   <p className="text-sm text-muted-foreground">
-                    Use your story to generate community-wide insights and patterns (anonymized).
+                    Use your story to generate community-wide insights and
+                    patterns (anonymized).
                   </p>
                 </div>
               </label>
@@ -522,13 +599,16 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                 <input
                   type="checkbox"
                   checked={storyData.consent_settings.allowValueCreation}
-                  onChange={(e) => handleConsentChange('allowValueCreation', e.target.checked)}
+                  onChange={e =>
+                    handleConsentChange('allowValueCreation', e.target.checked)
+                  }
                   className="mt-1"
                 />
                 <div>
                   <span className="font-medium">Value Creation</span>
                   <p className="text-sm text-muted-foreground">
-                    Allow your story to help secure grants, influence policy, or create other community value. You'll share in any benefits.
+                    Allow your story to help secure grants, influence policy, or
+                    create other community value. You'll share in any benefits.
                   </p>
                 </div>
               </label>
@@ -537,13 +617,16 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                 <input
                   type="checkbox"
                   checked={storyData.consent_settings.allowPolicyUse}
-                  onChange={(e) => handleConsentChange('allowPolicyUse', e.target.checked)}
+                  onChange={e =>
+                    handleConsentChange('allowPolicyUse', e.target.checked)
+                  }
                   className="mt-1"
                 />
                 <div>
                   <span className="font-medium">Policy Advocacy</span>
                   <p className="text-sm text-muted-foreground">
-                    Use insights from your story to advocate for policy changes that benefit your community.
+                    Use insights from your story to advocate for policy changes
+                    that benefit your community.
                   </p>
                 </div>
               </label>
@@ -555,19 +638,27 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
         {currentStep === 4 && (
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold mb-4">Cultural Protocols</h2>
-            
+
             <div className="space-y-4">
               <label className="flex items-start space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={storyData.cultural_protocols.seasonal_restrictions}
-                  onChange={(e) => handleCulturalProtocolChange('seasonal_restrictions', e.target.checked)}
+                  onChange={e =>
+                    handleCulturalProtocolChange(
+                      'seasonal_restrictions',
+                      e.target.checked
+                    )
+                  }
                   className="mt-1"
                 />
                 <div>
-                  <span className="font-medium">Seasonal or Ceremonial Restrictions</span>
+                  <span className="font-medium">
+                    Seasonal or Ceremonial Restrictions
+                  </span>
                   <p className="text-sm text-muted-foreground">
-                    This story has seasonal restrictions or requires special ceremonial considerations.
+                    This story has seasonal restrictions or requires special
+                    ceremonial considerations.
                   </p>
                 </div>
               </label>
@@ -576,13 +667,19 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                 <input
                   type="checkbox"
                   checked={storyData.cultural_protocols.gender_specific}
-                  onChange={(e) => handleCulturalProtocolChange('gender_specific', e.target.checked)}
+                  onChange={e =>
+                    handleCulturalProtocolChange(
+                      'gender_specific',
+                      e.target.checked
+                    )
+                  }
                   className="mt-1"
                 />
                 <div>
                   <span className="font-medium">Gender-Specific Knowledge</span>
                   <p className="text-sm text-muted-foreground">
-                    This story contains knowledge that should only be shared with specific gender groups.
+                    This story contains knowledge that should only be shared
+                    with specific gender groups.
                   </p>
                 </div>
               </label>
@@ -591,13 +688,19 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                 <input
                   type="checkbox"
                   checked={storyData.cultural_protocols.requires_elder_review}
-                  onChange={(e) => handleCulturalProtocolChange('requires_elder_review', e.target.checked)}
+                  onChange={e =>
+                    handleCulturalProtocolChange(
+                      'requires_elder_review',
+                      e.target.checked
+                    )
+                  }
                   className="mt-1"
                 />
                 <div>
                   <span className="font-medium">Elder or Community Review</span>
                   <p className="text-sm text-muted-foreground">
-                    Request community elders or leaders to review this story before sharing.
+                    Request community elders or leaders to review this story
+                    before sharing.
                   </p>
                 </div>
               </label>
@@ -606,24 +709,42 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
                 <input
                   type="checkbox"
                   checked={storyData.cultural_protocols.ceremonial_content}
-                  onChange={(e) => handleCulturalProtocolChange('ceremonial_content', e.target.checked)}
+                  onChange={e =>
+                    handleCulturalProtocolChange(
+                      'ceremonial_content',
+                      e.target.checked
+                    )
+                  }
                   className="mt-1"
                 />
                 <div>
-                  <span className="font-medium">Sacred or Ceremonial Content</span>
+                  <span className="font-medium">
+                    Sacred or Ceremonial Content
+                  </span>
                   <p className="text-sm text-muted-foreground">
-                    This story contains sacred knowledge that requires special handling and respect.
+                    This story contains sacred knowledge that requires special
+                    handling and respect.
                   </p>
                 </div>
               </label>
             </div>
 
-            <div className="p-4 rounded-lg" style={{ backgroundColor: 'var(--color-sunrise)', opacity: 0.1 }}>
-              <p className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
+            <div
+              className="p-4 rounded-lg"
+              style={{ backgroundColor: 'var(--color-sunrise)', opacity: 0.1 }}
+            >
+              <p
+                className="text-sm font-medium"
+                style={{ color: 'var(--foreground)' }}
+              >
                 🌟 Ready to Share Your Story
               </p>
-              <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-                Your story will be treated with the respect and protocols you've specified.
+              <p
+                className="text-sm mt-1"
+                style={{ color: 'var(--muted-foreground)' }}
+              >
+                Your story will be treated with the respect and protocols you've
+                specified.
               </p>
             </div>
           </div>
@@ -631,21 +752,27 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
 
         {/* Error and Success Messages */}
         {error && (
-          <div className="p-3 rounded-lg text-sm mt-6" style={{ 
-            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-            color: 'rgb(185, 28, 28)',
-            border: '1px solid rgba(239, 68, 68, 0.3)'
-          }}>
+          <div
+            className="p-3 rounded-lg text-sm mt-6"
+            style={{
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              color: 'rgb(185, 28, 28)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+            }}
+          >
             {error}
           </div>
         )}
 
         {success && (
-          <div className="p-3 rounded-lg text-sm mt-6" style={{ 
-            backgroundColor: 'rgba(34, 197, 94, 0.1)',
-            color: 'rgb(22, 101, 52)',
-            border: '1px solid rgba(34, 197, 94, 0.3)'
-          }}>
+          <div
+            className="p-3 rounded-lg text-sm mt-6"
+            style={{
+              backgroundColor: 'rgba(34, 197, 94, 0.1)',
+              color: 'rgb(22, 101, 52)',
+              border: '1px solid rgba(34, 197, 94, 0.3)',
+            }}
+          >
             {success}
           </div>
         )}
@@ -659,7 +786,7 @@ export default function StorySubmission({ onSuccess, initialData }: StorySubmiss
           >
             Previous
           </button>
-          
+
           {currentStep < 4 ? (
             <button
               onClick={nextStep}

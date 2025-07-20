@@ -194,7 +194,13 @@ export interface Database {
   };
 }
 
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
 
 // Additional types for components
 export interface ConsentSettings {

@@ -26,7 +26,7 @@ function checkEnvironmentSecurity() {
   // Check file permissions
   const stats = fs.statSync(ENV_FILE);
   const permissions = (stats.mode & parseInt('777', 8)).toString(8);
-  
+
   if (permissions !== '600') {
     issues.push(`❌ File permissions too open: ${permissions} (should be 600)`);
     console.log('   Fix with: chmod 600 .env.local');
@@ -37,42 +37,48 @@ function checkEnvironmentSecurity() {
 
   // Read and validate environment variables
   const envContent = fs.readFileSync(ENV_FILE, 'utf-8');
-  const lines = envContent.split('\n').filter(line => line.trim() && !line.startsWith('#'));
+  const lines = envContent
+    .split('\n')
+    .filter(line => line.trim() && !line.startsWith('#'));
 
   // Security checks
   const securityChecks = [
     {
       name: 'NextAuth Secret',
-      check: (content) => content.includes('NEXTAUTH_SECRET=') && 
-                          !content.includes('NEXTAUTH_SECRET=your-'),
-      required: true
+      check: content =>
+        content.includes('NEXTAUTH_SECRET=') &&
+        !content.includes('NEXTAUTH_SECRET=your-'),
+      required: true,
     },
     {
       name: 'Encryption Key',
-      check: (content) => {
+      check: content => {
         const match = content.match(/ENCRYPTION_KEY=(.+)/);
         return match && match[1].length >= 32;
       },
-      required: true
+      required: true,
     },
     {
       name: 'Production URLs in Development',
-      check: (content) => !content.includes('NODE_ENV=development') || 
-                          !content.includes('https://'),
-      warning: true
+      check: content =>
+        !content.includes('NODE_ENV=development') ||
+        !content.includes('https://'),
+      warning: true,
     },
     {
       name: 'Debug Mode in Production',
-      check: (content) => !content.includes('NODE_ENV=production') || 
-                          !content.includes('DEBUG_MODE=true'),
-      warning: true
+      check: content =>
+        !content.includes('NODE_ENV=production') ||
+        !content.includes('DEBUG_MODE=true'),
+      warning: true,
     },
     {
       name: 'Default/Example Values',
-      check: (content) => !content.includes('your-') && 
-                          !content.includes('change-for-production'),
-      warning: true
-    }
+      check: content =>
+        !content.includes('your-') &&
+        !content.includes('change-for-production'),
+      warning: true,
+    },
   ];
 
   securityChecks.forEach(check => {
@@ -92,7 +98,7 @@ function checkEnvironmentSecurity() {
   const sensitivePatterns = [
     { pattern: /password.*=.*[^*]/i, name: 'Plaintext passwords' },
     { pattern: /secret.*=.*[^*]/i, name: 'Exposed secrets' },
-    { pattern: /key.*=.*[^*]/i, name: 'API keys' }
+    { pattern: /key.*=.*[^*]/i, name: 'API keys' },
   ];
 
   console.log('\n📊 SECURITY SUMMARY:');
@@ -125,4 +131,4 @@ function checkEnvironmentSecurity() {
 
 // Run the security check
 const result = checkEnvironmentSecurity();
-process.exit(result.issues.length > 0 ? 1 : 0); 
+process.exit(result.issues.length > 0 ? 1 : 0);

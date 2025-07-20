@@ -13,12 +13,12 @@ interface VideoShowcaseProps {
 }
 
 const VideoShowcase: React.FC<VideoShowcaseProps> = ({
-  title = "Video Stories",
+  title = 'Video Stories',
   description,
   layout = 'grid',
   count = 4,
   className = '',
-  showControls = true
+  showControls = true,
 }) => {
   const renderHeroLayout = () => (
     <div className="space-y-6">
@@ -34,13 +34,17 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <button className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center shadow-xl hover:bg-white transition-colors">
-            <svg className="w-8 h-8 text-primary-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z"/>
+            <svg
+              className="w-8 h-8 text-primary-600 ml-1"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
             </svg>
           </button>
         </div>
       </div>
-      
+
       <div className="grid md:grid-cols-3 gap-4">
         {Array.from({ length: 3 }).map((_, index) => (
           <div key={index} className="relative">
@@ -54,8 +58,12 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <button className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors">
-                <svg className="w-4 h-4 text-primary-600 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
+                <svg
+                  className="w-4 h-4 text-primary-600 ml-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
                 </svg>
               </button>
             </div>
@@ -79,12 +87,16 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
           />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <button className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-xl hover:bg-white transition-colors">
-              <svg className="w-6 h-6 text-primary-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
+              <svg
+                className="w-6 h-6 text-primary-600 ml-1"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M8 5v14l11-7z" />
               </svg>
             </button>
           </div>
-          
+
           {showControls && (
             <div className="absolute bottom-4 left-4 right-4">
               <div className="bg-black/60 rounded-lg p-3 text-white text-sm">
@@ -112,19 +124,26 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <button className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center shadow-xl hover:bg-white transition-colors">
-            <svg className="w-8 h-8 text-primary-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z"/>
+            <svg
+              className="w-8 h-8 text-primary-600 ml-1"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
             </svg>
           </button>
         </div>
       </div>
-      
+
       <div className="space-y-6">
         <div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Story Title Placeholder</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-3">
+            Story Title Placeholder
+          </h3>
           <p className="text-gray-600 mb-4">
-            Featured story description placeholder. This would contain a compelling 
-            summary of the video content and its impact on the community.
+            Featured story description placeholder. This would contain a
+            compelling summary of the video content and its impact on the
+            community.
           </p>
           <div className="flex items-center text-sm text-gray-500 space-x-4">
             <span>Duration: 3:45</span>
@@ -134,7 +153,7 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
             <span>Location: NSW</span>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-4">
           {Array.from({ length: 2 }).map((_, index) => (
             <div key={index} className="relative">
@@ -147,8 +166,12 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <button className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors">
-                  <svg className="w-3 h-3 text-primary-600 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"/>
+                  <svg
+                    className="w-3 h-3 text-primary-600 ml-0.5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z" />
                   </svg>
                 </button>
               </div>
@@ -175,21 +198,25 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <button className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-xl hover:bg-white transition-colors">
-                <svg className="w-6 h-6 text-primary-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
+                <svg
+                  className="w-6 h-6 text-primary-600 ml-1"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
                 </svg>
               </button>
             </div>
           </div>
-          
+
           <div className={`${index % 2 === 1 ? 'md:order-1' : ''}`}>
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <h3 className="text-xl font-bold text-gray-900 mb-3">
                 Story Title Placeholder {index + 1}
               </h3>
               <p className="text-gray-600 mb-4">
-                Story description placeholder. This would contain the context and 
-                impact of this particular community member's experience.
+                Story description placeholder. This would contain the context
+                and impact of this particular community member's experience.
               </p>
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>Duration: 2:15</span>
@@ -205,7 +232,10 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
   const renderTestimonialsLayout = () => (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div
+          key={index}
+          className="bg-white rounded-xl shadow-lg overflow-hidden"
+        >
           <div className="relative">
             <ImagePlaceholder
               type="video"
@@ -217,17 +247,23 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <button className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors">
-                <svg className="w-4 h-4 text-primary-600 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
+                <svg
+                  className="w-4 h-4 text-primary-600 ml-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
                 </svg>
               </button>
             </div>
           </div>
-          
+
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-2">Testimonial Title</h4>
+            <h4 className="font-semibold text-gray-900 mb-2">
+              Testimonial Title
+            </h4>
             <p className="text-sm text-gray-600 mb-3">
-              "Testimonial quote placeholder that would contain a powerful 
+              "Testimonial quote placeholder that would contain a powerful
               statement about impact and change."
             </p>
             <div className="text-xs text-gray-500">
@@ -260,13 +296,15 @@ const VideoShowcase: React.FC<VideoShowcaseProps> = ({
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-3">{title}</h2>
           {description && (
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">{description}</p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              {description}
+            </p>
           )}
         </div>
       )}
-      
+
       {renderLayout()}
-      
+
       <div className="mt-8 text-center">
         <button className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
           + Add more videos

@@ -14,7 +14,9 @@ interface EmbedPreviewProps {
 export function EmbedPreview({ projectId, embedCode }: EmbedPreviewProps) {
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Embed Preview</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Embed Preview
+      </h3>
       <div className="border rounded-lg p-4 bg-gray-50">
         <p className="text-sm text-gray-600 mb-2">Project: {projectId}</p>
         {embedCode ? (

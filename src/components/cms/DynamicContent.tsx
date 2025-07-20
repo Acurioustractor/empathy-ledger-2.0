@@ -1,9 +1,19 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getPageContent, getStoriesByCategory, getSiteMetrics, type ContentBlock, type Story, type SiteMetric } from '@/lib/supabase-cms';
+import {
+  getPageContent,
+  getStoriesByCategory,
+  getSiteMetrics,
+  type ContentBlock,
+  type Story,
+  type SiteMetric,
+} from '@/lib/supabase-cms';
 import MediaDisplay from '@/components/ui/MediaDisplay';
-import { placeholderImages, placeholderBlurDataURLs } from '@/lib/supabase-media';
+import {
+  placeholderImages,
+  placeholderBlurDataURLs,
+} from '@/lib/supabase-media';
 
 interface DynamicContentProps {
   pageSlug: string;
@@ -11,13 +21,21 @@ interface DynamicContentProps {
 }
 
 interface LiveMetricProps {
-  metricType: 'story_count' | 'community_count' | 'policy_changes' | 'value_created';
+  metricType:
+    | 'story_count'
+    | 'community_count'
+    | 'policy_changes'
+    | 'value_created';
   fallbackValue?: string | number;
   format?: 'number' | 'currency' | 'percentage';
 }
 
 // Component for displaying live metrics from Supabase
-export function LiveMetric({ metricType, fallbackValue = 0, format = 'number' }: LiveMetricProps) {
+export function LiveMetric({
+  metricType,
+  fallbackValue = 0,
+  format = 'number',
+}: LiveMetricProps) {
   const [value, setValue] = useState<string | number>(fallbackValue);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,7 +44,7 @@ export function LiveMetric({ metricType, fallbackValue = 0, format = 'number' }:
       try {
         const metrics = await getSiteMetrics();
         const metric = metrics.find(m => m.metric_type === metricType);
-        
+
         if (metric) {
           setValue(metric.metric_value);
         } else {
@@ -35,7 +53,7 @@ export function LiveMetric({ metricType, fallbackValue = 0, format = 'number' }:
             story_count: 1847,
             community_count: 89,
             policy_changes: 67,
-            value_created: 2300000
+            value_created: 2300000,
           };
           setValue(fallbacks[metricType]);
         }
@@ -52,7 +70,7 @@ export function LiveMetric({ metricType, fallbackValue = 0, format = 'number' }:
 
   const formatValue = (val: string | number): string => {
     const numVal = Number(val);
-    
+
     switch (format) {
       case 'currency':
         return `$${(numVal / 1000000).toFixed(1)}M`;
@@ -72,9 +90,7 @@ export function LiveMetric({ metricType, fallbackValue = 0, format = 'number' }:
   }
 
   return (
-    <span className="font-extralight text-gray-900">
-      {formatValue(value)}
-    </span>
+    <span className="font-extralight text-gray-900">{formatValue(value)}</span>
   );
 }
 
@@ -85,7 +101,11 @@ interface LiveStoryCollectionProps {
   displayStyle?: 'cards' | 'list' | 'quotes';
 }
 
-export function LiveStoryCollection({ category, limit = 3, displayStyle = 'cards' }: LiveStoryCollectionProps) {
+export function LiveStoryCollection({
+  category,
+  limit = 3,
+  displayStyle = 'cards',
+}: LiveStoryCollectionProps) {
   const [stories, setStories] = useState<Story[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -122,7 +142,9 @@ export function LiveStoryCollection({ category, limit = 3, displayStyle = 'cards
   if (stories.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 font-light">No stories available in this category yet.</p>
+        <p className="text-gray-500 font-light">
+          No stories available in this category yet.
+        </p>
       </div>
     );
   }
@@ -130,8 +152,11 @@ export function LiveStoryCollection({ category, limit = 3, displayStyle = 'cards
   if (displayStyle === 'quotes') {
     return (
       <div className="space-y-8">
-        {stories.map((story) => (
-          <blockquote key={story.id} className="border-l-4 border-gray-200 pl-6">
+        {stories.map(story => (
+          <blockquote
+            key={story.id}
+            className="border-l-4 border-gray-200 pl-6"
+          >
             <p className="text-lg text-gray-700 font-light italic mb-3">
               "{story.content.substring(0, 200)}..."
             </p>
@@ -147,15 +172,23 @@ export function LiveStoryCollection({ category, limit = 3, displayStyle = 'cards
   if (displayStyle === 'list') {
     return (
       <div className="space-y-4">
-        {stories.map((story) => (
-          <div key={story.id} className="border-b border-gray-100 pb-4 last:border-b-0">
-            <h3 className="text-lg font-normal text-gray-900 mb-2">{story.title}</h3>
+        {stories.map(story => (
+          <div
+            key={story.id}
+            className="border-b border-gray-100 pb-4 last:border-b-0"
+          >
+            <h3 className="text-lg font-normal text-gray-900 mb-2">
+              {story.title}
+            </h3>
             <p className="text-gray-600 font-light text-sm mb-2">
               {story.content.substring(0, 150)}...
             </p>
             <div className="flex gap-2">
-              {story.themes.slice(0, 2).map((theme) => (
-                <span key={theme} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+              {story.themes.slice(0, 2).map(theme => (
+                <span
+                  key={theme}
+                  className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                >
                   {theme}
                 </span>
               ))}
@@ -169,26 +202,39 @@ export function LiveStoryCollection({ category, limit = 3, displayStyle = 'cards
   // Default: cards style
   return (
     <div className="grid gap-6">
-      {stories.map((story) => (
-        <div key={story.id} className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
+      {stories.map(story => (
+        <div
+          key={story.id}
+          className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
+        >
           <div className="flex justify-between items-start mb-3">
             <span className="text-xs text-gray-500 font-light uppercase tracking-wide">
               {story.category}
             </span>
             {story.sentiment_score && (
-              <div className={`w-2 h-2 rounded-full ${
-                story.sentiment_score > 0.7 ? 'bg-green-500' :
-                story.sentiment_score > 0.4 ? 'bg-yellow-500' : 'bg-red-500'
-              }`}></div>
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  story.sentiment_score > 0.7
+                    ? 'bg-green-500'
+                    : story.sentiment_score > 0.4
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
+                }`}
+              ></div>
             )}
           </div>
-          <h3 className="text-lg font-normal text-gray-900 mb-3">{story.title}</h3>
+          <h3 className="text-lg font-normal text-gray-900 mb-3">
+            {story.title}
+          </h3>
           <p className="text-gray-600 font-light mb-4 leading-relaxed">
             {story.content.substring(0, 200)}...
           </p>
           <div className="flex flex-wrap gap-2">
-            {story.themes.slice(0, 3).map((theme) => (
-              <span key={theme} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+            {story.themes.slice(0, 3).map(theme => (
+              <span
+                key={theme}
+                className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+              >
                 {theme}
               </span>
             ))}
@@ -200,7 +246,10 @@ export function LiveStoryCollection({ category, limit = 3, displayStyle = 'cards
 }
 
 // Main dynamic content component
-export default function DynamicContent({ pageSlug, fallbackContent }: DynamicContentProps) {
+export default function DynamicContent({
+  pageSlug,
+  fallbackContent,
+}: DynamicContentProps) {
   const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -239,7 +288,7 @@ export default function DynamicContent({ pageSlug, fallbackContent }: DynamicCon
 
   return (
     <div className="space-y-16">
-      {contentBlocks.map((block) => (
+      {contentBlocks.map(block => (
         <DynamicContentBlock key={block.id} block={block} />
       ))}
     </div>

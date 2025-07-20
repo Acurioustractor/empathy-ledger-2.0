@@ -25,7 +25,12 @@ export interface UserProfile {
   age_range?: string;
   location_general?: string;
   languages_spoken?: string[];
-  role: 'storyteller' | 'organization_admin' | 'community_moderator' | 'platform_admin' | 'researcher';
+  role:
+    | 'storyteller'
+    | 'organization_admin'
+    | 'community_moderator'
+    | 'platform_admin'
+    | 'researcher';
   privacy_settings: PrivacySettings;
   notification_preferences: NotificationPreferences;
   stories_contributed: number;
@@ -84,9 +89,12 @@ export async function signUpUser(
       options: {
         data: {
           full_name: userData.full_name,
-          display_name: userData.display_name || userData.full_name?.split(' ')[0] || 'Storyteller'
-        }
-      }
+          display_name:
+            userData.display_name ||
+            userData.full_name?.split(' ')[0] ||
+            'Storyteller',
+        },
+      },
     });
 
     if (authError) {
@@ -99,7 +107,10 @@ export async function signUpUser(
         id: authData.user.id,
         email,
         full_name: userData.full_name || null,
-        display_name: userData.display_name || userData.full_name?.split(' ')[0] || 'Anonymous',
+        display_name:
+          userData.display_name ||
+          userData.full_name?.split(' ')[0] ||
+          'Anonymous',
         age_range: userData.age_range || null,
         location_general: userData.location_general || null,
         role: userData.role || 'storyteller',
@@ -110,7 +121,7 @@ export async function signUpUser(
           show_age_range: false,
           allow_contact: true,
           allow_research_participation: false,
-          data_retention_preference: 'standard' as const
+          data_retention_preference: 'standard' as const,
         },
         notification_preferences: {
           email_story_responses: true,
@@ -119,10 +130,10 @@ export async function signUpUser(
           email_platform_updates: false,
           push_story_responses: true,
           push_community_activity: false,
-          push_insights_ready: true
+          push_insights_ready: true,
         },
         is_verified: false,
-        is_active: true
+        is_active: true,
       };
 
       const { error: profileError } = await supabase
@@ -152,7 +163,7 @@ export async function signInUser(
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password
+      password,
     });
 
     if (error) {
@@ -176,7 +187,9 @@ export async function signInUser(
 /**
  * Get current user profile with all data
  */
-export async function getUserProfile(userId: string): Promise<{ profile: UserProfile | null; error: any }> {
+export async function getUserProfile(
+  userId: string
+): Promise<{ profile: UserProfile | null; error: any }> {
   try {
     const { data, error } = await supabase
       .from('profiles')
@@ -204,7 +217,9 @@ export async function updateUserProfile(
   try {
     // Validate privacy settings if being updated
     if (updates.privacy_settings) {
-      const validatedSettings = validatePrivacySettings(updates.privacy_settings);
+      const validatedSettings = validatePrivacySettings(
+        updates.privacy_settings
+      );
       updates.privacy_settings = validatedSettings;
     }
 
@@ -212,7 +227,7 @@ export async function updateUserProfile(
       .from('profiles')
       .update({
         ...updates,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq('id', userId);
 
@@ -245,15 +260,18 @@ export async function signOutUser(): Promise<{ error: any }> {
 /**
  * Validate and sanitize privacy settings
  */
-function validatePrivacySettings(settings: Partial<PrivacySettings>): PrivacySettings {
+function validatePrivacySettings(
+  settings: Partial<PrivacySettings>
+): PrivacySettings {
   return {
     show_profile: settings.show_profile || 'community',
     show_stories: settings.show_stories || 'community',
     show_location: settings.show_location ?? false,
     show_age_range: settings.show_age_range ?? false,
     allow_contact: settings.allow_contact ?? true,
-    allow_research_participation: settings.allow_research_participation ?? false,
-    data_retention_preference: settings.data_retention_preference || 'standard'
+    allow_research_participation:
+      settings.allow_research_participation ?? false,
+    data_retention_preference: settings.data_retention_preference || 'standard',
   };
 }
 
@@ -271,7 +289,7 @@ export async function requestDataDeletion(
       .update({
         is_active: false,
         deletion_requested_at: new Date().toISOString(),
-        deletion_reason: reason || 'User requested'
+        deletion_reason: reason || 'User requested',
       })
       .eq('id', userId);
 
@@ -291,7 +309,9 @@ export async function requestDataDeletion(
 /**
  * Export user data (GDPR Data Portability)
  */
-export async function exportUserData(userId: string): Promise<{ data: any | null; error: any }> {
+export async function exportUserData(
+  userId: string
+): Promise<{ data: any | null; error: any }> {
   try {
     // Get user profile
     const { data: profile, error: profileError } = await supabase
@@ -343,8 +363,8 @@ export async function exportUserData(userId: string): Promise<{ data: any | null
       data_summary: {
         total_stories: stories?.length || 0,
         total_reactions: reactions?.length || 0,
-        total_comments: comments?.length || 0
-      }
+        total_comments: comments?.length || 0,
+      },
     };
 
     return { data: exportData, error: null };
@@ -366,8 +386,11 @@ export async function getCurrentSession(): Promise<{
   profile: UserProfile | null;
 }> {
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
     if (error || !session) {
       return { session: null, user: null, profile: null };
     }
@@ -377,7 +400,7 @@ export async function getCurrentSession(): Promise<{
     return {
       session,
       user: session.user,
-      profile
+      profile,
     };
   } catch (error) {
     return { session: null, user: null, profile: null };
@@ -387,7 +410,9 @@ export async function getCurrentSession(): Promise<{
 /**
  * Listen to auth state changes
  */
-export function onAuthStateChange(callback: (event: string, session: Session | null) => void) {
+export function onAuthStateChange(
+  callback: (event: string, session: Session | null) => void
+) {
   return supabase.auth.onAuthStateChange(callback);
 }
 
@@ -403,13 +428,11 @@ export async function joinCommunity(
   communityId: string
 ): Promise<{ success: boolean; error: any }> {
   try {
-    const { error } = await supabase
-      .from('community_members')
-      .insert({
-        community_id: communityId,
-        user_id: userId,
-        role: 'member'
-      });
+    const { error } = await supabase.from('community_members').insert({
+      community_id: communityId,
+      user_id: userId,
+      role: 'member',
+    });
 
     if (error) {
       return { success: false, error };
@@ -454,11 +477,14 @@ export async function leaveCommunity(
 /**
  * Get user's communities
  */
-export async function getUserCommunities(userId: string): Promise<{ communities: any[]; error: any }> {
+export async function getUserCommunities(
+  userId: string
+): Promise<{ communities: any[]; error: any }> {
   try {
     const { data, error } = await supabase
       .from('community_members')
-      .select(`
+      .select(
+        `
         *,
         communities (
           id,
@@ -469,7 +495,8 @@ export async function getUserCommunities(userId: string): Promise<{ communities:
           story_count,
           is_active
         )
-      `)
+      `
+      )
       .eq('user_id', userId);
 
     if (error) {
@@ -496,7 +523,7 @@ export async function checkUserPermission(
 ): Promise<boolean> {
   try {
     const { profile } = await getUserProfile(userId);
-    
+
     if (!profile || !profile.is_active) {
       return false;
     }
@@ -504,17 +531,25 @@ export async function checkUserPermission(
     // Basic permission checks
     switch (action) {
       case 'create_story':
-        return profile.role === 'storyteller' || profile.role === 'platform_admin';
-      
+        return (
+          profile.role === 'storyteller' || profile.role === 'platform_admin'
+        );
+
       case 'moderate_content':
-        return profile.role === 'community_moderator' || profile.role === 'platform_admin';
-      
+        return (
+          profile.role === 'community_moderator' ||
+          profile.role === 'platform_admin'
+        );
+
       case 'access_analytics':
-        return profile.role === 'organization_admin' || profile.role === 'platform_admin';
-      
+        return (
+          profile.role === 'organization_admin' ||
+          profile.role === 'platform_admin'
+        );
+
       case 'manage_users':
         return profile.role === 'platform_admin';
-      
+
       default:
         return false;
     }

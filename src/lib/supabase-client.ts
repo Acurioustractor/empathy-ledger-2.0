@@ -1,35 +1,35 @@
 /**
  * Bulletproof Supabase Client for Empathy Ledger
- * 
+ *
  * This is the NEW main Supabase client that replaces the old ones.
  * It's bulletproof, handles all edge cases, and never fucking breaks.
- * 
+ *
  * Use this instead of the old supabase.ts and supabase-server.ts
  */
 
-import { 
-  createClient as createFactoryClient, 
+import {
+  createClient as createFactoryClient,
   createServerClient as createFactoryServerClient,
   createAdminClient as createFactoryAdminClient,
   getSupabaseHealth,
   testConnection,
-  validateSupabaseEnvironment
+  validateSupabaseEnvironment,
 } from './supabase-factory';
 
-import { 
-  withErrorHandling, 
-  SupabaseError, 
+import {
+  withErrorHandling,
+  SupabaseError,
   SupabaseErrorType,
   getUserMessage,
   getSuggestions,
-  isRetryableError
+  isRetryableError,
 } from './supabase-errors';
 
-import { 
+import {
   getSupabaseHealthReport,
   startHealthMonitoring,
   isSupabaseReady,
-  quickHealthCheck
+  quickHealthCheck,
 } from './supabase-health';
 
 import { Database } from './database.types';
@@ -39,13 +39,15 @@ export async function createClient() {
   try {
     const env = validateSupabaseEnvironment();
     if (!env.isValid) {
-      throw new Error(`Missing Supabase environment variables: ${env.missingVars.join(', ')}`);
+      throw new Error(
+        `Missing Supabase environment variables: ${env.missingVars.join(', ')}`
+      );
     }
 
     return await createFactoryClient({
       maxRetries: 3,
       retryDelay: 1000,
-      timeout: 10000
+      timeout: 10000,
     });
   } catch (error) {
     console.error('🚨 Failed to create Supabase client:', error);
@@ -57,13 +59,15 @@ export async function createServerClient() {
   try {
     const env = validateSupabaseEnvironment();
     if (!env.isValid) {
-      throw new Error(`Missing Supabase environment variables: ${env.missingVars.join(', ')}`);
+      throw new Error(
+        `Missing Supabase environment variables: ${env.missingVars.join(', ')}`
+      );
     }
 
     return await createFactoryServerClient({
       maxRetries: 3,
       retryDelay: 1000,
-      timeout: 15000
+      timeout: 15000,
     });
   } catch (error) {
     console.error('🚨 Failed to create Supabase server client:', error);
@@ -75,7 +79,9 @@ export async function createAdminClient() {
   try {
     const env = validateSupabaseEnvironment();
     if (!env.isValid) {
-      throw new Error(`Missing Supabase environment variables: ${env.missingVars.join(', ')}`);
+      throw new Error(
+        `Missing Supabase environment variables: ${env.missingVars.join(', ')}`
+      );
     }
 
     if (!process.env.SUPABASE_SERVICE_KEY) {
@@ -85,7 +91,7 @@ export async function createAdminClient() {
     return await createFactoryAdminClient({
       maxRetries: 5,
       retryDelay: 2000,
-      timeout: 30000
+      timeout: 30000,
     });
   } catch (error) {
     console.error('🚨 Failed to create Supabase admin client:', error);
@@ -126,13 +132,13 @@ export class SupabaseClient {
   ): Promise<T[]> {
     return withErrorHandling(async () => {
       let queryBuilder = this.client.from(table).select(query);
-      
+
       if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
           queryBuilder = queryBuilder.eq(key, value);
         });
       }
-      
+
       return queryBuilder;
     }, `select from ${table}`);
   }
@@ -144,17 +150,17 @@ export class SupabaseClient {
   }
 
   async update<T = any>(
-    table: string, 
-    data: any, 
+    table: string,
+    data: any,
     filters: Record<string, any>
   ): Promise<T> {
     return withErrorHandling(async () => {
       let queryBuilder = this.client.from(table).update(data);
-      
+
       Object.entries(filters).forEach(([key, value]) => {
         queryBuilder = queryBuilder.eq(key, value);
       });
-      
+
       return queryBuilder.select().single();
     }, `update ${table}`);
   }
@@ -162,11 +168,11 @@ export class SupabaseClient {
   async delete(table: string, filters: Record<string, any>): Promise<void> {
     return withErrorHandling(async () => {
       let queryBuilder = this.client.from(table).delete();
-      
+
       Object.entries(filters).forEach(([key, value]) => {
         queryBuilder = queryBuilder.eq(key, value);
       });
-      
+
       return queryBuilder;
     }, `delete from ${table}`);
   }
@@ -247,7 +253,9 @@ export class SupabaseClient {
 export async function ensureSupabaseReady(): Promise<void> {
   const isReady = await isSupabaseReady();
   if (!isReady) {
-    throw new Error('Supabase is not ready. Check your configuration and network connection.');
+    throw new Error(
+      'Supabase is not ready. Check your configuration and network connection.'
+    );
   }
 }
 
@@ -255,19 +263,19 @@ export async function getConnectionStatus() {
   try {
     const health = await getSupabaseHealthReport();
     const quick = await quickHealthCheck();
-    
+
     return {
       status: health.overall,
       responseTime: quick.responseTime,
       healthy: quick.healthy,
-      details: health
+      details: health,
     };
   } catch (error) {
     return {
       status: 'unhealthy' as const,
       responseTime: 0,
       healthy: false,
-      error: error.message
+      error: error.message,
     };
   }
 }
@@ -286,17 +294,17 @@ export {
   getUserMessage,
   getSuggestions,
   isRetryableError,
-  
+
   // Health monitoring
   getSupabaseHealthReport,
   startHealthMonitoring,
   isSupabaseReady,
   quickHealthCheck,
-  
+
   // Utilities
   testConnection,
   validateSupabaseEnvironment,
-  getSupabaseHealth
+  getSupabaseHealth,
 };
 
 // For debugging in development

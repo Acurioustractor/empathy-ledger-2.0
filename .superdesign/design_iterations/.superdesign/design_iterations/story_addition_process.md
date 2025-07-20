@@ -3,6 +3,7 @@
 ## 📊 Current Database State
 
 ### Core Tables (Ready to Use)
+
 ```
 users
 ├── id (uuid, primary key)
@@ -48,17 +49,20 @@ value_events (for tracking benefits)
 ## ✅ Ready to Use Features
 
 ### 1. **Consent Management** ✅
+
 - Granular consent via `consent_settings` JSONB
 - Privacy levels: private, community, public
 - Cultural protocols as flexible JSONB
 - RLS policies protecting user data
 
 ### 2. **Benefit Tracking** ✅
+
 - Automatic 70/30 split calculation
 - Event tracking for all value generation
 - Community fund accumulation
 
 ### 3. **Analysis Pipeline** ✅
+
 - AI analysis auto-triggered on story submission
 - Theme extraction and quote identification
 - Community insights aggregation
@@ -66,12 +70,14 @@ value_events (for tracking benefits)
 ## 🚀 Simple Story Addition Process
 
 ### Step 1: Create User (if new)
+
 ```sql
-INSERT INTO users (email, full_name, community_affiliation) 
+INSERT INTO users (email, full_name, community_affiliation)
 VALUES ('storyteller@example.com', 'Name', 'Community Name');
 ```
 
 ### Step 2: Add Story
+
 ```sql
 INSERT INTO stories (
   storyteller_id,
@@ -95,6 +101,7 @@ INSERT INTO stories (
 ```
 
 ### Step 3: System Handles Rest
+
 - **Automatic AI Analysis** → populates `story_analysis`
 - **Consent Tracking** → respects consent_settings
 - **Value Monitoring** → tracks any revenue generation
@@ -103,12 +110,14 @@ INSERT INTO stories (
 ## 📋 Data Management Checklist
 
 ### Before Adding New Stories:
+
 - [ ] User exists in `users` table
 - [ ] Consent settings configured
 - [ ] Privacy level chosen
 - [ ] Cultural protocols documented
 
 ### After Adding Stories:
+
 - [ ] Check `story_analysis` for AI results
 - [ ] Verify consent settings are respected
 - [ ] Monitor `value_events` for benefit tracking
@@ -140,12 +149,14 @@ curl -X GET 'https://your-project.supabase.co/rest/v1/value_events?select=*' \
 ## 💡 Recommendations
 
 ### Keep Using (Stable):
+
 - ✅ Current table structure
 - ✅ Consent system
 - ✅ Benefit tracking
 - ✅ RLS policies
 
 ### Consider Later (Enhancements):
+
 - Media asset management (separate table)
 - Story versioning
 - Advanced metadata

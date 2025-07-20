@@ -15,6 +15,7 @@ Empathy Ledger is an engine for ethical storytelling that powers diverse organiz
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - Supabase account
 - Environment variables (see `.env.example`)
@@ -60,6 +61,7 @@ Visit `http://localhost:3000` to see the application.
 ## 🏢 Multi-Tenant Architecture
 
 Each organization (project) gets:
+
 - ✅ Custom branding and domain
 - ✅ Configurable modules (story collection, analytics, etc.)
 - ✅ Role-based access control
@@ -69,16 +71,19 @@ Each organization (project) gets:
 ## 🧩 Core Modules
 
 ### Essential (All Projects)
+
 - **Story Core**: Multi-modal story collection
 - **Consent & Privacy**: Granular permission management
 - **User Management**: Role-based access control
 
 ### Standard (Most Projects)
+
 - **Community Analytics**: Insights respecting sovereignty
 - **Cultural Protocols**: Sacred knowledge protection
 - **Value Distribution**: Economic benefit tracking
 
 ### Specialized (Specific Use Cases)
+
 - **Youth Tracker**: Progress monitoring for youth services
 - **Cultural Knowledge**: Indigenous knowledge preservation
 - **Report Builder**: Automated stakeholder reporting
@@ -104,6 +109,7 @@ npm run lint         # Run ESLint
 ## 📊 Platform Admin
 
 Platform administrators can:
+
 - Manage all projects/tenants
 - Monitor system health
 - Configure modules

@@ -15,20 +15,20 @@ export function AuditLogStats({ stats }: AuditLogStatsProps) {
   const mockStats = {
     total_actions: 247,
     actions_by_type: {
-      'project_created': 12,
-      'module_enabled': 45,
-      'user_invited': 23,
-      'project_updated': 67,
-      'impersonation_started': 3
+      project_created: 12,
+      module_enabled: 45,
+      user_invited: 23,
+      project_updated: 67,
+      impersonation_started: 3,
     },
     actions_by_target: {
-      'project': 156,
-      'user': 67,
-      'module': 18,
-      'system': 6
+      project: 156,
+      user: 67,
+      module: 18,
+      system: 6,
     },
     unique_actors: 8,
-    timeframe: '7d'
+    timeframe: '7d',
   };
 
   const displayStats = stats || mockStats;
@@ -37,8 +37,9 @@ export function AuditLogStats({ stats }: AuditLogStatsProps) {
     .sort(([, a], [, b]) => b - a)
     .slice(0, 5);
 
-  const topTargets = Object.entries(displayStats.actions_by_target)
-    .sort(([, a], [, b]) => b - a);
+  const topTargets = Object.entries(displayStats.actions_by_target).sort(
+    ([, a], [, b]) => b - a
+  );
 
   const formatActionName = (action: string) => {
     return action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -47,7 +48,11 @@ export function AuditLogStats({ stats }: AuditLogStatsProps) {
   const getActionColor = (action: string) => {
     if (action.includes('created') || action.includes('enabled')) {
       return 'text-green-600';
-    } else if (action.includes('suspended') || action.includes('disabled') || action.includes('removed')) {
+    } else if (
+      action.includes('suspended') ||
+      action.includes('disabled') ||
+      action.includes('removed')
+    ) {
       return 'text-red-600';
     } else if (action.includes('updated') || action.includes('changed')) {
       return 'text-blue-600';
@@ -59,11 +64,16 @@ export function AuditLogStats({ stats }: AuditLogStatsProps) {
 
   const getTargetColor = (target: string) => {
     switch (target) {
-      case 'project': return 'text-blue-600';
-      case 'user': return 'text-green-600';
-      case 'module': return 'text-purple-600';
-      case 'system': return 'text-red-600';
-      default: return 'text-gray-600';
+      case 'project':
+        return 'text-blue-600';
+      case 'user':
+        return 'text-green-600';
+      case 'module':
+        return 'text-purple-600';
+      case 'system':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
@@ -103,7 +113,10 @@ export function AuditLogStats({ stats }: AuditLogStatsProps) {
           </div>
           <div className="mt-3">
             <div className="text-sm text-gray-500">
-              Last {displayStats.timeframe === '7d' ? '7 days' : displayStats.timeframe}
+              Last{' '}
+              {displayStats.timeframe === '7d'
+                ? '7 days'
+                : displayStats.timeframe}
             </div>
           </div>
         </div>
@@ -142,9 +155,7 @@ export function AuditLogStats({ stats }: AuditLogStatsProps) {
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-sm text-gray-500">
-              Platform administrators
-            </div>
+            <div className="text-sm text-gray-500">Platform administrators</div>
           </div>
         </div>
       </div>
@@ -240,7 +251,9 @@ export function AuditLogStats({ stats }: AuditLogStatsProps) {
               {topActions.map(([action, count]) => (
                 <div key={action} className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <div className={`h-2 w-2 rounded-full mr-3 ${getActionColor(action)}`}></div>
+                    <div
+                      className={`h-2 w-2 rounded-full mr-3 ${getActionColor(action)}`}
+                    ></div>
                     <span className="text-sm font-medium text-gray-900">
                       {formatActionName(action)}
                     </span>
@@ -264,7 +277,9 @@ export function AuditLogStats({ stats }: AuditLogStatsProps) {
               {topTargets.map(([target, count]) => (
                 <div key={target} className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <div className={`h-2 w-2 rounded-full mr-3 ${getTargetColor(target)}`}></div>
+                    <div
+                      className={`h-2 w-2 rounded-full mr-3 ${getTargetColor(target)}`}
+                    ></div>
                     <span className="text-sm font-medium text-gray-900 capitalize">
                       {target}
                     </span>
@@ -275,7 +290,7 @@ export function AuditLogStats({ stats }: AuditLogStatsProps) {
                       <div
                         className={`h-2 rounded-full ${getTargetColor(target).replace('text-', 'bg-')}`}
                         style={{
-                          width: `${(count / displayStats.total_actions) * 100}%`
+                          width: `${(count / displayStats.total_actions) * 100}%`,
                         }}
                       ></div>
                     </div>

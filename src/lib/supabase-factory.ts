@@ -1,6 +1,6 @@
 /**
  * Bulletproof Supabase Client Factory for Empathy Ledger
- * 
+ *
  * This factory creates rock-solid Supabase connections with:
  * - Connection pooling
  * - Retry logic with exponential backoff
@@ -8,16 +8,23 @@
  * - Health monitoring
  * - Circuit breaker pattern
  * - Environment validation
- * 
+ *
  * Philosophy: No more fucking connection issues. Ever.
  */
 
-import { createBrowserClient, createServerClient as createSupabaseServerClient } from '@supabase/ssr';
+import {
+  createBrowserClient,
+  createServerClient as createSupabaseServerClient,
+} from '@supabase/ssr';
 import { Database } from './database.types';
 
 // Types
 export type SupabaseClientType = 'browser' | 'server' | 'admin';
-export type ConnectionStatus = 'healthy' | 'degraded' | 'unhealthy' | 'circuit_open';
+export type ConnectionStatus =
+  | 'healthy'
+  | 'degraded'
+  | 'unhealthy'
+  | 'circuit_open';
 
 interface ClientConfig {
   maxRetries?: number;
@@ -53,7 +60,7 @@ class SupabaseConnectionManager {
       failedConnections: 0,
       lastHealthCheck: null,
       circuitBreakerTrips: 0,
-      averageResponseTime: 0
+      averageResponseTime: 0,
     };
     this.startHealthMonitoring();
   }
@@ -69,14 +76,14 @@ class SupabaseConnectionManager {
   validateEnvironment(): { isValid: boolean; missingVars: string[] } {
     const requiredVars = [
       'NEXT_PUBLIC_SUPABASE_URL',
-      'NEXT_PUBLIC_SUPABASE_ANON_KEY'
+      'NEXT_PUBLIC_SUPABASE_ANON_KEY',
     ];
 
     const missingVars = requiredVars.filter(varName => !process.env[varName]);
-    
+
     return {
       isValid: missingVars.length === 0,
-      missingVars
+      missingVars,
     };
   }
 
@@ -85,8 +92,10 @@ class SupabaseConnectionManager {
     if (!this.circuitBreakerOpen) return true;
 
     // Circuit breaker timeout (30 seconds)
-    if (this.lastCircuitBreakerTrip && 
-        Date.now() - this.lastCircuitBreakerTrip.getTime() > 30000) {
+    if (
+      this.lastCircuitBreakerTrip &&
+      Date.now() - this.lastCircuitBreakerTrip.getTime() > 30000
+    ) {
       this.circuitBreakerOpen = false;
       console.log('🔧 Supabase circuit breaker reset');
       return true;
@@ -110,7 +119,7 @@ class SupabaseConnectionManager {
   ): Promise<T> {
     const maxRetries = config.maxRetries || 3;
     const baseDelay = config.retryDelay || 1000;
-    
+
     if (!this.shouldAllowConnection()) {
       throw new Error('Connection blocked by circuit breaker');
     }
@@ -119,31 +128,39 @@ class SupabaseConnectionManager {
       try {
         const startTime = Date.now();
         const result = await operation();
-        
+
         // Success - update metrics
         this.metrics.successfulConnections++;
-        this.metrics.averageResponseTime = 
+        this.metrics.averageResponseTime =
           (this.metrics.averageResponseTime + (Date.now() - startTime)) / 2;
-        
+
         if (this.status !== 'healthy' && this.metrics.failedConnections > 0) {
           this.status = 'healthy';
           console.log('✅ Supabase connection recovered');
         }
-        
+
         return result;
       } catch (error) {
         this.metrics.failedConnections++;
-        
-        console.error(`🔥 Supabase attempt ${attempt}/${maxRetries} failed:`, error);
+
+        console.error(
+          `🔥 Supabase attempt ${attempt}/${maxRetries} failed:`,
+          error
+        );
 
         if (attempt === maxRetries) {
           // All retries exhausted
-          if (this.metrics.failedConnections > (config.circuitBreakerThreshold || 5)) {
+          if (
+            this.metrics.failedConnections >
+            (config.circuitBreakerThreshold || 5)
+          ) {
             this.tripCircuitBreaker();
           } else {
             this.status = 'degraded';
           }
-          throw new Error(`Supabase operation failed after ${maxRetries} attempts: ${error}`);
+          throw new Error(
+            `Supabase operation failed after ${maxRetries} attempts: ${error}`
+          );
         }
 
         // Wait before retry with exponential backoff
@@ -176,9 +193,9 @@ class SupabaseConnectionManager {
       // Simple ping to Supabase
       const client = this.createBrowserClient();
       await client.from('profiles').select('count').limit(1).single();
-      
+
       this.metrics.lastHealthCheck = new Date();
-      
+
       if (this.status === 'unhealthy') {
         this.status = 'healthy';
         console.log('💚 Supabase health check passed');
@@ -193,22 +210,27 @@ class SupabaseConnectionManager {
   getMetrics(): ConnectionMetrics & { status: ConnectionStatus } {
     return {
       ...this.metrics,
-      status: this.status
+      status: this.status,
     };
   }
 
   // Client factory methods
   createBrowserClient(config: ClientConfig = {}): any {
     const cacheKey = 'browser';
-    
+
     if (this.clientPool.has(cacheKey)) {
       return this.clientPool.get(cacheKey);
     }
 
     const env = this.validateEnvironment();
     if (!env.isValid) {
-      console.error('🚨 Missing Supabase environment variables:', env.missingVars);
-      throw new Error(`Missing environment variables: ${env.missingVars.join(', ')}`);
+      console.error(
+        '🚨 Missing Supabase environment variables:',
+        env.missingVars
+      );
+      throw new Error(
+        `Missing environment variables: ${env.missingVars.join(', ')}`
+      );
     }
 
     this.metrics.totalConnections++;
@@ -221,20 +243,21 @@ class SupabaseConnectionManager {
           persistSession: true,
           autoRefreshToken: true,
           detectSessionInUrl: true,
-          storage: typeof window !== 'undefined' ? window.localStorage : undefined
+          storage:
+            typeof window !== 'undefined' ? window.localStorage : undefined,
         },
         global: {
           headers: {
             'X-Community-Platform': 'empathy-ledger',
             'X-Philosophy': 'community-sovereignty',
             'X-Client-Type': 'browser',
-            'X-Connection-ID': `browser-${Date.now()}`
-          }
+            'X-Connection-ID': `browser-${Date.now()}`,
+          },
         },
         // Connection timeout
         db: {
-          schema: 'public'
-        }
+          schema: 'public',
+        },
       }
     );
 
@@ -245,8 +268,13 @@ class SupabaseConnectionManager {
   async createServerClient(config: ClientConfig = {}): Promise<any> {
     const env = this.validateEnvironment();
     if (!env.isValid) {
-      console.error('🚨 Missing Supabase environment variables:', env.missingVars);
-      throw new Error(`Missing environment variables: ${env.missingVars.join(', ')}`);
+      console.error(
+        '🚨 Missing Supabase environment variables:',
+        env.missingVars
+      );
+      throw new Error(
+        `Missing environment variables: ${env.missingVars.join(', ')}`
+      );
     }
 
     this.metrics.totalConnections++;
@@ -260,7 +288,10 @@ class SupabaseConnectionManager {
           cookieStore = await cookies();
         }
       } catch (error) {
-        console.warn('⚠️ Could not access cookies (might be build time):', error);
+        console.warn(
+          '⚠️ Could not access cookies (might be build time):',
+          error
+        );
       }
 
       return createSupabaseServerClient<Database>(
@@ -272,7 +303,10 @@ class SupabaseConnectionManager {
               try {
                 return cookieStore?.getAll() || [];
               } catch (error) {
-                console.warn('⚠️ Failed to get cookies, using empty array:', error);
+                console.warn(
+                  '⚠️ Failed to get cookies, using empty array:',
+                  error
+                );
                 return [];
               }
             },
@@ -294,9 +328,9 @@ class SupabaseConnectionManager {
               'X-Community-Platform': 'empathy-ledger',
               'X-Philosophy': 'community-sovereignty',
               'X-Client-Type': 'server',
-              'X-Connection-ID': `server-${Date.now()}`
-            }
-          }
+              'X-Connection-ID': `server-${Date.now()}`,
+            },
+          },
         }
       );
     } catch (error) {
@@ -312,7 +346,9 @@ class SupabaseConnectionManager {
 
     const env = this.validateEnvironment();
     if (!env.isValid) {
-      throw new Error(`Missing environment variables: ${env.missingVars.join(', ')}`);
+      throw new Error(
+        `Missing environment variables: ${env.missingVars.join(', ')}`
+      );
     }
 
     this.metrics.totalConnections++;
@@ -323,17 +359,21 @@ class SupabaseConnectionManager {
         process.env.SUPABASE_SERVICE_KEY,
         {
           cookies: {
-            getAll() { return []; },
-            setAll() { /* Admin client doesn't need cookies */ },
+            getAll() {
+              return [];
+            },
+            setAll() {
+              /* Admin client doesn't need cookies */
+            },
           },
           global: {
             headers: {
               'X-Community-Platform': 'empathy-ledger',
               'X-Philosophy': 'community-sovereignty',
               'X-Client-Type': 'admin',
-              'X-Connection-ID': `admin-${Date.now()}`
-            }
-          }
+              'X-Connection-ID': `admin-${Date.now()}`,
+            },
+          },
         }
       );
     } catch (error) {
@@ -356,22 +396,22 @@ const connectionManager = SupabaseConnectionManager.getInstance();
 
 // Public API
 export async function createClient(config: ClientConfig = {}) {
-  return connectionManager.withRetry(() => 
-    Promise.resolve(connectionManager.createBrowserClient(config)), 
+  return connectionManager.withRetry(
+    () => Promise.resolve(connectionManager.createBrowserClient(config)),
     config
   );
 }
 
 export async function createServerClient(config: ClientConfig = {}) {
-  return connectionManager.withRetry(() => 
-    connectionManager.createServerClient(config), 
+  return connectionManager.withRetry(
+    () => connectionManager.createServerClient(config),
     config
   );
 }
 
 export async function createAdminClient(config: ClientConfig = {}) {
-  return connectionManager.withRetry(() => 
-    connectionManager.createAdminClient(config), 
+  return connectionManager.withRetry(
+    () => connectionManager.createAdminClient(config),
     config
   );
 }
@@ -382,7 +422,9 @@ export function getSupabaseHealth() {
 }
 
 // Utility for testing connections
-export async function testConnection(clientType: SupabaseClientType = 'browser') {
+export async function testConnection(
+  clientType: SupabaseClientType = 'browser'
+) {
   try {
     let client;
     switch (clientType) {

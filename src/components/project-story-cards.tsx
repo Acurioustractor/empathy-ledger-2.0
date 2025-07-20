@@ -1,6 +1,6 @@
 /**
  * Project Story Cards Component
- * 
+ *
  * Philosophy: Stories are presented with dignity and respect for storyteller agency.
  * Display adapts to project branding while maintaining accessibility.
  */
@@ -40,11 +40,11 @@ interface ProjectStoryCardsProps {
   className?: string;
 }
 
-export function ProjectStoryCards({ 
-  projectId, 
-  limit = 10, 
+export function ProjectStoryCards({
+  projectId,
+  limit = 10,
   privacy_levels = ['public', 'community'],
-  className = ''
+  className = '',
 }: ProjectStoryCardsProps) {
   const [stories, setStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,11 +59,13 @@ export function ProjectStoryCards({
       setLoading(true);
       const params = new URLSearchParams({
         limit: limit.toString(),
-        privacy_levels: privacy_levels.join(',')
+        privacy_levels: privacy_levels.join(','),
       });
 
-      const response = await fetch(`/api/projects/${projectId}/stories?${params}`);
-      
+      const response = await fetch(
+        `/api/projects/${projectId}/stories?${params}`
+      );
+
       if (!response.ok) {
         throw new Error('Failed to load stories');
       }
@@ -79,7 +81,9 @@ export function ProjectStoryCards({
 
   if (loading) {
     return (
-      <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}>
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}
+      >
         {[...Array(limit)].map((_, i) => (
           <StoryCardSkeleton key={i} />
         ))}
@@ -91,7 +95,7 @@ export function ProjectStoryCards({
     return (
       <div className={`text-center py-12 ${className}`}>
         <p className="text-gray-600 mb-4">Unable to load stories: {error}</p>
-        <button 
+        <button
           onClick={loadStories}
           className="px-4 py-2 bg-brand-primary text-white rounded hover:opacity-90"
         >
@@ -108,11 +112,14 @@ export function ProjectStoryCards({
           <div className="w-16 h-16 bg-brand-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">📖</span>
           </div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">No Stories Yet</h3>
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+            No Stories Yet
+          </h3>
           <p className="text-gray-600 mb-6">
-            Be the first to share your story and help build our community narrative.
+            Be the first to share your story and help build our community
+            narrative.
           </p>
-          <a 
+          <a
             href={`/projects/${projectId}/submit`}
             className="inline-block px-6 py-3 bg-brand-primary text-white rounded-lg font-semibold hover:opacity-90 transition-opacity"
           >
@@ -124,8 +131,10 @@ export function ProjectStoryCards({
   }
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}>
-      {stories.map((story) => (
+    <div
+      className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}
+    >
+      {stories.map(story => (
         <StoryCard key={story.id} story={story} projectId={projectId} />
       ))}
     </div>
@@ -149,7 +158,7 @@ function StoryCard({ story, projectId }: StoryCardProps) {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -209,8 +218,8 @@ function StoryCard({ story, projectId }: StoryCardProps) {
         {/* Tags */}
         {story.tags && story.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {story.tags.slice(0, 3).map((tag) => (
-              <span 
+            {story.tags.slice(0, 3).map(tag => (
+              <span
                 key={tag}
                 className="inline-block px-2 py-1 text-xs font-medium bg-brand-primary bg-opacity-10 text-brand-primary rounded-full"
               >
@@ -245,7 +254,7 @@ function StoryCard({ story, projectId }: StoryCardProps) {
             </div>
           </div>
 
-          <a 
+          <a
             href={`/projects/${projectId}/stories/${story.id}`}
             className="text-sm font-medium text-brand-primary hover:text-brand-secondary transition-colors"
           >

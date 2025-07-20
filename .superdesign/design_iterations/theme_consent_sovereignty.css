@@ -12,7 +12,7 @@
   --clay-light: oklch(0.85 0.08 85);
   --sand-warm: oklch(0.95 0.05 95);
   --sand-light: oklch(0.98 0.02 100);
-  
+
   /* Semantic Colors */
   --background: var(--sand-light);
   --foreground: var(--earth-deep);
@@ -46,13 +46,13 @@
   --sidebar-accent-foreground: var(--earth-deep);
   --sidebar-border: var(--clay-warm);
   --sidebar-ring: var(--ochre-rich);
-  
+
   /* Typography - Respecting Indigenous Knowledge Systems */
   --font-sans: 'Source Serif Pro', 'Libre Baskerville', serif;
   --font-serif: 'Playfair Display', 'Lora', serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   --font-handwritten: 'Architects Daughter', cursive;
-  
+
   /* Spacing - Reflecting natural rhythms */
   --spacing-xs: 0.125rem;
   --spacing-sm: 0.375rem;
@@ -60,20 +60,26 @@
   --spacing-lg: 1.5rem;
   --spacing-xl: 2.5rem;
   --spacing-2xl: 4rem;
-  
+
   /* Borders - Earth-inspired */
   --radius-sm: 0.375rem;
   --radius-md: 0.75rem;
   --radius-lg: 1.5rem;
   --radius-xl: 2.25rem;
   --radius-full: 9999px;
-  
+
   /* Shadows - Natural depth */
   --shadow-sm: 0 1px 2px 0 rgba(101, 67, 33, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(101, 67, 33, 0.1), 0 2px 4px -1px rgba(101, 67, 33, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(101, 67, 33, 0.1), 0 4px 6px -2px rgba(101, 67, 33, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(101, 67, 33, 0.1), 0 10px 10px -5px rgba(101, 67, 33, 0.04);
-  
+  --shadow-md:
+    0 4px 6px -1px rgba(101, 67, 33, 0.1),
+    0 2px 4px -1px rgba(101, 67, 33, 0.06);
+  --shadow-lg:
+    0 10px 15px -3px rgba(101, 67, 33, 0.1),
+    0 4px 6px -2px rgba(101, 67, 33, 0.05);
+  --shadow-xl:
+    0 20px 25px -5px rgba(101, 67, 33, 0.1),
+    0 10px 10px -5px rgba(101, 67, 33, 0.04);
+
   /* Animation timing - Respectful transitions */
   --transition-fast: 150ms ease-out;
   --transition-base: 300ms ease-out;
@@ -82,7 +88,7 @@
 }
 
 /* Dark mode - Evening ceremony colors */
-[data-theme="dark"] {
+[data-theme='dark'] {
   --background: var(--earth-deep);
   --foreground: var(--sand-light);
   --card: var(--earth-warm);
@@ -120,29 +126,67 @@
 }
 
 /* Typography scale */
-.text-xs { font-size: 0.75rem; line-height: 1rem; }
-.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-.text-base { font-size: 1rem; line-height: 1.5rem; }
-.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
-.text-2xl { font-size: 1.5rem; line-height: 2rem; }
-.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
-.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
 
 /* Spacing utilities */
-.space-y-1 > * + * { margin-top: 0.25rem; }
-.space-y-2 > * + * { margin-top: 0.5rem; }
-.space-y-4 > * + * { margin-top: 1rem; }
-.space-y-6 > * + * { margin-top: 1.5rem; }
-.space-y-8 > * + * { margin-top: 2rem; }
+.space-y-1 > * + * {
+  margin-top: 0.25rem;
+}
+.space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+.space-y-8 > * + * {
+  margin-top: 2rem;
+}
 
 /* Cultural pattern backgrounds */
 .bg-earth-pattern {
-  background-image: 
+  background-image:
     radial-gradient(circle at 25% 25%, var(--clay-light) 0%, transparent 50%),
     radial-gradient(circle at 75% 75%, var(--sage-light) 0%, transparent 50%);
-  background-size: 40px 40px, 60px 60px;
-  background-position: 0 0, 20px 20px;
+  background-size:
+    40px 40px,
+    60px 60px;
+  background-position:
+    0 0,
+    20px 20px;
 }
 
 .bg-ochre-pattern {
@@ -152,7 +196,11 @@
     linear-gradient(45deg, transparent 75%, var(--ochre-light) 75%),
     linear-gradient(-45deg, transparent 75%, var(--ochre-light) 75%);
   background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  background-position:
+    0 0,
+    0 10px,
+    10px -10px,
+    -10px 0px;
 }
 
 /* Interactive states with cultural meaning */
@@ -165,7 +213,12 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent, var(--ochre-light), transparent);
+  background: linear-gradient(
+    135deg,
+    transparent,
+    var(--ochre-light),
+    transparent
+  );
   opacity: 0;
   transition: opacity var(--transition-base);
   border-radius: inherit;
@@ -323,10 +376,16 @@
     --spacing-xl: 1.5rem;
     --spacing-2xl: 2rem;
   }
-  
-  .text-4xl { font-size: 1.875rem; }
-  .text-3xl { font-size: 1.5rem; }
-  .text-2xl { font-size: 1.25rem; }
+
+  .text-4xl {
+    font-size: 1.875rem;
+  }
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+  .text-2xl {
+    font-size: 1.25rem;
+  }
 }
 
 /* Focus states for accessibility */
@@ -348,7 +407,8 @@
 }
 
 @keyframes pulseConnection {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

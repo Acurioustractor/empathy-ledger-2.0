@@ -32,35 +32,62 @@ export function ModuleRegistry({ modules }: ModuleRegistryProps) {
 
   const categories = [
     { value: 'all', label: 'All Modules', count: modules.length },
-    { value: 'core', label: 'Core', count: modules.filter(m => m.category === 'core').length },
-    { value: 'standard', label: 'Standard', count: modules.filter(m => m.category === 'standard').length },
-    { value: 'specialized', label: 'Specialized', count: modules.filter(m => m.category === 'specialized').length },
-    { value: 'experimental', label: 'Experimental', count: modules.filter(m => m.category === 'experimental').length },
+    {
+      value: 'core',
+      label: 'Core',
+      count: modules.filter(m => m.category === 'core').length,
+    },
+    {
+      value: 'standard',
+      label: 'Standard',
+      count: modules.filter(m => m.category === 'standard').length,
+    },
+    {
+      value: 'specialized',
+      label: 'Specialized',
+      count: modules.filter(m => m.category === 'specialized').length,
+    },
+    {
+      value: 'experimental',
+      label: 'Experimental',
+      count: modules.filter(m => m.category === 'experimental').length,
+    },
   ];
 
   const filteredModules = modules.filter(module => {
-    const matchesCategory = selectedCategory === 'all' || module.category === selectedCategory;
-    const matchesSearch = module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         module.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === 'all' || module.category === selectedCategory;
+    const matchesSearch =
+      module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      module.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'core': return 'bg-red-100 text-red-800';
-      case 'standard': return 'bg-blue-100 text-blue-800';
-      case 'specialized': return 'bg-purple-100 text-purple-800';
-      case 'experimental': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'core':
+        return 'bg-red-100 text-red-800';
+      case 'standard':
+        return 'bg-blue-100 text-blue-800';
+      case 'specialized':
+        return 'bg-purple-100 text-purple-800';
+      case 'experimental':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getTierColor = (tier: string) => {
     switch (tier) {
-      case 'enterprise': return 'bg-purple-100 text-purple-800';
-      case 'organization': return 'bg-blue-100 text-blue-800';
-      case 'community': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'enterprise':
+        return 'bg-purple-100 text-purple-800';
+      case 'organization':
+        return 'bg-blue-100 text-blue-800';
+      case 'community':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -85,7 +112,7 @@ export function ModuleRegistry({ modules }: ModuleRegistryProps) {
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Module Registry
           </h3>
-          
+
           {/* Search */}
           <div className="mt-4 sm:mt-0 sm:ml-4">
             <div className="max-w-xs">
@@ -115,7 +142,7 @@ export function ModuleRegistry({ modules }: ModuleRegistryProps) {
                   placeholder="Search modules..."
                   type="search"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
@@ -125,7 +152,7 @@ export function ModuleRegistry({ modules }: ModuleRegistryProps) {
         {/* Category Tabs */}
         <div className="mt-6">
           <nav className="-mb-px flex space-x-8">
-            {categories.map((category) => (
+            {categories.map(category => (
               <button
                 key={category.value}
                 onClick={() => setSelectedCategory(category.value)}
@@ -148,22 +175,26 @@ export function ModuleRegistry({ modules }: ModuleRegistryProps) {
       {/* Module List */}
       <div className="border-t border-gray-200">
         <ul className="divide-y divide-gray-200">
-          {filteredModules.map((module) => (
+          {filteredModules.map(module => (
             <li key={module.id} className="p-6 hover:bg-gray-50">
               <div className="flex items-center justify-between">
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0">
-                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                      module.is_active ? 'bg-green-100' : 'bg-gray-100'
-                    }`}>
-                      <span className={`text-lg font-semibold ${
-                        module.is_active ? 'text-green-600' : 'text-gray-400'
-                      }`}>
+                    <div
+                      className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                        module.is_active ? 'bg-green-100' : 'bg-gray-100'
+                      }`}
+                    >
+                      <span
+                        className={`text-lg font-semibold ${
+                          module.is_active ? 'text-green-600' : 'text-gray-400'
+                        }`}
+                      >
                         {module.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2">
                       <h4 className="text-lg font-medium text-gray-900">
@@ -189,16 +220,17 @@ export function ModuleRegistry({ modules }: ModuleRegistryProps) {
                         {module.minimum_tier}+
                       </span>
                     </div>
-                    
+
                     <p className="mt-1 text-sm text-gray-500">
                       {module.description}
                     </p>
-                    
+
                     <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
                       <span>Version {module.version}</span>
                       <span>•</span>
                       <span>
-                        {getUsageCount(module)} of {getTotalProjects()} projects using
+                        {getUsageCount(module)} of {getTotalProjects()} projects
+                        using
                       </span>
                       {module.requires_modules.length > 0 && (
                         <>
@@ -211,7 +243,7 @@ export function ModuleRegistry({ modules }: ModuleRegistryProps) {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   <div className="text-right">
                     <div className="text-sm font-medium text-gray-900">
@@ -221,7 +253,7 @@ export function ModuleRegistry({ modules }: ModuleRegistryProps) {
                       {module.is_active ? 'Active' : 'Inactive'}
                     </div>
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     <button
                       type="button"

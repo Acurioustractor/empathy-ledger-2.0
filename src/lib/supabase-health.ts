@@ -1,6 +1,6 @@
 /**
  * Supabase Health Monitoring System for Empathy Ledger
- * 
+ *
  * Continuous monitoring of Supabase connections with:
  * - Real-time health checks
  * - Performance metrics
@@ -8,8 +8,17 @@
  * - Recovery assistance
  */
 
-import { createClient, createServerClient, createAdminClient, getSupabaseHealth } from './supabase-factory';
-import { SupabaseErrorType, classifySupabaseError, logSupabaseError } from './supabase-errors';
+import {
+  createClient,
+  createServerClient,
+  createAdminClient,
+  getSupabaseHealth,
+} from './supabase-factory';
+import {
+  SupabaseErrorType,
+  classifySupabaseError,
+  logSupabaseError,
+} from './supabase-errors';
 
 export interface HealthMetrics {
   timestamp: Date;
@@ -84,30 +93,41 @@ class SupabaseHealthMonitor {
     const checks = await Promise.allSettled([
       this.checkBrowserClient(),
       this.checkServerClient(),
-      this.checkAdminClient()
+      this.checkAdminClient(),
     ]);
 
     const [browserResult, serverResult, adminResult] = checks;
 
-    const browserHealth = browserResult.status === 'fulfilled' 
-      ? browserResult.value 
-      : this.createUnhealthyStatus(browserResult.reason);
+    const browserHealth =
+      browserResult.status === 'fulfilled'
+        ? browserResult.value
+        : this.createUnhealthyStatus(browserResult.reason);
 
-    const serverHealth = serverResult.status === 'fulfilled' 
-      ? serverResult.value 
-      : this.createUnhealthyStatus(serverResult.reason);
+    const serverHealth =
+      serverResult.status === 'fulfilled'
+        ? serverResult.value
+        : this.createUnhealthyStatus(serverResult.reason);
 
-    const adminHealth = adminResult.status === 'fulfilled' 
-      ? adminResult.value 
-      : this.createUnhealthyStatus(adminResult.reason);
+    const adminHealth =
+      adminResult.status === 'fulfilled'
+        ? adminResult.value
+        : this.createUnhealthyStatus(adminResult.reason);
 
     const report: HealthReport = {
-      overall: this.calculateOverallHealth([browserHealth, serverHealth, adminHealth]),
+      overall: this.calculateOverallHealth([
+        browserHealth,
+        serverHealth,
+        adminHealth,
+      ]),
       browser: browserHealth,
       server: serverHealth,
       admin: adminHealth,
       metrics: this.getRecentMetrics(),
-      recommendations: this.generateRecommendations([browserHealth, serverHealth, adminHealth])
+      recommendations: this.generateRecommendations([
+        browserHealth,
+        serverHealth,
+        adminHealth,
+      ]),
     };
 
     // Trigger alerts if needed
@@ -124,7 +144,7 @@ class SupabaseHealthMonitor {
 
     try {
       const client = await createClient();
-      
+
       // Simple test query
       const { data, error } = await client
         .from('profiles')
@@ -144,13 +164,13 @@ class SupabaseHealthMonitor {
     }
 
     const responseTime = Date.now() - startTime;
-    
+
     // Record metric
     this.recordMetric({
       timestamp: new Date(),
       responseTime,
       success,
-      errorType
+      errorType,
     });
 
     return this.calculateHealthStatus('browser', success, responseTime);
@@ -164,7 +184,7 @@ class SupabaseHealthMonitor {
 
     try {
       const client = await createServerClient();
-      
+
       // Simple test query
       const { data, error } = await client
         .from('profiles')
@@ -184,12 +204,12 @@ class SupabaseHealthMonitor {
     }
 
     const responseTime = Date.now() - startTime;
-    
+
     this.recordMetric({
       timestamp: new Date(),
       responseTime,
       success,
-      errorType
+      errorType,
     });
 
     return this.calculateHealthStatus('server', success, responseTime);
@@ -209,12 +229,12 @@ class SupabaseHealthMonitor {
           lastCheck: new Date(),
           responseTime: 0,
           errorCount: 0,
-          uptime: 100
+          uptime: 100,
         };
       }
 
       const client = await createAdminClient();
-      
+
       // Simple test query
       const { data, error } = await client
         .from('profiles')
@@ -234,12 +254,12 @@ class SupabaseHealthMonitor {
     }
 
     const responseTime = Date.now() - startTime;
-    
+
     this.recordMetric({
       timestamp: new Date(),
       responseTime,
       success,
-      errorType
+      errorType,
     });
 
     return this.calculateHealthStatus('admin', success, responseTime);
@@ -248,7 +268,7 @@ class SupabaseHealthMonitor {
   // Record health metric
   private recordMetric(metric: HealthMetrics): void {
     this.metrics.push(metric);
-    
+
     // Keep only recent metrics
     if (this.metrics.length > this.maxMetrics) {
       this.metrics = this.metrics.slice(-this.maxMetrics);
@@ -256,17 +276,21 @@ class SupabaseHealthMonitor {
   }
 
   // Calculate health status for a client type
-  private calculateHealthStatus(clientType: string, success: boolean, responseTime: number): HealthStatus {
+  private calculateHealthStatus(
+    clientType: string,
+    success: boolean,
+    responseTime: number
+  ): HealthStatus {
     const recentMetrics = this.getRecentMetrics(10); // Last 10 checks
     const relevantMetrics = recentMetrics; // In a real implementation, filter by client type
-    
+
     const successfulChecks = relevantMetrics.filter(m => m.success).length;
     const totalChecks = relevantMetrics.length || 1;
     const uptime = (successfulChecks / totalChecks) * 100;
     const errorCount = relevantMetrics.filter(m => !m.success).length;
 
     let status: 'healthy' | 'degraded' | 'unhealthy';
-    
+
     if (uptime >= 95 && responseTime < 2000) {
       status = 'healthy';
     } else if (uptime >= 80 && responseTime < 5000) {
@@ -280,14 +304,20 @@ class SupabaseHealthMonitor {
       lastCheck: new Date(),
       responseTime,
       errorCount,
-      uptime
+      uptime,
     };
   }
 
   // Calculate overall system health
-  private calculateOverallHealth(healthStatuses: HealthStatus[]): 'healthy' | 'degraded' | 'unhealthy' {
-    const unhealthyCount = healthStatuses.filter(h => h.status === 'unhealthy').length;
-    const degradedCount = healthStatuses.filter(h => h.status === 'degraded').length;
+  private calculateOverallHealth(
+    healthStatuses: HealthStatus[]
+  ): 'healthy' | 'degraded' | 'unhealthy' {
+    const unhealthyCount = healthStatuses.filter(
+      h => h.status === 'unhealthy'
+    ).length;
+    const degradedCount = healthStatuses.filter(
+      h => h.status === 'degraded'
+    ).length;
 
     if (unhealthyCount > 0) return 'unhealthy';
     if (degradedCount > 0) return 'degraded';
@@ -300,28 +330,39 @@ class SupabaseHealthMonitor {
 
     healthStatuses.forEach((status, index) => {
       const clientType = ['browser', 'server', 'admin'][index];
-      
+
       if (status.status === 'unhealthy') {
-        recommendations.push(`${clientType} client is unhealthy - check environment variables and network connection`);
+        recommendations.push(
+          `${clientType} client is unhealthy - check environment variables and network connection`
+        );
       } else if (status.status === 'degraded') {
-        recommendations.push(`${clientType} client performance is degraded - consider optimizing queries`);
+        recommendations.push(
+          `${clientType} client performance is degraded - consider optimizing queries`
+        );
       }
 
       if (status.responseTime > 2000) {
-        recommendations.push(`${clientType} client has slow response times (${status.responseTime}ms) - check network and query complexity`);
+        recommendations.push(
+          `${clientType} client has slow response times (${status.responseTime}ms) - check network and query complexity`
+        );
       }
 
       if (status.errorCount > 3) {
-        recommendations.push(`${clientType} client has ${status.errorCount} recent errors - investigate error logs`);
+        recommendations.push(
+          `${clientType} client has ${status.errorCount} recent errors - investigate error logs`
+        );
       }
     });
 
     // General recommendations
     const recentMetrics = this.getRecentMetrics(20);
-    const failureRate = recentMetrics.filter(m => !m.success).length / recentMetrics.length;
-    
+    const failureRate =
+      recentMetrics.filter(m => !m.success).length / recentMetrics.length;
+
     if (failureRate > 0.2) {
-      recommendations.push('High failure rate detected - check Supabase status and environment configuration');
+      recommendations.push(
+        'High failure rate detected - check Supabase status and environment configuration'
+      );
     }
 
     if (recommendations.length === 0) {
@@ -338,7 +379,7 @@ class SupabaseHealthMonitor {
       lastCheck: new Date(),
       responseTime: 0,
       errorCount: 1,
-      uptime: 0
+      uptime: 0,
     };
   }
 
@@ -418,20 +459,23 @@ export async function isSupabaseReady(): Promise<boolean> {
 }
 
 // Quick health check (lightweight)
-export async function quickHealthCheck(): Promise<{ healthy: boolean; responseTime: number }> {
+export async function quickHealthCheck(): Promise<{
+  healthy: boolean;
+  responseTime: number;
+}> {
   const startTime = Date.now();
-  
+
   try {
     const client = await createClient();
     await client.from('profiles').select('count').limit(1).single();
     return {
       healthy: true,
-      responseTime: Date.now() - startTime
+      responseTime: Date.now() - startTime,
     };
   } catch (error) {
     return {
       healthy: false,
-      responseTime: Date.now() - startTime
+      responseTime: Date.now() - startTime,
     };
   }
 }

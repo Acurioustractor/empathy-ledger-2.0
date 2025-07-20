@@ -24,7 +24,7 @@ interface MediaManagerProps {
 const MediaManager: React.FC<MediaManagerProps> = ({
   userRole = 'storyteller',
   allowedCategories = ['story', 'community', 'impact'],
-  className = ''
+  className = '',
 }) => {
   const [activeTab, setActiveTab] = useState('upload');
   const [selectedCategory, setSelectedCategory] = useState('story');
@@ -40,7 +40,7 @@ const MediaManager: React.FC<MediaManagerProps> = ({
       category: 'community',
       uploadDate: '2024-01-15',
       status: 'published',
-      consentStatus: 'approved'
+      consentStatus: 'approved',
     },
     {
       id: '2',
@@ -50,7 +50,7 @@ const MediaManager: React.FC<MediaManagerProps> = ({
       category: 'story',
       uploadDate: '2024-01-14',
       status: 'ready',
-      consentStatus: 'approved'
+      consentStatus: 'approved',
     },
     {
       id: '3',
@@ -60,24 +60,44 @@ const MediaManager: React.FC<MediaManagerProps> = ({
       category: 'impact',
       uploadDate: '2024-01-13',
       status: 'processing',
-      consentStatus: 'pending'
-    }
+      consentStatus: 'pending',
+    },
   ];
 
   const categories = [
-    { key: 'story', name: 'Personal Stories', description: 'Individual storyteller content' },
-    { key: 'community', name: 'Community Events', description: 'Workshops, meetings, gatherings' },
-    { key: 'impact', name: 'Impact Documentation', description: 'Before/after, policy changes' },
-    { key: 'team', name: 'Team & Partners', description: 'Behind the scenes content' },
-    { key: 'testimonial', name: 'Testimonials', description: 'Community member endorsements' }
+    {
+      key: 'story',
+      name: 'Personal Stories',
+      description: 'Individual storyteller content',
+    },
+    {
+      key: 'community',
+      name: 'Community Events',
+      description: 'Workshops, meetings, gatherings',
+    },
+    {
+      key: 'impact',
+      name: 'Impact Documentation',
+      description: 'Before/after, policy changes',
+    },
+    {
+      key: 'team',
+      name: 'Team & Partners',
+      description: 'Behind the scenes content',
+    },
+    {
+      key: 'testimonial',
+      name: 'Testimonials',
+      description: 'Community member endorsements',
+    },
   ];
 
   const handleFileUpload = async (files: FileList | null) => {
     if (!files) return;
-    
+
     setIsUploading(true);
     setUploadProgress(0);
-    
+
     // Simulate upload progress
     const interval = setInterval(() => {
       setUploadProgress(prev => {
@@ -94,10 +114,13 @@ const MediaManager: React.FC<MediaManagerProps> = ({
   const renderUploadTab = () => (
     <div className="space-y-8">
       <div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">Upload New Media</h3>
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">
+          Upload New Media
+        </h3>
         <p className="text-gray-600 mb-6">
-          Share photos and videos that document community storytelling and its impact. 
-          All uploads require explicit consent from featured individuals.
+          Share photos and videos that document community storytelling and its
+          impact. All uploads require explicit consent from featured
+          individuals.
         </p>
       </div>
 
@@ -107,20 +130,26 @@ const MediaManager: React.FC<MediaManagerProps> = ({
           Category
         </label>
         <div className="grid md:grid-cols-3 gap-4">
-          {categories.filter(cat => allowedCategories.includes(cat.key)).map((category) => (
-            <button
-              key={category.key}
-              onClick={() => setSelectedCategory(category.key)}
-              className={`p-4 rounded-lg border-2 text-left transition-all ${
-                selectedCategory === category.key
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <div className="font-semibold text-gray-900">{category.name}</div>
-              <div className="text-sm text-gray-600">{category.description}</div>
-            </button>
-          ))}
+          {categories
+            .filter(cat => allowedCategories.includes(cat.key))
+            .map(category => (
+              <button
+                key={category.key}
+                onClick={() => setSelectedCategory(category.key)}
+                className={`p-4 rounded-lg border-2 text-left transition-all ${
+                  selectedCategory === category.key
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="font-semibold text-gray-900">
+                  {category.name}
+                </div>
+                <div className="text-sm text-gray-600">
+                  {category.description}
+                </div>
+              </button>
+            ))}
         </div>
       </div>
 
@@ -141,7 +170,7 @@ const MediaManager: React.FC<MediaManagerProps> = ({
             type="file"
             multiple
             accept="image/*,video/*"
-            onChange={(e) => handleFileUpload(e.target.files)}
+            onChange={e => handleFileUpload(e.target.files)}
             className="hidden"
             id="file-upload"
           />
@@ -159,7 +188,7 @@ const MediaManager: React.FC<MediaManagerProps> = ({
               <span>{uploadProgress}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className="bg-primary-600 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${uploadProgress}%` }}
               ></div>
@@ -171,7 +200,10 @@ const MediaManager: React.FC<MediaManagerProps> = ({
       {/* Metadata Form */}
       <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="title" className="block text-sm font-semibold text-gray-900 mb-2">
+          <label
+            htmlFor="title"
+            className="block text-sm font-semibold text-gray-900 mb-2"
+          >
             Title
           </label>
           <input
@@ -182,7 +214,10 @@ const MediaManager: React.FC<MediaManagerProps> = ({
           />
         </div>
         <div>
-          <label htmlFor="location" className="block text-sm font-semibold text-gray-900 mb-2">
+          <label
+            htmlFor="location"
+            className="block text-sm font-semibold text-gray-900 mb-2"
+          >
             Location (optional)
           </label>
           <select
@@ -203,7 +238,10 @@ const MediaManager: React.FC<MediaManagerProps> = ({
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-semibold text-gray-900 mb-2">
+        <label
+          htmlFor="description"
+          className="block text-sm font-semibold text-gray-900 mb-2"
+        >
           Description
         </label>
         <textarea
@@ -217,7 +255,9 @@ const MediaManager: React.FC<MediaManagerProps> = ({
       {/* Consent Checkboxes */}
       <div className="space-y-4">
         <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-          <h4 className="font-semibold text-gray-900 mb-2">Consent Requirements</h4>
+          <h4 className="font-semibold text-gray-900 mb-2">
+            Consent Requirements
+          </h4>
           <div className="space-y-3">
             <label className="flex items-start">
               <input
@@ -226,7 +266,9 @@ const MediaManager: React.FC<MediaManagerProps> = ({
                 required
               />
               <span className="ml-3 text-sm text-gray-700">
-                I have explicit consent from all individuals featured in this media to share their image/voice for community storytelling purposes.
+                I have explicit consent from all individuals featured in this
+                media to share their image/voice for community storytelling
+                purposes.
               </span>
             </label>
             <label className="flex items-start">
@@ -236,7 +278,8 @@ const MediaManager: React.FC<MediaManagerProps> = ({
                 required
               />
               <span className="ml-3 text-sm text-gray-700">
-                I confirm this media represents authentic community storytelling activities and will benefit the broader community.
+                I confirm this media represents authentic community storytelling
+                activities and will benefit the broader community.
               </span>
             </label>
             <label className="flex items-start">
@@ -245,7 +288,8 @@ const MediaManager: React.FC<MediaManagerProps> = ({
                 className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 mt-1"
               />
               <span className="ml-3 text-sm text-gray-700">
-                I consent to this media being used in Empathy Ledger promotional materials, case studies, and community galleries.
+                I consent to this media being used in Empathy Ledger promotional
+                materials, case studies, and community galleries.
               </span>
             </label>
           </div>
@@ -264,8 +308,12 @@ const MediaManager: React.FC<MediaManagerProps> = ({
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Media Library</h3>
-          <p className="text-gray-600">Manage your uploaded photos and videos</p>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            Media Library
+          </h3>
+          <p className="text-gray-600">
+            Manage your uploaded photos and videos
+          </p>
         </div>
         <Button variant="secondary" onClick={() => setActiveTab('upload')}>
           + Upload New Media
@@ -293,8 +341,11 @@ const MediaManager: React.FC<MediaManagerProps> = ({
 
       {/* Media Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockMediaItems.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+        {mockMediaItems.map(item => (
+          <div
+            key={item.id}
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
+          >
             <div className="relative">
               <ImagePlaceholder
                 type={item.type}
@@ -306,27 +357,38 @@ const MediaManager: React.FC<MediaManagerProps> = ({
                 showIcon={true}
               />
               <div className="absolute top-3 left-3 flex gap-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  item.status === 'published' ? 'bg-green-100 text-green-800' :
-                  item.status === 'ready' ? 'bg-blue-100 text-blue-800' :
-                  item.status === 'processing' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    item.status === 'published'
+                      ? 'bg-green-100 text-green-800'
+                      : item.status === 'ready'
+                        ? 'bg-blue-100 text-blue-800'
+                        : item.status === 'processing'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-gray-100 text-gray-800'
+                  }`}
+                >
                   {item.status}
                 </span>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  item.consentStatus === 'approved' ? 'bg-green-100 text-green-800' :
-                  item.consentStatus === 'declined' ? 'bg-red-100 text-red-800' :
-                  'bg-yellow-100 text-yellow-800'
-                }`}>
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    item.consentStatus === 'approved'
+                      ? 'bg-green-100 text-green-800'
+                      : item.consentStatus === 'declined'
+                        ? 'bg-red-100 text-red-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                  }`}
+                >
                   {item.consentStatus}
                 </span>
               </div>
             </div>
-            
+
             <div className="p-4">
               <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
-              <p className="text-sm text-gray-600 mb-3 line-clamp-2">{item.description}</p>
+              <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                {item.description}
+              </p>
               <div className="flex justify-between items-center text-xs text-gray-500">
                 <span>{item.category}</span>
                 <span>{item.uploadDate}</span>

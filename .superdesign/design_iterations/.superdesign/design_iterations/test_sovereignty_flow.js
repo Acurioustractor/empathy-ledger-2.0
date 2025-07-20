@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Sovereignty-Aligned Testing Suite
- * 
+ *
  * Tests the complete end-to-end flow with existing data
  * ensuring Indigenous Data Sovereignty principles are maintained
  */
@@ -19,7 +19,8 @@ const __dirname = path.dirname(__filename);
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
 class SovereigntyTestSuite {
@@ -45,12 +46,14 @@ class SovereigntyTestSuite {
 
   async testUserSovereignty() {
     console.log('👤 Testing user sovereignty...');
-    
+
     try {
       // Test user data ownership
       const { data: user, error } = await supabase
         .from('users')
-        .select('id, email, full_name, community_affiliation, cultural_protocols')
+        .select(
+          'id, email, full_name, community_affiliation, cultural_protocols'
+        )
         .limit(1)
         .single();
 
@@ -60,11 +63,10 @@ class SovereigntyTestSuite {
         user_data_accessible: !!user,
         community_affiliation_set: !!user.community_affiliation,
         cultural_protocols_configurable: !!user.cultural_protocols,
-        rls_protection_active: true
+        rls_protection_active: true,
       };
 
       this.logResult('User Sovereignty', sovereigntyCheck);
-      
     } catch (error) {
       this.logResult('User Sovereignty', { error: error.message });
     }
@@ -72,12 +74,12 @@ class SovereigntyTestSuite {
 
   async testStoryConsentFlow() {
     console.log('📋 Testing story consent flow...');
-    
+
     try {
       // Create test story with full sovereignty settings
       const storyData = {
-        title: "Test Story - Sovereignty Validation",
-        transcript: "This is a test story to validate sovereignty principles.",
+        title: 'Test Story - Sovereignty Validation',
+        transcript: 'This is a test story to validate sovereignty principles.',
         privacy_level: 'community',
         consent_settings: {
           allowAnalysis: true,
@@ -86,17 +88,17 @@ class SovereigntyTestSuite {
           sovereignty_acknowledged: true,
           elder_approval_required: true,
           community_consent: true,
-          retention_period: 'community_lifecycle'
+          retention_period: 'community_lifecycle',
         },
         cultural_protocols: {
           community: 'Test Community',
           protocols: ['elder_approval', 'seasonal_restrictions'],
           seasonal_restrictions: ['ceremonial_period'],
-          gender_specific: false
+          gender_specific: false,
         },
         tags: ['test', 'sovereignty', 'consent'],
         submission_method: 'web',
-        status: 'pending'
+        status: 'pending',
       };
 
       const { data: newStory, error } = await supabase
@@ -111,13 +113,13 @@ class SovereigntyTestSuite {
 
       const consentCheck = {
         consent_settings_stored: !!newStory.consent_settings,
-        sovereignty_acknowledged: newStory.consent_settings?.sovereignty_acknowledged,
+        sovereignty_acknowledged:
+          newStory.consent_settings?.sovereignty_acknowledged,
         cultural_protocols_valid: !!newStory.cultural_protocols,
-        privacy_level_set: !!newStory.privacy_level
+        privacy_level_set: !!newStory.privacy_level,
       };
 
       this.logResult('Story Consent Flow', consentCheck);
-      
     } catch (error) {
       this.logResult('Story Consent Flow', { error: error.message });
     }
@@ -125,7 +127,7 @@ class SovereigntyTestSuite {
 
   async testBenefitDistribution() {
     console.log('💰 Testing benefit distribution...');
-    
+
     try {
       if (!this.testStory) {
         throw new Error('No test story available');
@@ -137,9 +139,9 @@ class SovereigntyTestSuite {
         event_type: 'grant_funded',
         value_amount: 1000,
         storyteller_share: 700, // 70%
-        community_share: 300,   // 30%
+        community_share: 300, // 30%
         description: 'Test grant funding with sovereignty-aligned distribution',
-        occurred_at: new Date().toISOString()
+        occurred_at: new Date().toISOString(),
       };
 
       const { data: benefitEvent, error } = await supabase
@@ -152,13 +154,16 @@ class SovereigntyTestSuite {
 
       const distributionCheck = {
         value_amount_recorded: benefitEvent.value_amount === 1000,
-        split_ratio_correct: benefitEvent.storyteller_share === 700 && benefitEvent.community_share === 300,
-        sovereignty_documented: benefitEvent.description.includes('sovereignty-aligned'),
-        transparent_tracking: !!benefitEvent.occurred_at
+        split_ratio_correct:
+          benefitEvent.storyteller_share === 700 &&
+          benefitEvent.community_share === 300,
+        sovereignty_documented: benefitEvent.description.includes(
+          'sovereignty-aligned'
+        ),
+        transparent_tracking: !!benefitEvent.occurred_at,
       };
 
       this.logResult('Benefit Distribution', distributionCheck);
-      
     } catch (error) {
       this.logResult('Benefit Distribution', { error: error.message });
     }
@@ -166,22 +171,33 @@ class SovereigntyTestSuite {
 
   async testCulturalProtocolHandling() {
     console.log('🏛️ Testing cultural protocol handling...');
-    
+
     try {
       // Test protocol validation
       const protocols = [
         {
           name: 'Elder Approval Required',
-          protocol: { elder_approval_required: true, seasonal_restrictions: ['ceremonial_period'] }
+          protocol: {
+            elder_approval_required: true,
+            seasonal_restrictions: ['ceremonial_period'],
+          },
         },
         {
           name: 'Womens Business',
-          protocol: { womens_business: true, gender_specific_access: true, seasonal_restrictions: [] }
+          protocol: {
+            womens_business: true,
+            gender_specific_access: true,
+            seasonal_restrictions: [],
+          },
         },
         {
           name: 'Youth Voice',
-          protocol: { youth_voice: true, elder_guidance: true, community_consent: true }
-        }
+          protocol: {
+            youth_voice: true,
+            elder_guidance: true,
+            community_consent: true,
+          },
+        },
       ];
 
       const protocolResults = [];
@@ -189,13 +205,14 @@ class SovereigntyTestSuite {
         const validation = {
           protocol_valid: !!protocol,
           restrictions_clear: Object.keys(protocol).length > 0,
-          sovereignty_respected: true
+          sovereignty_respected: true,
         };
         protocolResults.push({ name, ...validation });
       }
 
-      this.logResult('Cultural Protocol Handling', { protocols: protocolResults });
-      
+      this.logResult('Cultural Protocol Handling', {
+        protocols: protocolResults,
+      });
     } catch (error) {
       this.logResult('Cultural Protocol Handling', { error: error.message });
     }
@@ -203,7 +220,7 @@ class SovereigntyTestSuite {
 
   async testDataRetrievalRights() {
     console.log('📤 Testing data retrieval rights...');
-    
+
     try {
       // Test user data export
       const { data: userData, error } = await supabase
@@ -218,11 +235,10 @@ class SovereigntyTestSuite {
         data_exportable: !!userData,
         stories_included: Array.isArray(userData.stories),
         rls_protection_active: true,
-        sovereignty_maintained: true
+        sovereignty_maintained: true,
       };
 
       this.logResult('Data Retrieval Rights', retrievalCheck);
-      
     } catch (error) {
       this.logResult('Data Retrieval Rights', { error: error.message });
     }
@@ -230,7 +246,7 @@ class SovereigntyTestSuite {
 
   async testCommunityGovernance() {
     console.log('👥 Testing community governance...');
-    
+
     try {
       // Test community sovereignty records
       const { data: communities, error } = await supabase
@@ -240,13 +256,16 @@ class SovereigntyTestSuite {
 
       const governanceCheck = {
         communities_defined: Array.isArray(communities),
-        sovereignty_declarations: communities?.every(c => c.sovereignty_declaration),
-        benefit_agreements: communities?.every(c => c.benefit_distribution_agreement),
-        cultural_protocols: communities?.every(c => c.cultural_protocols)
+        sovereignty_declarations: communities?.every(
+          c => c.sovereignty_declaration
+        ),
+        benefit_agreements: communities?.every(
+          c => c.benefit_distribution_agreement
+        ),
+        cultural_protocols: communities?.every(c => c.cultural_protocols),
       };
 
       this.logResult('Community Governance', governanceCheck);
-      
     } catch (error) {
       this.logResult('Community Governance', { error: error.message });
     }
@@ -254,7 +273,7 @@ class SovereigntyTestSuite {
 
   async testConsentWithdrawal() {
     console.log('🔄 Testing consent withdrawal...');
-    
+
     try {
       if (!this.testStory) {
         throw new Error('No test story available');
@@ -268,8 +287,8 @@ class SovereigntyTestSuite {
             ...this.testStory.consent_settings,
             allowSharing: false,
             consent_withdrawn: true,
-            withdrawal_date: new Date().toISOString()
-          }
+            withdrawal_date: new Date().toISOString(),
+          },
         })
         .eq('id', this.testStory.id)
         .select()
@@ -281,35 +300,38 @@ class SovereigntyTestSuite {
         consent_modifiable: !!updatedStory,
         withdrawal_recorded: updatedStory.consent_settings?.consent_withdrawn,
         timestamp_set: updatedStory.consent_settings?.withdrawal_date,
-        sovereignty_respected: true
+        sovereignty_respected: true,
       };
 
       this.logResult('Consent Withdrawal', withdrawalCheck);
-      
     } catch (error) {
       this.logResult('Consent Withdrawal', { error: error.message });
     }
   }
 
   logResult(testName, result) {
-    const passed = Object.values(result).every(val => val !== false && val !== null);
+    const passed = Object.values(result).every(
+      val => val !== false && val !== null
+    );
     this.testResults.push({
       test: testName,
       passed,
       details: result,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
-    console.log(`${passed ? '✅' : '❌'} ${testName}: ${passed ? 'PASSED' : 'FAILED'}`);
+    console.log(
+      `${passed ? '✅' : '❌'} ${testName}: ${passed ? 'PASSED' : 'FAILED'}`
+    );
   }
 
   generateReport() {
     console.log('\n📊 SOVEREIGNTY TEST SUMMARY:');
     console.log('='.repeat(50));
-    
+
     const passed = this.testResults.filter(r => r.passed).length;
     const total = this.testResults.length;
-    const successRate = (passed / total * 100).toFixed(1);
+    const successRate = ((passed / total) * 100).toFixed(1);
 
     console.log(`Total tests: ${total}`);
     console.log(`Passed: ${passed}`);
@@ -331,7 +353,9 @@ class SovereigntyTestSuite {
     if (failedTests.length > 0) {
       console.log('\n🔧 Recommendations for failed tests:');
       failedTests.forEach(test => {
-        console.log(`- ${test.test}: ${test.details.error || 'Check implementation'}`);
+        console.log(
+          `- ${test.test}: ${test.details.error || 'Check implementation'}`
+        );
       });
     }
   }

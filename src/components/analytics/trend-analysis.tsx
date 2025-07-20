@@ -13,7 +13,9 @@ interface TrendAnalysisProps {
 export function TrendAnalysis({ data }: TrendAnalysisProps) {
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Trend Analysis</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Trend Analysis
+      </h3>
       <div className="space-y-4">
         {data.map((trend, index) => (
           <div key={index} className="p-4 bg-gray-50 rounded-lg">

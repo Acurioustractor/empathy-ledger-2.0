@@ -17,7 +17,7 @@ export function PlatformMetrics({ metrics }: PlatformMetricsProps) {
       previousStat: metrics.totalProjects,
       change: '12%',
       changeType: 'increase',
-      description: 'Organizations using the platform'
+      description: 'Organizations using the platform',
     },
     {
       name: 'Total Stories',
@@ -25,7 +25,7 @@ export function PlatformMetrics({ metrics }: PlatformMetricsProps) {
       previousStat: metrics.totalStories - 145,
       change: '5.4%',
       changeType: 'increase',
-      description: 'Stories collected this month'
+      description: 'Stories collected this month',
     },
     {
       name: 'Community Members',
@@ -33,7 +33,7 @@ export function PlatformMetrics({ metrics }: PlatformMetricsProps) {
       previousStat: metrics.totalUsers - 32,
       change: '3.2%',
       changeType: 'increase',
-      description: 'Active storytellers and staff'
+      description: 'Active storytellers and staff',
     },
     {
       name: 'Sovereignty Score',
@@ -41,14 +41,17 @@ export function PlatformMetrics({ metrics }: PlatformMetricsProps) {
       previousStat: '98.1%',
       change: '0.4%',
       changeType: 'increase',
-      description: 'Platform sovereignty compliance'
-    }
+      description: 'Platform sovereignty compliance',
+    },
   ];
 
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      {stats.map((item) => (
-        <div key={item.name} className="bg-white overflow-hidden shadow rounded-lg">
+      {stats.map(item => (
+        <div
+          key={item.name}
+          className="bg-white overflow-hidden shadow rounded-lg"
+        >
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">

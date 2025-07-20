@@ -1,6 +1,6 @@
 /**
  * Project Templates API
- * 
+ *
  * Philosophy: Templates accelerate sovereignty-compliant project creation
  * while ensuring each community can customize according to their protocols.
  */
@@ -20,21 +20,22 @@ export async function GET(request: NextRequest) {
     const { templates, error } = await projectOperations.getProjectTemplates();
 
     if (error) {
-      return NextResponse.json(
-        { error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error }, { status: 500 });
     }
 
     // Filter templates based on query parameters
     let filtered_templates = templates;
 
     if (category) {
-      filtered_templates = templates.filter(template => template.category === category);
+      filtered_templates = templates.filter(
+        template => template.category === category
+      );
     }
 
     if (featured_only) {
-      filtered_templates = filtered_templates.filter(template => template.is_featured);
+      filtered_templates = filtered_templates.filter(
+        template => template.is_featured
+      );
     }
 
     // Enrich templates with sovereignty guidance
@@ -42,18 +43,25 @@ export async function GET(request: NextRequest) {
       ...template,
       sovereignty_features: {
         cultural_protocols_included: !!template.default_cultural_protocols,
-        community_ownership_ensured: template.default_sovereignty_framework?.community_ownership || false,
-        consent_management_configured: template.default_sovereignty_framework?.consent_granularity === 'story_level',
-        value_sharing_enabled: template.default_sovereignty_framework?.value_sharing || false
+        community_ownership_ensured:
+          template.default_sovereignty_framework?.community_ownership || false,
+        consent_management_configured:
+          template.default_sovereignty_framework?.consent_granularity ===
+          'story_level',
+        value_sharing_enabled:
+          template.default_sovereignty_framework?.value_sharing || false,
       },
       community_benefits: {
-        storyteller_empowerment: template.category === 'indigenous_communities' ? 'maximum' : 'high',
-        cultural_respect: template.default_cultural_protocols ? 'comprehensive' : 'standard',
+        storyteller_empowerment:
+          template.category === 'indigenous_communities' ? 'maximum' : 'high',
+        cultural_respect: template.default_cultural_protocols
+          ? 'comprehensive'
+          : 'standard',
         data_sovereignty: 'full',
-        community_control: 'complete'
+        community_control: 'complete',
       },
       use_cases: this.getTemplateLUseCases(template.category),
-      estimated_setup_time: this.getSetupTime(template.category)
+      estimated_setup_time: this.getSetupTime(template.category),
     }));
 
     return NextResponse.json({
@@ -62,39 +70,44 @@ export async function GET(request: NextRequest) {
         {
           id: 'indigenous_communities',
           name: 'Indigenous Communities',
-          description: 'Templates designed for Indigenous communities with full cultural protocol support',
-          sovereignty_level: 'maximum'
+          description:
+            'Templates designed for Indigenous communities with full cultural protocol support',
+          sovereignty_level: 'maximum',
         },
         {
           id: 'youth_justice',
           name: 'Youth Justice',
-          description: 'Templates for organizations working with youth in justice systems',
-          sovereignty_level: 'high'
+          description:
+            'Templates for organizations working with youth in justice systems',
+          sovereignty_level: 'high',
         },
         {
           id: 'health_sovereignty',
           name: 'Health Sovereignty',
-          description: 'Templates for community health initiatives and traditional medicine',
-          sovereignty_level: 'high'
+          description:
+            'Templates for community health initiatives and traditional medicine',
+          sovereignty_level: 'high',
         },
         {
           id: 'environmental_justice',
           name: 'Environmental Justice',
-          description: 'Templates for environmental and climate justice organizations',
-          sovereignty_level: 'high'
+          description:
+            'Templates for environmental and climate justice organizations',
+          sovereignty_level: 'high',
         },
         {
           id: 'community_development',
           name: 'Community Development',
           description: 'General community development and empowerment projects',
-          sovereignty_level: 'standard'
+          sovereignty_level: 'standard',
         },
         {
           id: 'research_partnership',
           name: 'Research Partnership',
-          description: 'Templates for ethical research collaborations with communities',
-          sovereignty_level: 'high'
-        }
+          description:
+            'Templates for ethical research collaborations with communities',
+          sovereignty_level: 'high',
+        },
       ],
       sovereignty_principles: {
         all_templates_include: [
@@ -102,21 +115,28 @@ export async function GET(request: NextRequest) {
           'Granular consent management',
           'Cultural protocol support',
           'Value sharing mechanisms',
-          'Storyteller empowerment focus'
+          'Storyteller empowerment focus',
         ],
-        customization_allowed: 'All templates can be customized to match specific community needs',
-        community_validation: 'Templates are developed with input from relevant communities'
+        customization_allowed:
+          'All templates can be customized to match specific community needs',
+        community_validation:
+          'Templates are developed with input from relevant communities',
       },
       selection_guidance: {
-        indigenous_communities: 'Choose if your organization is Indigenous-led or working directly with Indigenous communities',
-        youth_justice: 'Choose if working with young people affected by justice systems',
-        health_sovereignty: 'Choose for community health, traditional medicine, or wellness initiatives',
-        environmental_justice: 'Choose for environmental protection, climate action, or land rights work',
-        community_development: 'Choose for general community empowerment and development work',
-        research_partnership: 'Choose for academic or research collaborations with communities'
-      }
+        indigenous_communities:
+          'Choose if your organization is Indigenous-led or working directly with Indigenous communities',
+        youth_justice:
+          'Choose if working with young people affected by justice systems',
+        health_sovereignty:
+          'Choose for community health, traditional medicine, or wellness initiatives',
+        environmental_justice:
+          'Choose for environmental protection, climate action, or land rights work',
+        community_development:
+          'Choose for general community empowerment and development work',
+        research_partnership:
+          'Choose for academic or research collaborations with communities',
+      },
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -128,7 +148,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -148,7 +171,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Admin privileges required to create templates',
-          sovereignty_note: 'Template creation requires platform-level responsibility'
+          sovereignty_note:
+            'Template creation requires platform-level responsibility',
         },
         { status: 403 }
       );
@@ -163,16 +187,19 @@ export async function POST(request: NextRequest) {
       'category',
       'default_sovereignty_framework',
       'default_settings',
-      'default_branding'
+      'default_branding',
     ];
 
-    const missing_fields = required_fields.filter(field => !template_data[field]);
+    const missing_fields = required_fields.filter(
+      field => !template_data[field]
+    );
     if (missing_fields.length > 0) {
       return NextResponse.json(
         {
           error: 'Missing required fields',
           missing_fields,
-          sovereignty_note: 'Templates must include complete sovereignty configuration'
+          sovereignty_note:
+            'Templates must include complete sovereignty configuration',
         },
         { status: 400 }
       );
@@ -183,7 +210,7 @@ export async function POST(request: NextRequest) {
       'cultural_protocols_required',
       'consent_granularity',
       'community_ownership',
-      'value_sharing'
+      'value_sharing',
     ];
 
     const missing_sovereignty_keys = required_sovereignty_keys.filter(
@@ -195,7 +222,8 @@ export async function POST(request: NextRequest) {
         {
           error: 'Incomplete sovereignty framework',
           missing_keys: missing_sovereignty_keys,
-          sovereignty_note: 'All templates must include complete sovereignty configuration'
+          sovereignty_note:
+            'All templates must include complete sovereignty configuration',
         },
         { status: 400 }
       );
@@ -208,7 +236,7 @@ export async function POST(request: NextRequest) {
         ...template_data,
         created_by: user.id,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .select()
       .single();
@@ -226,11 +254,10 @@ export async function POST(request: NextRequest) {
         framework_validated: true,
         cultural_protocols_included: true,
         community_ownership_ensured: true,
-        consent_management_configured: true
+        consent_management_configured: true,
       },
-      message: 'Template created successfully with full sovereignty compliance'
+      message: 'Template created successfully with full sovereignty compliance',
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -247,43 +274,43 @@ function getTemplateLUseCases(category: string): string[] {
       'Language revitalization programs',
       'Land rights documentation',
       'Cultural preservation initiatives',
-      'Elder story collection'
+      'Elder story collection',
     ],
     youth_justice: [
       'Restorative justice programs',
       'Youth mentorship initiatives',
       'Alternative to incarceration programs',
       'Community service documentation',
-      'Rehabilitation success stories'
+      'Rehabilitation success stories',
     ],
     health_sovereignty: [
       'Traditional medicine documentation',
       'Community health assessments',
       'Wellness program evaluation',
       'Health equity advocacy',
-      'Healing practice sharing'
+      'Healing practice sharing',
     ],
     environmental_justice: [
       'Environmental impact documentation',
       'Climate change adaptation stories',
       'Land protection campaigns',
       'Traditional ecological knowledge',
-      'Community resilience projects'
+      'Community resilience projects',
     ],
     community_development: [
       'Asset-based community development',
       'Social enterprise documentation',
       'Community organizing stories',
       'Neighborhood improvement projects',
-      'Civic engagement initiatives'
+      'Civic engagement initiatives',
     ],
     research_partnership: [
       'Participatory action research',
       'Community-based participatory research',
       'Ethical research collaborations',
       'Knowledge co-creation projects',
-      'Community validation of research'
-    ]
+      'Community validation of research',
+    ],
   };
 
   return use_cases[category] || ['General community storytelling'];
@@ -296,7 +323,7 @@ function getSetupTime(category: string): string {
     health_sovereignty: '1-2 hours',
     environmental_justice: '1-2 hours',
     community_development: '30-60 minutes',
-    research_partnership: '1-2 hours'
+    research_partnership: '1-2 hours',
   };
 
   return setup_times[category] || '1 hour';

@@ -2,7 +2,7 @@
 
 /**
  * EMPATHY LEDGER AIRTABLE TO SUPABASE MIGRATION
- * 
+ *
  * This script handles the complete migration of data from Airtable to Supabase
  * while preserving relationships, cleaning data, and maintaining privacy.
  */
@@ -24,19 +24,19 @@ interface AirtableStory {
     'Date Submitted'?: string;
     'Contributor Email'?: string;
     'Contributor Name'?: string;
-    'Location'?: string;
+    Location?: string;
     'Age Range'?: string;
-    'Organization'?: string[];
-    'Themes'?: string[];
-    'Status'?: string;
+    Organization?: string[];
+    Themes?: string[];
+    Status?: string;
     'Privacy Level'?: string;
     'Audio URL'?: string;
     'Video URL'?: string;
-    'Transcription'?: string;
+    Transcription?: string;
     'Sentiment Score'?: number;
     'Impact Score'?: number;
     'View Count'?: number;
-    'Featured'?: boolean;
+    Featured?: boolean;
     [key: string]: any;
   };
 }
@@ -46,12 +46,12 @@ interface AirtableOrganization {
   fields: {
     'Organization Name'?: string;
     'Organization Type'?: string;
-    'Website'?: string;
+    Website?: string;
     'Primary Contact Email'?: string;
     'Contact Name'?: string;
-    'Description'?: string;
-    'Location'?: string;
-    'Active'?: boolean;
+    Description?: string;
+    Location?: string;
+    Active?: boolean;
     [key: string]: any;
   };
 }
@@ -60,11 +60,11 @@ interface AirtableCommunity {
   id: string;
   fields: {
     'Community Name'?: string;
-    'Description'?: string;
-    'Location'?: string;
+    Description?: string;
+    Location?: string;
     'Geographic Level'?: string;
-    'Organization'?: string[];
-    'Active'?: boolean;
+    Organization?: string[];
+    Active?: boolean;
     [key: string]: any;
   };
 }
@@ -93,7 +93,7 @@ class EmpathyLedgerMigration {
 
     // Initialize Airtable
     this.airtable = new Airtable({
-      apiKey: process.env.AIRTABLE_API_KEY!
+      apiKey: process.env.AIRTABLE_API_KEY!,
     }).base(process.env.AIRTABLE_BASE_ID!);
 
     this.stats = {
@@ -101,17 +101,17 @@ class EmpathyLedgerMigration {
       organizations: { processed: 0, created: 0, errors: 0 },
       communities: { processed: 0, created: 0, errors: 0 },
       stories: { processed: 0, created: 0, errors: 0 },
-      totalDuration: 0
+      totalDuration: 0,
     };
   }
 
   private log(message: string, type: 'info' | 'error' | 'success' = 'info') {
     const timestamp = new Date().toISOString();
     const logMessage = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
-    
+
     console.log(logMessage);
     this.migrationLog.push(logMessage);
-    
+
     if (type === 'error') {
       this.errorLog.push(logMessage);
     }
@@ -124,7 +124,7 @@ class EmpathyLedgerMigration {
     }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    
+
     // Save migration log
     fs.writeFileSync(
       path.join(logsDir, `migration-${timestamp}.log`),
@@ -148,24 +148,24 @@ class EmpathyLedgerMigration {
 
   private normalizeCategory(category?: string): string {
     if (!category) return 'community';
-    
+
     const categoryMap: { [key: string]: string } = {
-      'Health': 'healthcare',
-      'Healthcare': 'healthcare',
-      'Medical': 'healthcare',
-      'Education': 'education',
-      'Housing': 'housing',
-      'Youth': 'youth',
+      Health: 'healthcare',
+      Healthcare: 'healthcare',
+      Medical: 'healthcare',
+      Education: 'education',
+      Housing: 'housing',
+      Youth: 'youth',
       'Young People': 'youth',
       'Elder Care': 'elder_care',
-      'Seniors': 'elder_care',
-      'Policy': 'policy',
-      'Government': 'policy',
-      'Community': 'community',
-      'Environment': 'environment',
-      'Employment': 'employment',
-      'Jobs': 'employment',
-      'Social Services': 'social_services'
+      Seniors: 'elder_care',
+      Policy: 'policy',
+      Government: 'policy',
+      Community: 'community',
+      Environment: 'environment',
+      Employment: 'employment',
+      Jobs: 'employment',
+      'Social Services': 'social_services',
     };
 
     return categoryMap[category] || 'community';
@@ -173,12 +173,12 @@ class EmpathyLedgerMigration {
 
   private normalizePrivacyLevel(level?: string): string {
     if (!level) return 'private';
-    
+
     const privacyMap: { [key: string]: string } = {
-      'Public': 'public',
-      'Community': 'community',
-      'Organization': 'organization',
-      'Private': 'private'
+      Public: 'public',
+      Community: 'community',
+      Organization: 'organization',
+      Private: 'private',
     };
 
     return privacyMap[level] || 'private';
@@ -186,14 +186,14 @@ class EmpathyLedgerMigration {
 
   private normalizeStatus(status?: string): string {
     if (!status) return 'pending';
-    
+
     const statusMap: { [key: string]: string } = {
-      'Draft': 'draft',
-      'Submitted': 'pending',
-      'Approved': 'approved',
-      'Published': 'approved',
-      'Featured': 'featured',
-      'Archived': 'archived'
+      Draft: 'draft',
+      Submitted: 'pending',
+      Approved: 'approved',
+      Published: 'approved',
+      Featured: 'featured',
+      Archived: 'archived',
     };
 
     return statusMap[status] || 'pending';
@@ -214,24 +214,28 @@ class EmpathyLedgerMigration {
 
     try {
       const records = await this.airtable('Organizations').select().all();
-      
+
       for (const record of records) {
         this.stats.organizations.processed++;
-        
+
         try {
           const org = record as AirtableOrganization;
-          const name = org.fields['Organization Name'] || `Organization ${this.stats.organizations.processed}`;
-          
+          const name =
+            org.fields['Organization Name'] ||
+            `Organization ${this.stats.organizations.processed}`;
+
           const organizationData = {
             id: uuidv4(),
             name,
             slug: this.slugify(name),
             description: org.fields['Description'] || null,
             website_url: org.fields['Website'] || null,
-            organization_type: this.normalizeOrganizationType(org.fields['Organization Type']),
+            organization_type: this.normalizeOrganizationType(
+              org.fields['Organization Type']
+            ),
             headquarters_location: org.fields['Location'] || null,
             support_email: org.fields['Primary Contact Email'] || null,
-            is_active: org.fields['Active'] !== false
+            is_active: org.fields['Active'] !== false,
           };
 
           const { error } = await this.supabase
@@ -244,39 +248,52 @@ class EmpathyLedgerMigration {
 
           airtableToSupabaseMap.set(org.id, organizationData.id);
           this.stats.organizations.created++;
-          
+
           this.log(`Created organization: ${name}`, 'success');
         } catch (error) {
           this.stats.organizations.errors++;
-          this.log(`Error migrating organization ${record.id}: ${error}`, 'error');
+          this.log(
+            `Error migrating organization ${record.id}: ${error}`,
+            'error'
+          );
         }
       }
     } catch (error) {
       this.log(`Error fetching organizations from Airtable: ${error}`, 'error');
     }
 
-    this.log(`Organizations migration complete. Created: ${this.stats.organizations.created}, Errors: ${this.stats.organizations.errors}`);
+    this.log(
+      `Organizations migration complete. Created: ${this.stats.organizations.created}, Errors: ${this.stats.organizations.errors}`
+    );
     return airtableToSupabaseMap;
   }
 
-  async migrateCommunities(organizationMap: Map<string, string>): Promise<Map<string, string>> {
+  async migrateCommunities(
+    organizationMap: Map<string, string>
+  ): Promise<Map<string, string>> {
     this.log('Starting communities migration...');
     const airtableToSupabaseMap = new Map<string, string>();
 
     try {
       const records = await this.airtable('Communities').select().all();
-      
+
       for (const record of records) {
         this.stats.communities.processed++;
-        
+
         try {
           const community = record as AirtableCommunity;
-          const name = community.fields['Community Name'] || `Community ${this.stats.communities.processed}`;
-          
+          const name =
+            community.fields['Community Name'] ||
+            `Community ${this.stats.communities.processed}`;
+
           // Map organization if it exists
           let organizationId = null;
-          if (community.fields['Organization'] && community.fields['Organization'].length > 0) {
-            organizationId = organizationMap.get(community.fields['Organization'][0]) || null;
+          if (
+            community.fields['Organization'] &&
+            community.fields['Organization'].length > 0
+          ) {
+            organizationId =
+              organizationMap.get(community.fields['Organization'][0]) || null;
           }
 
           const communityData = {
@@ -285,9 +302,11 @@ class EmpathyLedgerMigration {
             slug: this.slugify(name),
             description: community.fields['Description'] || null,
             geographic_level: community.fields['Geographic Level'] || 'city',
-            location_data: community.fields['Location'] ? { location: community.fields['Location'] } : {},
+            location_data: community.fields['Location']
+              ? { location: community.fields['Location'] }
+              : {},
             organization_id: organizationId,
-            is_active: community.fields['Active'] !== false
+            is_active: community.fields['Active'] !== false,
           };
 
           const { error } = await this.supabase
@@ -300,7 +319,7 @@ class EmpathyLedgerMigration {
 
           airtableToSupabaseMap.set(community.id, communityData.id);
           this.stats.communities.created++;
-          
+
           this.log(`Created community: ${name}`, 'success');
         } catch (error) {
           this.stats.communities.errors++;
@@ -311,7 +330,9 @@ class EmpathyLedgerMigration {
       this.log(`Error fetching communities from Airtable: ${error}`, 'error');
     }
 
-    this.log(`Communities migration complete. Created: ${this.stats.communities.created}, Errors: ${this.stats.communities.errors}`);
+    this.log(
+      `Communities migration complete. Created: ${this.stats.communities.created}, Errors: ${this.stats.communities.errors}`
+    );
     return airtableToSupabaseMap;
   }
 
@@ -321,12 +342,19 @@ class EmpathyLedgerMigration {
 
     try {
       // Get unique contributors from stories
-      const storyRecords = await this.airtable('Stories').select({
-        fields: ['Contributor Email', 'Contributor Name', 'Age Range', 'Location']
-      }).all();
+      const storyRecords = await this.airtable('Stories')
+        .select({
+          fields: [
+            'Contributor Email',
+            'Contributor Name',
+            'Age Range',
+            'Location',
+          ],
+        })
+        .all();
 
       const uniqueContributors = new Map<string, any>();
-      
+
       for (const record of storyRecords) {
         const email = record.fields['Contributor Email'];
         if (email && !uniqueContributors.has(email)) {
@@ -334,14 +362,14 @@ class EmpathyLedgerMigration {
             email,
             name: record.fields['Contributor Name'],
             ageRange: record.fields['Age Range'],
-            location: record.fields['Location']
+            location: record.fields['Location'],
           });
         }
       }
 
       for (const [email, contributor] of uniqueContributors) {
         this.stats.profiles.processed++;
-        
+
         try {
           const profileData = {
             id: uuidv4(),
@@ -352,7 +380,7 @@ class EmpathyLedgerMigration {
             location_general: contributor.location || null,
             role: 'storyteller' as const,
             is_verified: false,
-            is_active: true
+            is_active: true,
           };
 
           const { error } = await this.supabase
@@ -365,7 +393,7 @@ class EmpathyLedgerMigration {
 
           emailToIdMap.set(email, profileData.id);
           this.stats.profiles.created++;
-          
+
           this.log(`Created profile for: ${email}`, 'success');
         } catch (error) {
           this.stats.profiles.errors++;
@@ -376,7 +404,9 @@ class EmpathyLedgerMigration {
       this.log(`Error processing profiles: ${error}`, 'error');
     }
 
-    this.log(`Profiles migration complete. Created: ${this.stats.profiles.created}, Errors: ${this.stats.profiles.errors}`);
+    this.log(
+      `Profiles migration complete. Created: ${this.stats.profiles.created}, Errors: ${this.stats.profiles.errors}`
+    );
     return emailToIdMap;
   }
 
@@ -389,25 +419,34 @@ class EmpathyLedgerMigration {
 
     try {
       const records = await this.airtable('Stories').select().all();
-      
+
       for (const record of records) {
         this.stats.stories.processed++;
-        
+
         try {
           const story = record as AirtableStory;
-          
+
           // Get contributor ID
           const contributorEmail = story.fields['Contributor Email'];
-          const contributorId = contributorEmail ? profileMap.get(contributorEmail) : null;
-          
+          const contributorId = contributorEmail
+            ? profileMap.get(contributorEmail)
+            : null;
+
           if (!contributorId && contributorEmail) {
-            this.log(`Warning: Could not find profile for email ${contributorEmail}`, 'error');
+            this.log(
+              `Warning: Could not find profile for email ${contributorEmail}`,
+              'error'
+            );
           }
 
           // Map organization
           let organizationId = null;
-          if (story.fields['Organization'] && story.fields['Organization'].length > 0) {
-            organizationId = organizationMap.get(story.fields['Organization'][0]) || null;
+          if (
+            story.fields['Organization'] &&
+            story.fields['Organization'].length > 0
+          ) {
+            organizationId =
+              organizationMap.get(story.fields['Organization'][0]) || null;
           }
 
           // For now, assign all stories to the global community
@@ -417,7 +456,7 @@ class EmpathyLedgerMigration {
             .select('id')
             .eq('slug', 'global')
             .single();
-          
+
           const communityId = globalCommunityResult.data?.id || null;
 
           const storyData = {
@@ -426,7 +465,9 @@ class EmpathyLedgerMigration {
             content: story.fields['Content'] || '',
             category: this.normalizeCategory(story.fields['Category']),
             themes: story.fields['Themes'] || [],
-            privacy_level: this.normalizePrivacyLevel(story.fields['Privacy Level']),
+            privacy_level: this.normalizePrivacyLevel(
+              story.fields['Privacy Level']
+            ),
             contributor_id: contributorId,
             organization_id: organizationId,
             community_id: communityId,
@@ -438,11 +479,18 @@ class EmpathyLedgerMigration {
             sentiment_score: story.fields['Sentiment Score'] || null,
             impact_score: story.fields['Impact Score'] || 0,
             view_count: story.fields['View Count'] || 0,
-            status: story.fields['Featured'] ? 'featured' : this.normalizeStatus(story.fields['Status']),
-            created_at: story.fields['Date Submitted'] ? new Date(story.fields['Date Submitted']).toISOString() : new Date().toISOString(),
-            published_at: this.normalizeStatus(story.fields['Status']) === 'approved' ? 
-              (story.fields['Date Submitted'] ? new Date(story.fields['Date Submitted']).toISOString() : new Date().toISOString()) : 
-              null
+            status: story.fields['Featured']
+              ? 'featured'
+              : this.normalizeStatus(story.fields['Status']),
+            created_at: story.fields['Date Submitted']
+              ? new Date(story.fields['Date Submitted']).toISOString()
+              : new Date().toISOString(),
+            published_at:
+              this.normalizeStatus(story.fields['Status']) === 'approved'
+                ? story.fields['Date Submitted']
+                  ? new Date(story.fields['Date Submitted']).toISOString()
+                  : new Date().toISOString()
+                : null,
           };
 
           const { error } = await this.supabase
@@ -464,7 +512,9 @@ class EmpathyLedgerMigration {
       this.log(`Error fetching stories from Airtable: ${error}`, 'error');
     }
 
-    this.log(`Stories migration complete. Created: ${this.stats.stories.created}, Errors: ${this.stats.stories.errors}`);
+    this.log(
+      `Stories migration complete. Created: ${this.stats.stories.created}, Errors: ${this.stats.stories.errors}`
+    );
   }
 
   async updateMetrics(): Promise<void> {
@@ -502,18 +552,18 @@ class EmpathyLedgerMigration {
 
   private normalizeOrganizationType(type?: string): string {
     if (!type) return 'community_group';
-    
+
     const typeMap: { [key: string]: string } = {
       'Non-profit': 'nonprofit',
-      'Nonprofit': 'nonprofit',
-      'NGO': 'nonprofit',
-      'Government': 'government',
-      'Healthcare': 'healthcare',
-      'Education': 'education',
-      'Research': 'research',
+      Nonprofit: 'nonprofit',
+      NGO: 'nonprofit',
+      Government: 'government',
+      Healthcare: 'healthcare',
+      Education: 'education',
+      Research: 'research',
       'Community Group': 'community_group',
-      'Private': 'private_sector',
-      'Corporate': 'private_sector'
+      Private: 'private_sector',
+      Corporate: 'private_sector',
     };
 
     return typeMap[type] || 'community_group';
@@ -526,21 +576,21 @@ class EmpathyLedgerMigration {
     try {
       // Step 1: Migrate organizations
       const organizationMap = await this.migrateOrganizations();
-      
+
       // Step 2: Migrate communities
       const communityMap = await this.migrateCommunities(organizationMap);
-      
+
       // Step 3: Migrate profiles
       const profileMap = await this.migrateProfiles();
-      
+
       // Step 4: Migrate stories
       await this.migrateStories(profileMap, organizationMap, communityMap);
-      
+
       // Step 5: Update metrics
       await this.updateMetrics();
-      
+
       this.stats.totalDuration = Date.now() - startTime;
-      
+
       this.log('✅ Migration completed successfully!', 'success');
       this.log(`📊 Final Stats:
         - Organizations: ${this.stats.organizations.created} created, ${this.stats.organizations.errors} errors
@@ -548,7 +598,6 @@ class EmpathyLedgerMigration {
         - Profiles: ${this.stats.profiles.created} created, ${this.stats.profiles.errors} errors
         - Stories: ${this.stats.stories.created} created, ${this.stats.stories.errors} errors
         - Total Duration: ${this.stats.totalDuration}ms`);
-      
     } catch (error) {
       this.log(`❌ Migration failed: ${error}`, 'error');
       throw error;
@@ -561,7 +610,7 @@ class EmpathyLedgerMigration {
 // CLI execution
 async function main() {
   const migration = new EmpathyLedgerMigration();
-  
+
   try {
     await migration.runFullMigration();
     process.exit(0);

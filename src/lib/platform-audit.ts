@@ -1,8 +1,8 @@
 import { createClient } from './supabase';
 
-export type AuditAction = 
+export type AuditAction =
   | 'project_created'
-  | 'project_updated' 
+  | 'project_updated'
   | 'project_suspended'
   | 'project_activated'
   | 'module_enabled'
@@ -35,16 +35,14 @@ class PlatformAuditLogger {
    */
   async log(entry: AuditLogEntry): Promise<void> {
     try {
-      const { error } = await this.supabase
-        .from('platform_audit_log')
-        .insert({
-          action: entry.action,
-          target_type: entry.target_type,
-          target_id: entry.target_id,
-          details: entry.details || {},
-          ip_address: entry.ip_address,
-          user_agent: entry.user_agent
-        });
+      const { error } = await this.supabase.from('platform_audit_log').insert({
+        action: entry.action,
+        target_type: entry.target_type,
+        target_id: entry.target_id,
+        details: entry.details || {},
+        ip_address: entry.ip_address,
+        user_agent: entry.user_agent,
+      });
 
       if (error) {
         console.error('Failed to log audit entry:', error);
@@ -59,7 +57,13 @@ class PlatformAuditLogger {
    * Log project-related actions
    */
   async logProjectAction(
-    action: Extract<AuditAction, 'project_created' | 'project_updated' | 'project_suspended' | 'project_activated'>,
+    action: Extract<
+      AuditAction,
+      | 'project_created'
+      | 'project_updated'
+      | 'project_suspended'
+      | 'project_activated'
+    >,
     projectId: string,
     details?: Record<string, any>
   ): Promise<void> {
@@ -67,7 +71,7 @@ class PlatformAuditLogger {
       action,
       target_type: 'project',
       target_id: projectId,
-      details
+      details,
     });
   }
 
@@ -86,8 +90,8 @@ class PlatformAuditLogger {
       target_id: projectId,
       details: {
         ...details,
-        module_key: moduleKey
-      }
+        module_key: moduleKey,
+      },
     });
   }
 
@@ -95,7 +99,10 @@ class PlatformAuditLogger {
    * Log user management actions
    */
   async logUserAction(
-    action: Extract<AuditAction, 'user_invited' | 'user_removed' | 'user_role_changed'>,
+    action: Extract<
+      AuditAction,
+      'user_invited' | 'user_removed' | 'user_role_changed'
+    >,
     userId: string,
     details?: Record<string, any>
   ): Promise<void> {
@@ -103,7 +110,7 @@ class PlatformAuditLogger {
       action,
       target_type: 'user',
       target_id: userId,
-      details
+      details,
     });
   }
 
@@ -111,13 +118,16 @@ class PlatformAuditLogger {
    * Log system-level actions
    */
   async logSystemAction(
-    action: Extract<AuditAction, 'platform_settings_updated' | 'system_maintenance' | 'data_export'>,
+    action: Extract<
+      AuditAction,
+      'platform_settings_updated' | 'system_maintenance' | 'data_export'
+    >,
     details?: Record<string, any>
   ): Promise<void> {
     await this.log({
       action,
       target_type: 'system',
-      details
+      details,
     });
   }
 
@@ -125,7 +135,10 @@ class PlatformAuditLogger {
    * Log impersonation actions (for god mode)
    */
   async logImpersonation(
-    action: Extract<AuditAction, 'impersonation_started' | 'impersonation_ended'>,
+    action: Extract<
+      AuditAction,
+      'impersonation_started' | 'impersonation_ended'
+    >,
     targetUserId: string,
     details?: Record<string, any>
   ): Promise<void> {
@@ -133,26 +146,29 @@ class PlatformAuditLogger {
       action,
       target_type: 'user',
       target_id: targetUserId,
-      details
+      details,
     });
   }
 
   /**
    * Get audit log entries with filters
    */
-  async getAuditLog(options: {
-    limit?: number;
-    offset?: number;
-    action?: AuditAction;
-    target_type?: TargetType;
-    target_id?: string;
-    start_date?: string;
-    end_date?: string;
-    actor_id?: string;
-  } = {}) {
+  async getAuditLog(
+    options: {
+      limit?: number;
+      offset?: number;
+      action?: AuditAction;
+      target_type?: TargetType;
+      target_id?: string;
+      start_date?: string;
+      end_date?: string;
+      actor_id?: string;
+    } = {}
+  ) {
     let query = this.supabase
       .from('platform_audit_log')
-      .select(`
+      .select(
+        `
         id,
         action,
         target_type,
@@ -167,7 +183,8 @@ class PlatformAuditLogger {
           email,
           platform_role
         )
-      `)
+      `
+      )
       .order('created_at', { ascending: false });
 
     // Apply filters
@@ -195,11 +212,14 @@ class PlatformAuditLogger {
       query = query.limit(options.limit);
     }
     if (options.offset) {
-      query = query.range(options.offset, options.offset + (options.limit || 50) - 1);
+      query = query.range(
+        options.offset,
+        options.offset + (options.limit || 50) - 1
+      );
     }
 
     const { data, error } = await query;
-    
+
     if (error) {
       throw new Error(`Failed to fetch audit log: ${error.message}`);
     }
@@ -213,7 +233,7 @@ class PlatformAuditLogger {
   async getAuditStats(timeframe: '24h' | '7d' | '30d' = '7d') {
     const now = new Date();
     const startDate = new Date();
-    
+
     switch (timeframe) {
       case '24h':
         startDate.setHours(startDate.getHours() - 24);
@@ -240,16 +260,18 @@ class PlatformAuditLogger {
       total_actions: data.length,
       actions_by_type: {} as Record<string, number>,
       actions_by_target: {} as Record<string, number>,
-      daily_activity: [] as Array<{ date: string; count: number }>
+      daily_activity: [] as Array<{ date: string; count: number }>,
     };
 
     data.forEach(entry => {
       // Count by action type
-      stats.actions_by_type[entry.action] = (stats.actions_by_type[entry.action] || 0) + 1;
-      
+      stats.actions_by_type[entry.action] =
+        (stats.actions_by_type[entry.action] || 0) + 1;
+
       // Count by target type
       if (entry.target_type) {
-        stats.actions_by_target[entry.target_type] = (stats.actions_by_target[entry.target_type] || 0) + 1;
+        stats.actions_by_target[entry.target_type] =
+          (stats.actions_by_target[entry.target_type] || 0) + 1;
       }
     });
 
@@ -272,14 +294,15 @@ export async function logPlatformAction(
     action,
     target_type,
     target_id,
-    details
+    details,
   };
 
   // Extract IP and User-Agent from request if available
   if (request) {
-    auditEntry.ip_address = request.headers.get('x-forwarded-for') || 
-                           request.headers.get('x-real-ip') || 
-                           'unknown';
+    auditEntry.ip_address =
+      request.headers.get('x-forwarded-for') ||
+      request.headers.get('x-real-ip') ||
+      'unknown';
     auditEntry.user_agent = request.headers.get('user-agent') || 'unknown';
   }
 

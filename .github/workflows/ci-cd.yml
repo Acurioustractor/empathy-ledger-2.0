@@ -2,10 +2,10 @@ name: 🚀 CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
-    types: [ opened, synchronize, reopened, ready_for_review ]
+    branches: [main, develop]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   NODE_VERSION: '18'
@@ -15,31 +15,31 @@ jobs:
   # ==============================================
   # CODE QUALITY & SECURITY
   # ==============================================
-  
+
   lint-and-type-check:
     name: 🔍 Lint & Type Check
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: 📋 Install dependencies
         run: npm ci
-        
+
       - name: 🔍 Run ESLint
         run: npm run lint
-        
+
       - name: 🏷️ Run TypeScript check
         run: npm run type-check
-        
+
       - name: 📏 Check code formatting
         run: npm run format:check
 
@@ -47,11 +47,11 @@ jobs:
     name: 🔒 Security Scan
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 🔒 Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
@@ -59,34 +59,34 @@ jobs:
           scan-ref: '.'
           format: 'sarif'
           output: 'trivy-results.sarif'
-          
+
       - name: 📤 Upload Trivy scan results
         uses: github/codeql-action/upload-sarif@v2
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
-          
+
       - name: 🕵️ Run CodeQL Analysis
         uses: github/codeql-action/analyze@v2
         with:
           languages: javascript
-          
+
       - name: 📦 Audit npm dependencies
         run: npm audit --audit-level=high
 
   # ==============================================
   # TESTING
   # ==============================================
-  
+
   test:
     name: 🧪 Test Suite
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
-    
+
     strategy:
       matrix:
         test-type: [unit, integration, e2e]
-        
+
     services:
       postgres:
         image: postgres:15
@@ -100,27 +100,27 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-          
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: 📋 Install dependencies
         run: npm ci
-        
+
       - name: 🗄️ Setup test database
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/empathy_ledger_test
         run: |
           npm run db:setup:test
           npm run db:migrate:test
-          
+
       - name: 🧪 Run ${{ matrix.test-type }} tests
         env:
           NODE_ENV: test
@@ -128,7 +128,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_TEST }}
           NEXTAUTH_SECRET: test-secret-key-for-testing-only
         run: npm run test:${{ matrix.test-type }}
-        
+
       - name: 📊 Upload coverage reports
         if: matrix.test-type == 'unit'
         uses: codecov/codecov-action@v3
@@ -140,32 +140,32 @@ jobs:
   # ==============================================
   # BUILD & DEPLOYMENT
   # ==============================================
-  
+
   build:
     name: 🏗️ Build Application
     runs-on: ubuntu-latest
     needs: [lint-and-type-check, security-scan, test]
     if: github.event.pull_request.draft == false
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: 📋 Install dependencies
         run: npm ci
-        
+
       - name: 🏗️ Build application
         env:
           NODE_ENV: production
           NEXT_PUBLIC_APP_ENV: production
         run: npm run build
-        
+
       - name: 📤 Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -181,16 +181,16 @@ jobs:
     needs: [build]
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     environment: staging
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 📦 Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: build-files
-          
+
       - name: 🗄️ Run database migrations (staging)
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
@@ -198,7 +198,7 @@ jobs:
         run: |
           npm ci
           npm run db:migrate
-          
+
       - name: 🚀 Deploy to Vercel (staging)
         uses: amondnet/vercel-action@v25
         with:
@@ -207,14 +207,14 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod --build-env NODE_ENV=production --build-env NEXT_PUBLIC_APP_ENV=staging'
           scope: ${{ secrets.VERCEL_ORG_ID }}
-          
+
       - name: 🧪 Run staging smoke tests
         env:
           E2E_BASE_URL: https://staging.empathyledger.com
           E2E_ADMIN_EMAIL: ${{ secrets.STAGING_ADMIN_EMAIL }}
           E2E_ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
         run: npm run test:smoke:staging
-        
+
       - name: 📢 Notify team of staging deployment
         uses: 8398a7/action-slack@v3
         with:
@@ -230,16 +230,16 @@ jobs:
     needs: [build]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment: production
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 📦 Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: build-files
-          
+
       - name: 💾 Create pre-deployment backup
         env:
           DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
@@ -249,7 +249,7 @@ jobs:
         run: |
           npm ci
           npm run backup:full
-          
+
       - name: 🗄️ Run database migrations (production)
         env:
           DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
@@ -257,7 +257,7 @@ jobs:
           MIGRATION_TIMEOUT_MS: 600000
         run: |
           npm run db:migrate:production
-          
+
       - name: 🚀 Deploy to Vercel (production)
         uses: amondnet/vercel-action@v25
         with:
@@ -266,7 +266,7 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod --build-env NODE_ENV=production --build-env NEXT_PUBLIC_APP_ENV=production'
           scope: ${{ secrets.VERCEL_ORG_ID }}
-          
+
       - name: 🔍 Post-deployment health check
         env:
           HEALTH_CHECK_URL: https://empathyledger.com/api/health
@@ -274,14 +274,14 @@ jobs:
         run: |
           sleep 30  # Wait for deployment to be ready
           npm run health:check
-          
+
       - name: 🧪 Run production smoke tests
         env:
           E2E_BASE_URL: https://empathyledger.com
           E2E_ADMIN_EMAIL: ${{ secrets.PRODUCTION_ADMIN_EMAIL }}
           E2E_ADMIN_PASSWORD: ${{ secrets.PRODUCTION_ADMIN_PASSWORD }}
         run: npm run test:smoke:production
-        
+
       - name: 🏷️ Create GitHub release
         uses: actions/create-release@v1
         env:
@@ -292,14 +292,14 @@ jobs:
           body: |
             ## Changes in this Release
             ${{ github.event.head_commit.message }}
-            
+
             **Deployment Info:**
             - Commit: ${{ github.sha }}
             - Branch: ${{ github.ref }}
             - Deployed at: $(date)
           draft: false
           prerelease: false
-          
+
       - name: 📢 Notify team of production deployment
         uses: 8398a7/action-slack@v3
         with:
@@ -312,12 +312,12 @@ jobs:
   # ==============================================
   # MIGRATION-SPECIFIC WORKFLOW
   # ==============================================
-  
+
   database-migration:
     name: 🗄️ Database Migration Check
     runs-on: ubuntu-latest
     if: contains(github.head_ref, 'migration/') || contains(github.ref, 'migration/')
-    
+
     services:
       postgres:
         image: postgres:15
@@ -331,43 +331,43 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: 📋 Install dependencies
         run: npm ci
-        
+
       - name: 🗄️ Test migration on empty database
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/empathy_ledger_migration_test
         run: |
           npm run db:migrate:test
           npm run db:seed:test
-          
+
       - name: 🔄 Test rollback functionality
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/empathy_ledger_migration_test
         run: |
           npm run db:rollback:test
-          
+
       - name: 📊 Generate migration report
         run: |
           npm run migration:report > migration-report.md
-          
+
       - name: 📤 Upload migration report
         uses: actions/upload-artifact@v3
         with:
           name: migration-report
           path: migration-report.md
-          
+
       - name: 💬 Comment migration report on PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v6
@@ -385,13 +385,13 @@ jobs:
   # ==============================================
   # CLEANUP & MONITORING
   # ==============================================
-  
+
   cleanup:
     name: 🧹 Cleanup
     runs-on: ubuntu-latest
     needs: [deploy-staging, deploy-production]
     if: always()
-    
+
     steps:
       - name: 🗑️ Clean up artifacts
         uses: actions/github-script@v6
@@ -402,7 +402,7 @@ jobs:
               repo: context.repo.repo,
               run_id: context.runId,
             });
-            
+
             for (const artifact of artifacts.data.artifacts) {
               if (artifact.name === 'build-files') {
                 await github.rest.actions.deleteArtifact({
@@ -418,11 +418,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [deploy-production]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 📊 Monitor application health
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
@@ -432,7 +432,7 @@ jobs:
           sleep 300  # Wait 5 minutes
           npm run monitor:errors
           npm run monitor:performance
-          
+
       - name: 🚨 Create alert if issues detected
         if: failure()
         uses: 8398a7/action-slack@v3

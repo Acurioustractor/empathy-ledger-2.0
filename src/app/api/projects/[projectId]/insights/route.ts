@@ -1,6 +1,6 @@
 /**
  * Project-Specific Community Insights API
- * 
+ *
  * Philosophy: Insights generated from community stories belong to the community
  * and must respect both individual consent and collective sovereignty.
  */
@@ -14,7 +14,10 @@ export async function GET(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -47,14 +50,16 @@ export async function GET(
     // Build query for community insights
     let query = supabase
       .from('community_insights')
-      .select(`
+      .select(
+        `
         *,
         supporting_story_count:supporting_stories->count,
         project:project_id (
           name,
           organization_name
         )
-      `)
+      `
+      )
       .eq('project_id', params.projectId)
       .order('generated_at', { ascending: false })
       .limit(limit);
@@ -76,45 +81,47 @@ export async function GET(
     const { data: insights, error } = await query;
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     // Add sovereignty metadata to each insight
-    const sovereignty_aware_insights = insights?.map(insight => ({
-      ...insight,
-      sovereignty_metadata: {
-        community_generated: true,
-        storyteller_consent_verified: true,
-        value_belongs_to_community: true,
-        cultural_protocols_respected: true,
-        attribution_maintained: true
-      },
-      consent_summary: {
-        total_supporting_stories: insight.supporting_stories?.length || 0,
-        consented_for_insights: true, // Only stories with consent are included
-        community_validated: insight.community_validated || false
-      }
-    })) || [];
+    const sovereignty_aware_insights =
+      insights?.map(insight => ({
+        ...insight,
+        sovereignty_metadata: {
+          community_generated: true,
+          storyteller_consent_verified: true,
+          value_belongs_to_community: true,
+          cultural_protocols_respected: true,
+          attribution_maintained: true,
+        },
+        consent_summary: {
+          total_supporting_stories: insight.supporting_stories?.length || 0,
+          consented_for_insights: true, // Only stories with consent are included
+          community_validated: insight.community_validated || false,
+        },
+      })) || [];
 
     return NextResponse.json({
       insights: sovereignty_aware_insights,
       sovereignty_principles: {
-        community_ownership: 'All insights belong to the storytelling community',
-        consent_based: 'Only stories with explicit consent contribute to insights',
-        culturally_respectful: 'Analysis preserves community language and frameworks',
-        value_sharing: 'Benefits from insights flow back to storytelling communities',
-        transparency: 'Communities can see exactly how insights are generated'
+        community_ownership:
+          'All insights belong to the storytelling community',
+        consent_based:
+          'Only stories with explicit consent contribute to insights',
+        culturally_respectful:
+          'Analysis preserves community language and frameworks',
+        value_sharing:
+          'Benefits from insights flow back to storytelling communities',
+        transparency: 'Communities can see exactly how insights are generated',
       },
       project_context: {
         project_id: params.projectId,
-        insight_generation: 'Asset-based analysis identifying community strengths first',
-        cultural_framework: 'Community-defined protocols guide all analysis'
-      }
+        insight_generation:
+          'Asset-based analysis identifying community strengths first',
+        cultural_framework: 'Community-defined protocols guide all analysis',
+      },
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
@@ -129,7 +136,10 @@ export async function POST(
 ) {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -147,7 +157,10 @@ export async function POST(
       .eq('status', 'active')
       .single();
 
-    if (!membership || !['owner', 'admin', 'editor'].includes(membership.role)) {
+    if (
+      !membership ||
+      !['owner', 'admin', 'editor'].includes(membership.role)
+    ) {
       return NextResponse.json(
         { error: 'Insufficient permissions to create insights' },
         { status: 403 }
@@ -157,7 +170,10 @@ export async function POST(
     const insight_data = await request.json();
 
     // Validate that supporting stories belong to this project and have consent
-    if (insight_data.supporting_stories && insight_data.supporting_stories.length > 0) {
+    if (
+      insight_data.supporting_stories &&
+      insight_data.supporting_stories.length > 0
+    ) {
       const { data: supporting_stories } = await supabase
         .from('stories')
         .select('id, consent_settings, project_id')
@@ -165,17 +181,21 @@ export async function POST(
         .eq('project_id', params.projectId);
 
       // Verify all stories have consent for community sharing/insights
-      const unconsented_stories = supporting_stories?.filter(story => 
-        !story.consent_settings?.allowCommunitySharing && 
-        !story.consent_settings?.allowAnalysis
-      ) || [];
+      const unconsented_stories =
+        supporting_stories?.filter(
+          story =>
+            !story.consent_settings?.allowCommunitySharing &&
+            !story.consent_settings?.allowAnalysis
+        ) || [];
 
       if (unconsented_stories.length > 0) {
         return NextResponse.json(
-          { 
-            error: 'Some supporting stories do not have consent for insight generation',
-            sovereignty_violation: 'Cannot create insights from stories without explicit consent',
-            unconsented_story_ids: unconsented_stories.map(s => s.id)
+          {
+            error:
+              'Some supporting stories do not have consent for insight generation',
+            sovereignty_violation:
+              'Cannot create insights from stories without explicit consent',
+            unconsented_story_ids: unconsented_stories.map(s => s.id),
           },
           { status: 400 }
         );
@@ -201,8 +221,8 @@ export async function POST(
         // Inherit project protocols
         ...project?.sovereignty_framework,
         // Allow insight-specific protocols
-        ...insight_data.cultural_protocols
-      }
+        ...insight_data.cultural_protocols,
+      },
     };
 
     const { data: new_insight, error: insert_error } = await supabase
@@ -224,15 +244,17 @@ export async function POST(
         community_ownership: true,
         consent_verified: true,
         cultural_protocols_applied: true,
-        requires_community_validation: true
+        requires_community_validation: true,
       },
       next_steps: {
-        validation_required: 'Insight requires community validation before full activation',
-        consent_tracking: 'All supporting stories have verified consent for insight generation',
-        value_sharing: 'Any value created from this insight will flow back to the storytelling community'
-      }
+        validation_required:
+          'Insight requires community validation before full activation',
+        consent_tracking:
+          'All supporting stories have verified consent for insight generation',
+        value_sharing:
+          'Any value created from this insight will flow back to the storytelling community',
+      },
     });
-
   } catch (error: any) {
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },

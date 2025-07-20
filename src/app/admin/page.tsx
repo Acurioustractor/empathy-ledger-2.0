@@ -25,7 +25,9 @@ export default function AdminPage() {
 
             {/* Quick Stats */}
             <div className="bg-white border border-gray-200 rounded-3xl p-6">
-              <h3 className="text-lg font-normal text-gray-900 mb-4">Platform Overview</h3>
+              <h3 className="text-lg font-normal text-gray-900 mb-4">
+                Platform Overview
+              </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-600 font-light">Environment</span>
@@ -40,7 +42,9 @@ export default function AdminPage() {
                   <span className="font-light">Supabase Storage</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 font-light">Authentication</span>
+                  <span className="text-gray-600 font-light">
+                    Authentication
+                  </span>
                   <span className="font-light">Supabase Auth</span>
                 </div>
               </div>
@@ -48,30 +52,42 @@ export default function AdminPage() {
 
             {/* System Health */}
             <div className="bg-white border border-gray-200 rounded-3xl p-6">
-              <h3 className="text-lg font-normal text-gray-900 mb-4">System Health</h3>
+              <h3 className="text-lg font-normal text-gray-900 mb-4">
+                System Health
+              </h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="font-light text-gray-900">Website Active</span>
+                  <span className="font-light text-gray-900">
+                    Website Active
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="font-light text-gray-900">Story Submission Active</span>
+                  <span className="font-light text-gray-900">
+                    Story Submission Active
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="font-light text-gray-900">Authentication Active</span>
+                  <span className="font-light text-gray-900">
+                    Authentication Active
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span className="font-light text-gray-900">AI Analysis (Mock)</span>
+                  <span className="font-light text-gray-900">
+                    AI Analysis (Mock)
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Useful Links */}
             <div className="bg-white border border-gray-200 rounded-3xl p-6">
-              <h3 className="text-lg font-normal text-gray-900 mb-4">Quick Links</h3>
+              <h3 className="text-lg font-normal text-gray-900 mb-4">
+                Quick Links
+              </h3>
               <div className="space-y-3">
                 <a
                   href="https://supabase.com/dashboard"

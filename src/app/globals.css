@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /**
  * Global styles for elegant, minimal design
@@ -8,15 +8,21 @@
   a {
     text-decoration: none;
   }
-  
+
   /* Ensure smooth scrolling */
   html {
     scroll-behavior: smooth;
   }
-  
+
   /* Set default font */
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-family:
+      'Inter',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      system-ui,
+      sans-serif;
   }
 }
 
@@ -31,21 +37,21 @@
 
 :root {
   /* Primary Colors - Grounding in Country */
-  --color-ochre: #B85C38;
-  --color-river: #1A3A52;
-  --color-sage: #7A9B76;
-  
+  --color-ochre: #b85c38;
+  --color-river: #1a3a52;
+  --color-sage: #7a9b76;
+
   /* Secondary Colors - Light and Connection */
-  --color-sunrise: #E8B14A;
-  --color-clay: #D4A574;
-  --color-storm: #4A6B7C;
-  
+  --color-sunrise: #e8b14a;
+  --color-clay: #d4a574;
+  --color-storm: #4a6b7c;
+
   /* Neutral Palette - Space for Stories */
-  --color-ceremony: #FEFEFE;
-  --color-elder: #F5F5F2;
-  --color-charcoal: #2D2D2D;
-  --color-stone: #6B7280;
-  
+  --color-ceremony: #fefefe;
+  --color-elder: #f5f5f2;
+  --color-charcoal: #2d2d2d;
+  --color-stone: #6b7280;
+
   /* Semantic Colors */
   --background: var(--color-ceremony);
   --foreground: var(--color-charcoal);
@@ -57,17 +63,17 @@
   --muted-foreground: var(--color-stone);
   --accent: var(--color-sunrise);
   --accent-foreground: var(--color-charcoal);
-  
+
   /* Shadows that honor stories */
   --shadow-story: 0 2px 8px rgba(29, 58, 82, 0.08);
   --shadow-elevated: 0 8px 32px rgba(29, 58, 82, 0.12);
   --shadow-gentle: 0 4px 16px rgba(29, 58, 82, 0.06);
-  
+
   /* Border radius for community warmth */
   --radius-card: 12px;
   --radius-button: 8px;
   --radius-input: 6px;
-  
+
   /* Typography scale */
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-serif: 'Crimson Text', ui-serif, Georgia, serif;
@@ -82,17 +88,17 @@
   --color-muted: var(--color-elder);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  
+
   /* Typography */
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-display: var(--font-display);
-  
+
   /* Shadows */
   --shadow-sm: var(--shadow-story);
   --shadow-md: var(--shadow-gentle);
   --shadow-lg: var(--shadow-elevated);
-  
+
   /* Border radius */
   --radius-sm: calc(var(--radius-button) - 2px);
   --radius: var(--radius-button);
@@ -117,7 +123,12 @@ body {
 }
 
 /* Headings that carry stories with dignity */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 600;
   line-height: 1.2;
@@ -188,7 +199,9 @@ blockquote {
 }
 
 /* Forms that invite participation */
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.5;
@@ -197,10 +210,14 @@ input, textarea, select {
   border-radius: var(--radius-input);
   background: var(--background);
   color: var(--foreground);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(184, 92, 56, 0.1);
@@ -227,7 +244,7 @@ button {
 }
 
 .btn-primary:hover {
-  background: #A04D2F; /* Darker ochre */
+  background: #a04d2f; /* Darker ochre */
   transform: translateY(-1px);
   box-shadow: var(--shadow-gentle);
 }
@@ -288,12 +305,12 @@ button {
     --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.4);
     --shadow-gentle: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
-  
+
   a {
     text-decoration: none !important;
     outline: 1px solid currentColor;
   }
-  
+
   button {
     border: 2px solid currentColor;
   }
@@ -306,11 +323,11 @@ button {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .story-card:hover {
     transform: none;
   }
-  
+
   .btn-primary:hover {
     transform: none;
   }
@@ -337,7 +354,12 @@ button {
 }
 
 .storyteller-highlight {
-  background: linear-gradient(90deg, transparent 0%, var(--color-sunrise) 2%, transparent 4%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-sunrise) 2%,
+    transparent 4%
+  );
 }
 
 .cultural-protocol-indicator {
@@ -459,7 +481,11 @@ button {
 }
 
 /* Elegant link styling - absolutely no underlines anywhere */
-a, a:hover, a:focus, a:active, a:visited {
+a,
+a:hover,
+a:focus,
+a:active,
+a:visited {
   text-decoration: none !important;
   text-decoration-line: none !important;
   text-underline-offset: unset !important;

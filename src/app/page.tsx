@@ -1,8 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
-import { LiveMetric, LiveStoryCollection } from '@/components/cms/DynamicContent';
+import {
+  LiveMetric,
+  LiveStoryCollection,
+} from '@/components/cms/DynamicContent';
 import MediaDisplay from '@/components/ui/MediaDisplay';
-import { placeholderImages, placeholderBlurDataURLs } from '@/lib/supabase-media';
+import {
+  placeholderImages,
+  placeholderBlurDataURLs,
+} from '@/lib/supabase-media';
 
 export default function HomePage() {
   return (
@@ -16,8 +22,8 @@ export default function HomePage() {
             has power.
           </h1>
           <p className="text-lg md:text-xl text-gray-600 font-light max-w-2xl mx-auto content-spacing leading-relaxed">
-            Transform personal experiences into community wisdom. 
-            Complete privacy. Real impact.
+            Transform personal experiences into community wisdom. Complete
+            privacy. Real impact.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center subsection-spacing">
             <Link href="/submit" className="no-underline">
@@ -32,7 +38,7 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-        
+
         {/* Elegant scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
           <div className="w-6 h-10 border border-gray-300 rounded-full flex justify-center pt-2">
@@ -55,7 +61,10 @@ export default function HomePage() {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-              <span><LiveMetric metricType="story_count" fallbackValue={15247} /> stories protected</span>
+              <span>
+                <LiveMetric metricType="story_count" fallbackValue={15247} />{' '}
+                stories protected
+              </span>
             </div>
           </div>
         </div>
@@ -72,9 +81,9 @@ export default function HomePage() {
                 stays yours.
               </h2>
               <p className="text-lg text-gray-600 subsection-spacing leading-relaxed font-light">
-                Share your experiences while maintaining complete control. 
-                Choose who sees your story, change permissions anytime, 
-                and benefit when your insights help others.
+                Share your experiences while maintaining complete control.
+                Choose who sees your story, change permissions anytime, and
+                benefit when your insights help others.
               </p>
               <div className="space-y-8">
                 <div className="flex items-start gap-6">
@@ -82,8 +91,12 @@ export default function HomePage() {
                     <div className="w-2 h-2 bg-gray-900 rounded-full"></div>
                   </div>
                   <div>
-                    <h3 className="font-normal text-gray-900 mb-3 text-lg">Complete privacy control</h3>
-                    <p className="text-gray-500 text-base font-light leading-relaxed">Your data never leaves Australia. Full encryption.</p>
+                    <h3 className="font-normal text-gray-900 mb-3 text-lg">
+                      Complete privacy control
+                    </h3>
+                    <p className="text-gray-500 text-base font-light leading-relaxed">
+                      Your data never leaves Australia. Full encryption.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-6">
@@ -91,8 +104,12 @@ export default function HomePage() {
                     <div className="w-2 h-2 bg-gray-900 rounded-full"></div>
                   </div>
                   <div>
-                    <h3 className="font-normal text-gray-900 mb-3 text-lg">Connect with community</h3>
-                    <p className="text-gray-500 text-base font-light leading-relaxed">Find others with shared experiences, anonymously.</p>
+                    <h3 className="font-normal text-gray-900 mb-3 text-lg">
+                      Connect with community
+                    </h3>
+                    <p className="text-gray-500 text-base font-light leading-relaxed">
+                      Find others with shared experiences, anonymously.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-6">
@@ -100,13 +117,17 @@ export default function HomePage() {
                     <div className="w-2 h-2 bg-gray-900 rounded-full"></div>
                   </div>
                   <div>
-                    <h3 className="font-normal text-gray-900 mb-3 text-lg">Fair compensation</h3>
-                    <p className="text-gray-500 text-base font-light leading-relaxed">Receive value when your story creates insights.</p>
+                    <h3 className="font-normal text-gray-900 mb-3 text-lg">
+                      Fair compensation
+                    </h3>
+                    <p className="text-gray-500 text-base font-light leading-relaxed">
+                      Receive value when your story creates insights.
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div className="relative">
               <MediaDisplay
                 src={placeholderImages.community}
@@ -118,9 +139,12 @@ export default function HomePage() {
               />
               <div className="absolute -bottom-8 -right-8 bg-white rounded-3xl shadow-xl p-8 max-w-sm hover-lift">
                 <p className="text-base text-gray-600 italic font-light mb-4">
-                  "My story helped reshape mental health services for 200+ people in my community."
+                  "My story helped reshape mental health services for 200+
+                  people in my community."
                 </p>
-                <p className="text-sm font-normal text-gray-900">Sarah, Brisbane</p>
+                <p className="text-sm font-normal text-gray-900">
+                  Sarah, Brisbane
+                </p>
               </div>
             </div>
           </div>
@@ -137,30 +161,40 @@ export default function HomePage() {
               <span className="text-gray-500">communities transform.</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto font-light">
-              Privacy-preserving AI reveals patterns without exposing individuals. 
-              Real insights. Real change.
+              Privacy-preserving AI reveals patterns without exposing
+              individuals. Real insights. Real change.
             </p>
           </div>
-          
+
           {/* Live metrics with perfect spacing */}
           <div className="grid md:grid-cols-3 gap-16 max-w-5xl mx-auto">
             <div className="text-center hover-lift">
               <div className="text-6xl font-extralight text-gray-900 mb-4">
                 <LiveMetric metricType="community_count" fallbackValue={89} />
               </div>
-              <div className="text-base text-gray-500 font-light">Communities empowered</div>
+              <div className="text-base text-gray-500 font-light">
+                Communities empowered
+              </div>
             </div>
             <div className="text-center hover-lift">
               <div className="text-6xl font-extralight text-gray-900 mb-4">
                 <LiveMetric metricType="policy_changes" fallbackValue={342} />
               </div>
-              <div className="text-base text-gray-500 font-light">Policy changes driven</div>
+              <div className="text-base text-gray-500 font-light">
+                Policy changes driven
+              </div>
             </div>
             <div className="text-center hover-lift">
               <div className="text-6xl font-extralight text-gray-900 mb-4">
-                <LiveMetric metricType="value_created" fallbackValue={2300000} format="currency" />
+                <LiveMetric
+                  metricType="value_created"
+                  fallbackValue={2300000}
+                  format="currency"
+                />
               </div>
-              <div className="text-base text-gray-500 font-light">Returned to storytellers</div>
+              <div className="text-base text-gray-500 font-light">
+                Returned to storytellers
+              </div>
             </div>
           </div>
         </div>
@@ -180,20 +214,33 @@ export default function HomePage() {
                 className="hover-lift"
               />
             </div>
-            
+
             <div className="order-1 lg:order-2">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-gray-900 content-spacing leading-[1.1]">
                 See the impact.
               </h2>
               <p className="text-lg text-gray-600 subsection-spacing leading-relaxed font-light">
-                From individual stories to community transformation. 
-                Watch how shared experiences create lasting change 
-                in healthcare, education, and social services.
+                From individual stories to community transformation. Watch how
+                shared experiences create lasting change in healthcare,
+                education, and social services.
               </p>
-              <Link href="/case-studies" className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg smooth-transition group no-underline">
-                View case studies 
-                <svg className="w-5 h-5 group-hover:translate-x-1 smooth-transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+              <Link
+                href="/case-studies"
+                className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg smooth-transition group no-underline"
+              >
+                View case studies
+                <svg
+                  className="w-5 h-5 group-hover:translate-x-1 smooth-transition"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </Link>
             </div>
@@ -207,7 +254,7 @@ export default function HomePage() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-gray-900 subsection-spacing leading-[1.1]">
             Simple. Secure. Powerful.
           </h2>
-          
+
           <div className="grid md:grid-cols-3 gap-16 subsection-spacing">
             <div className="hover-lift">
               <div className="w-24 h-24 bg-gray-900 rounded-3xl flex items-center justify-center mx-auto content-spacing">
@@ -218,33 +265,50 @@ export default function HomePage() {
                 Tell your story in your own way. Written, audio, or video.
               </p>
             </div>
-            
+
             <div className="hover-lift">
               <div className="w-24 h-24 bg-gray-900 rounded-3xl flex items-center justify-center mx-auto content-spacing">
                 <span className="text-3xl text-white font-extralight">2</span>
               </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">Connect</h3>
+              <h3 className="text-xl font-normal text-gray-900 mb-4">
+                Connect
+              </h3>
               <p className="text-gray-500 font-light leading-relaxed">
                 Find community. Build understanding. Drive change.
               </p>
             </div>
-            
+
             <div className="hover-lift">
               <div className="w-24 h-24 bg-gray-900 rounded-3xl flex items-center justify-center mx-auto content-spacing">
                 <span className="text-3xl text-white font-extralight">3</span>
               </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">Transform</h3>
+              <h3 className="text-xl font-normal text-gray-900 mb-4">
+                Transform
+              </h3>
               <p className="text-gray-500 font-light leading-relaxed">
                 See real impact in your community. Get compensated.
               </p>
             </div>
           </div>
-          
+
           <div>
-            <Link href="/how-it-works" className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg smooth-transition group no-underline">
+            <Link
+              href="/how-it-works"
+              className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg smooth-transition group no-underline"
+            >
               Learn how it works
-              <svg className="w-5 h-5 group-hover:translate-x-1 smooth-transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-5 h-5 group-hover:translate-x-1 smooth-transition"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </Link>
           </div>
@@ -262,20 +326,33 @@ export default function HomePage() {
               Real community insights updating live from our platform
             </p>
           </div>
-          
+
           <div className="bg-white border border-gray-100 rounded-3xl p-8 md:p-12 hover-lift">
-            <LiveStoryCollection 
+            <LiveStoryCollection
               category="healthcare"
               limit={2}
               displayStyle="quotes"
             />
           </div>
-          
+
           <div className="text-center mt-12">
-            <Link href="/cms" className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg smooth-transition group no-underline">
+            <Link
+              href="/cms"
+              className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg smooth-transition group no-underline"
+            >
               View CMS Dashboard
-              <svg className="w-5 h-5 group-hover:translate-x-1 smooth-transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-5 h-5 group-hover:translate-x-1 smooth-transition"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </Link>
           </div>
@@ -293,7 +370,7 @@ export default function HomePage() {
               See the faces and places where stories become change
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <MediaDisplay
               src={placeholderImages.workshop}
@@ -335,7 +412,8 @@ export default function HomePage() {
             your story?
           </h2>
           <p className="text-xl text-gray-600 subsection-spacing max-w-2xl mx-auto font-light">
-            Join thousands of Australians creating positive change through storytelling.
+            Join thousands of Australians creating positive change through
+            storytelling.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link href="/submit" className="no-underline">
