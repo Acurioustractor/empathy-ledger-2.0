@@ -1,0 +1,263 @@
+/**
+ * Empathy Ledger Design Tokens
+ * Based on trusted Australian tech brand patterns
+ * Building trust through consistent, accessible design
+ */
+
+:root {
+  /* =================================================================
+     Colors - Trust, Empathy, and Human Connection
+     ================================================================= */
+  
+  /* Primary - Trust & Stability (CSIRO-inspired) */
+  --color-primary-900: #003D7A;  /* Deep Ocean */
+  --color-primary-800: #004494;  /* Navy Trust */
+  --color-primary-700: #0747A6;  /* Trust Blue */
+  --color-primary-600: #0052CC;  /* Active Blue */
+  --color-primary-500: #0065CC;  /* Interactive */
+  --color-primary-400: #2684FF;  /* Bright Blue */
+  --color-primary-300: #579DFF;  /* Sky Blue */
+  --color-primary-200: #85B8FF;  /* Light Sky */
+  --color-primary-100: #E9F2FF;  /* Cloud Blue */
+  --color-primary-50: #F7FAFF;   /* Ice Blue */
+
+  /* Secondary - Empathy & Connection */
+  --color-teal-900: #003A4F;   /* Deep Sea */
+  --color-teal-800: #00526C;   /* Ocean Depth */
+  --color-teal-700: #006B8F;   /* Deep Teal */
+  --color-teal-600: #0084A8;   /* Connection */
+  --color-teal-500: #00B8D9;   /* Empathy Teal */
+  --color-teal-400: #00C7E6;   /* Bright Teal */
+  --color-teal-300: #79E2F2;   /* Light Teal */
+  --color-teal-200: #B3F0FF;   /* Soft Teal */
+  --color-teal-100: #E6FCFF;   /* Mist */
+  --color-teal-50: #F0FCFF;    /* Morning Mist */
+
+  /* Accent - Human Warmth */
+  --color-coral-900: #5F1F00;  /* Earth Brown */
+  --color-coral-800: #7A2E0E;  /* Rust */
+  --color-coral-700: #BF2600;  /* Earth Red */
+  --color-coral-600: #DE350B;  /* Warning Red */
+  --color-coral-500: #FF5630;  /* Human Coral */
+  --color-coral-400: #FF7452;  /* Warm Coral */
+  --color-coral-300: #FF8F73;  /* Peach */
+  --color-coral-200: #FFBDAD;  /* Soft Peach */
+  --color-coral-100: #FFEBE6;  /* Blush */
+  --color-coral-50: #FFF7F5;   /* Whisper */
+
+  /* Neutrals - Warm Grays */
+  --color-gray-900: #091E42;   /* Charcoal */
+  --color-gray-800: #172B4D;   /* Dark Slate */
+  --color-gray-700: #253858;   /* Storm */
+  --color-gray-600: #344563;   /* Steel */
+  --color-gray-500: #5E6C84;   /* Slate */
+  --color-gray-400: #7A869A;   /* Stone */
+  --color-gray-300: #97A0AF;   /* Silver */
+  --color-gray-200: #C1C7D0;   /* Ash */
+  --color-gray-100: #F4F5F7;   /* Pearl */
+  --color-gray-50: #FAFBFC;    /* Snow */
+  --color-white: #FFFFFF;      /* Pure White */
+
+  /* Semantic Colors */
+  --color-success-dark: #006644;
+  --color-success: #00875A;
+  --color-success-light: #36B37E;
+  --color-success-bg: #E3FCEF;
+
+  --color-warning-dark: #FF8B00;
+  --color-warning: #FFAB00;
+  --color-warning-light: #FFC400;
+  --color-warning-bg: #FFFAE6;
+
+  --color-error-dark: #BF2600;
+  --color-error: #DE350B;
+  --color-error-light: #FF5630;
+  --color-error-bg: #FFEBE6;
+
+  --color-info-dark: #0052CC;
+  --color-info: #0065CC;
+  --color-info-light: #2684FF;
+  --color-info-bg: #E9F2FF;
+
+  /* =================================================================
+     Typography - Clear, Trustworthy, Accessible
+     ================================================================= */
+
+  /* Font Families */
+  --font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Courier New', monospace;
+  --font-accent: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Font Sizes - Desktop */
+  --text-7xl: 4.5rem;      /* 72px - Hero headlines */
+  --text-6xl: 3.75rem;     /* 60px - Large headers */
+  --text-5xl: 3rem;        /* 48px - Page titles */
+  --text-4xl: 2.25rem;     /* 36px - Section titles */
+  --text-3xl: 1.875rem;    /* 30px - Subsection headers */
+  --text-2xl: 1.5rem;      /* 24px - Large body */
+  --text-xl: 1.25rem;      /* 20px - Emphasis */
+  --text-lg: 1.125rem;     /* 18px - Large paragraph */
+  --text-base: 1rem;       /* 16px - Body text */
+  --text-sm: 0.875rem;     /* 14px - Supporting text */
+  --text-xs: 0.75rem;      /* 12px - Labels, metadata */
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.75;
+  --leading-extra: 2;
+
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* =================================================================
+     Spacing - 8px Grid System
+     ================================================================= */
+
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  --space-32: 8rem;     /* 128px */
+
+  /* =================================================================
+     Borders & Radius
+     ================================================================= */
+
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 4px;
+
+  --radius-none: 0;
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-md: 0.375rem;   /* 6px */
+  --radius-lg: 0.5rem;     /* 8px */
+  --radius-xl: 0.75rem;    /* 12px */
+  --radius-2xl: 1rem;      /* 16px */
+  --radius-3xl: 1.5rem;    /* 24px */
+  --radius-full: 9999px;
+
+  /* =================================================================
+     Shadows - Subtle depth
+     ================================================================= */
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-none: none;
+
+  /* Trust-specific shadows */
+  --shadow-trust: 0 0 0 3px rgba(7, 71, 166, 0.1);
+  --shadow-empathy: 0 0 0 3px rgba(0, 184, 217, 0.1);
+  --shadow-warmth: 0 0 0 3px rgba(255, 86, 48, 0.1);
+
+  /* =================================================================
+     Animation
+     ================================================================= */
+
+  /* Durations */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --duration-slower: 600ms;
+
+  /* Easings */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* =================================================================
+     Breakpoints
+     ================================================================= */
+
+  --screen-sm: 640px;   /* Mobile landscape */
+  --screen-md: 768px;   /* Tablet portrait */
+  --screen-lg: 1024px;  /* Tablet landscape */
+  --screen-xl: 1280px;  /* Desktop */
+  --screen-2xl: 1536px; /* Wide desktop */
+
+  /* =================================================================
+     Z-Index Scale
+     ================================================================= */
+
+  --z-0: 0;
+  --z-10: 10;      /* Dropdowns */
+  --z-20: 20;      /* Sticky elements */
+  --z-30: 30;      /* Fixed overlays */
+  --z-40: 40;      /* Modals */
+  --z-50: 50;      /* Notifications */
+  --z-max: 9999;   /* Critical UI */
+
+  /* =================================================================
+     Containers
+     ================================================================= */
+
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+}
+
+/* =================================================================
+   Dark Mode Overrides (Future)
+   ================================================================= */
+
+[data-theme="dark"] {
+  /* Invert the color scale for dark mode */
+  /* This is a placeholder for future dark mode support */
+}
+
+/* =================================================================
+   Media Query Helpers
+   ================================================================= */
+
+@custom-media --sm (min-width: 640px);
+@custom-media --md (min-width: 768px);
+@custom-media --lg (min-width: 1024px);
+@custom-media --xl (min-width: 1280px);
+@custom-media --2xl (min-width: 1536px);
+
+/* =================================================================
+   Motion Preferences
+   ================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+  }
+}

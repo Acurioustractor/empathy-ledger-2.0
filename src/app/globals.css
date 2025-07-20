@@ -1,26 +1,480 @@
 @import "tailwindcss";
 
+/**
+ * Global styles for elegant, minimal design
+ */
+@layer base {
+  /* Remove underlines from all links */
+  a {
+    text-decoration: none;
+  }
+  
+  /* Ensure smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Set default font */
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+}
+
+/**
+ * Empathy Ledger Design System
+ * Colors inspired by earth, sky, and story
+ * Typography designed for dignity and accessibility
+ * 
+ * Philosophy: Every visual element should honor the sacred trust 
+ * communities place in this platform.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Colors - Grounding in Country */
+  --color-ochre: #B85C38;
+  --color-river: #1A3A52;
+  --color-sage: #7A9B76;
+  
+  /* Secondary Colors - Light and Connection */
+  --color-sunrise: #E8B14A;
+  --color-clay: #D4A574;
+  --color-storm: #4A6B7C;
+  
+  /* Neutral Palette - Space for Stories */
+  --color-ceremony: #FEFEFE;
+  --color-elder: #F5F5F2;
+  --color-charcoal: #2D2D2D;
+  --color-stone: #6B7280;
+  
+  /* Semantic Colors */
+  --background: var(--color-ceremony);
+  --foreground: var(--color-charcoal);
+  --primary: var(--color-ochre);
+  --primary-foreground: var(--color-ceremony);
+  --secondary: var(--color-sage);
+  --secondary-foreground: var(--color-ceremony);
+  --muted: var(--color-elder);
+  --muted-foreground: var(--color-stone);
+  --accent: var(--color-sunrise);
+  --accent-foreground: var(--color-charcoal);
+  
+  /* Shadows that honor stories */
+  --shadow-story: 0 2px 8px rgba(29, 58, 82, 0.08);
+  --shadow-elevated: 0 8px 32px rgba(29, 58, 82, 0.12);
+  --shadow-gentle: 0 4px 16px rgba(29, 58, 82, 0.06);
+  
+  /* Border radius for community warmth */
+  --radius-card: 12px;
+  --radius-button: 8px;
+  --radius-input: 6px;
+  
+  /* Typography scale */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Crimson Text', ui-serif, Georgia, serif;
+  --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
+  /* Tailwind integration with community colors */
+  --color-primary: var(--color-ochre);
+  --color-secondary: var(--color-sage);
+  --color-accent: var(--color-sunrise);
+  --color-muted: var(--color-elder);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  
+  /* Typography */
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-display: var(--font-display);
+  
+  /* Shadows */
+  --shadow-sm: var(--shadow-story);
+  --shadow-md: var(--shadow-gentle);
+  --shadow-lg: var(--shadow-elevated);
+  
+  /* Border radius */
+  --radius-sm: calc(var(--radius-button) - 2px);
+  --radius: var(--radius-button);
+  --radius-lg: var(--radius-card);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base typography that honors voices */
+html {
+  font-size: 16px; /* Minimum for accessibility */
+  line-height: 1.6; /* Generous for readability */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings that carry stories with dignity */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--foreground);
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: 3rem; /* 48px */
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 2.25rem; /* 36px */
+}
+
+h3 {
+  font-size: 1.5rem; /* 24px */
+}
+
+h4 {
+  font-size: 1.25rem; /* 20px */
+}
+
+h5 {
+  font-size: 1.125rem; /* 18px */
+}
+
+h6 {
+  font-size: 1rem; /* 16px */
+  font-weight: 500;
+}
+
+/* Body text that honors every word */
+p {
+  margin-bottom: 1em;
+  max-width: 65ch; /* Optimal reading length */
+}
+
+/* Links that connect with respect - NO UNDERLINES */
+a {
+  color: var(--primary);
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-storm);
+  text-decoration: none !important;
+}
+
+a:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Quotes that preserve wisdom */
+blockquote {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--color-storm);
+  border-left: 4px solid var(--primary);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+  line-height: 1.5;
+}
+
+/* Forms that invite participation */
+input, textarea, select {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--muted);
+  border-radius: var(--radius-input);
+  background: var(--background);
+  color: var(--foreground);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(184, 92, 56, 0.1);
+}
+
+/* Buttons that invite action with dignity */
+button {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  border-radius: var(--radius-button);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+/* Primary button - main actions */
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-story);
+}
+
+.btn-primary:hover {
+  background: #A04D2F; /* Darker ochre */
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-gentle);
+}
+
+.btn-primary:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Secondary button - supporting actions */
+.btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Cards that contain stories with reverence */
+.story-card {
+  background: var(--background);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-story);
+  border-left: 4px solid var(--primary);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.story-card:hover {
+  box-shadow: var(--shadow-elevated);
+  transform: translateY(-2px);
+}
+
+/* Community insight cards */
+.insight-card {
+  background: linear-gradient(135deg, var(--muted) 0%, var(--background) 100%);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-gentle);
+  border: 1px solid rgba(122, 155, 118, 0.2);
+  padding: 1.5rem;
+}
+
+/* Elevated cards for important content */
+.elevated-card {
+  background: var(--background);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-elevated);
+  padding: 2rem;
+}
+
+/* Accessibility and high contrast support */
+@media (prefers-contrast: high) {
+  :root {
+    --shadow-story: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-gentle: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  a {
+    text-decoration: none !important;
+    outline: 1px solid currentColor;
+  }
+  
+  button {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .story-card:hover {
+    transform: none;
+  }
+  
+  .btn-primary:hover {
+    transform: none;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Ensure sufficient color contrast */
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.text-subtle {
+  color: var(--stone);
+}
+
+/* Community-specific utility classes */
+.community-border {
+  border-color: var(--sage);
+}
+
+.storyteller-highlight {
+  background: linear-gradient(90deg, transparent 0%, var(--color-sunrise) 2%, transparent 4%);
+}
+
+.cultural-protocol-indicator {
+  border: 2px dashed var(--color-clay);
+  background: rgba(212, 165, 116, 0.1);
+}
+
+/* Perfect Apple-inspired spacing system */
+.section-spacing {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+@media (min-width: 768px) {
+  .section-spacing {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-spacing {
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+  }
+}
+
+.hero-spacing {
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .hero-spacing {
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+    min-height: 85vh;
+  }
+}
+
+.subsection-spacing {
+  margin-bottom: 4rem;
+}
+
+@media (min-width: 768px) {
+  .subsection-spacing {
+    margin-bottom: 6rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .subsection-spacing {
+    margin-bottom: 8rem;
+  }
+}
+
+.content-spacing {
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .content-spacing {
+    margin-bottom: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .content-spacing {
+    margin-bottom: 4rem;
+  }
+}
+
+/* Elegant container widths */
+.content-container {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (min-width: 768px) {
+  .content-container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+.hero-container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (min-width: 768px) {
+  .hero-container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+/* Smooth transitions for everything */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-0.25rem);
+}
+
+/* Elegant link styling - absolutely no underlines anywhere */
+a, a:hover, a:focus, a:active, a:visited {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: unset !important;
+}
+
+/* Override any potential underlines from frameworks */
+* {
+  text-decoration: none !important;
+}
+*:hover {
+  text-decoration: none !important;
+}
+*:focus {
+  text-decoration: none !important;
+}
+*:active {
+  text-decoration: none !important;
 }

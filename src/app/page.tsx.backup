@@ -1,0 +1,203 @@
+/**
+ * Empathy Ledger Homepage
+ * 
+ * Philosophy: This page should immediately communicate our commitment to
+ * community sovereignty, narrative ownership, and respectful story sharing.
+ * Every element should invite participation while honoring the trust communities place in us.
+ */
+
+import Link from 'next/link';
+
+export default function Home() {
+  return (
+    <div className="min-h-screen" style={{ background: 'var(--background)' }}>
+      {/* Hero Section - Honoring Community Wisdom */}
+      <section className="relative overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 py-20">
+          {/* Main Heading with Community-Centered Language */}
+          <div className="text-center mb-16">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6" 
+                style={{ color: 'var(--foreground)' }}>
+              Every Story Has Power
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto" 
+               style={{ color: 'var(--color-storm)' }}>
+              A community knowledge sovereignty platform where storytellers own their narratives, 
+              receive insights about their wisdom, and benefit when their stories create value.
+            </p>
+            <div className="max-w-2xl mx-auto">
+              <blockquote className="text-lg italic border-none pl-0" 
+                          style={{ color: 'var(--color-storm)', fontFamily: 'var(--font-serif)' }}>
+                "Stories are not raw materials to be processed, but living entities that belong to their tellers."
+              </blockquote>
+            </div>
+          </div>
+
+          {/* Action Buttons with Community Language */}
+          <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16">
+            <Link 
+              href="/stories" 
+              className="btn-primary text-center px-8 py-4 text-lg font-medium"
+            >
+              Witness Community Wisdom
+            </Link>
+            <Link 
+              href="/submit" 
+              className="btn-secondary text-center px-8 py-4 text-lg font-medium"
+            >
+              Share Your Experience
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Values Section - What We Stand For */}
+      <section className="py-20" style={{ background: 'var(--muted)' }}>
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            Community Knowledge Sovereignty
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Storyteller Ownership */}
+            <div className="story-card">
+              <div className="w-12 h-12 rounded-full mb-4 flex items-center justify-center"
+                   style={{ background: 'var(--primary)' }}>
+                <span className="text-2xl" style={{ color: 'var(--primary-foreground)' }}>🌱</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">You Own Your Stories</h3>
+              <p style={{ color: 'var(--muted-foreground)' }}>
+                Every narrative belongs to its teller. You maintain full control over how your story 
+                is shared, analyzed, and used. Your consent is ongoing and granular.
+              </p>
+            </div>
+
+            {/* Community Wisdom */}
+            <div className="story-card">
+              <div className="w-12 h-12 rounded-full mb-4 flex items-center justify-center"
+                   style={{ background: 'var(--secondary)' }}>
+                <span className="text-2xl" style={{ color: 'var(--secondary-foreground)' }}>🤝</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Collective Intelligence</h3>
+              <p style={{ color: 'var(--muted-foreground)' }}>
+                Individual stories reveal community patterns and wisdom. AI analysis preserves 
+                your language and identifies community assets before challenges.
+              </p>
+            </div>
+
+            {/* Value Returns */}
+            <div className="story-card">
+              <div className="w-12 h-12 rounded-full mb-4 flex items-center justify-center"
+                   style={{ background: 'var(--accent)' }}>
+                <span className="text-2xl" style={{ color: 'var(--accent-foreground)' }}>⭐</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Value Flows Back</h3>
+              <p style={{ color: 'var(--muted-foreground)' }}>
+                When your stories help secure grants, influence policy, or create other value, 
+                you and your community benefit. Knowledge becomes a community asset.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works - Community Process */}
+      <section className="py-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            How Community Knowledge Sovereignty Works
+          </h2>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Step 1: Share */}
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
+                   style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+                1
+              </div>
+              <h4 className="text-lg font-semibold mb-2">Share Your Experience</h4>
+              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                Submit your story with full control over privacy settings and cultural protocols.
+              </p>
+            </div>
+
+            {/* Step 2: Analyze */}
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
+                   style={{ background: 'var(--secondary)', color: 'var(--secondary-foreground)' }}>
+                2
+              </div>
+              <h4 className="text-lg font-semibold mb-2">Receive Insights</h4>
+              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                AI analysis that preserves your language and identifies community strengths.
+              </p>
+            </div>
+
+            {/* Step 3: Connect */}
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
+                   style={{ background: 'var(--accent)', color: 'var(--accent-foreground)' }}>
+                3
+              </div>
+              <h4 className="text-lg font-semibold mb-2">Build Community</h4>
+              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                Connect with others who share similar experiences and wisdom.
+              </p>
+            </div>
+
+            {/* Step 4: Benefit */}
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
+                   style={{ background: 'var(--color-storm)', color: 'var(--primary-foreground)' }}>
+                4
+              </div>
+              <h4 className="text-lg font-semibold mb-2">Create Value</h4>
+              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                Your collective wisdom influences policy and attracts resources for your community.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action - Invitation to Participate */}
+      <section className="py-20" style={{ background: 'var(--muted)' }}>
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-6">
+            Join the Movement for Knowledge Sovereignty
+          </h2>
+          <p className="text-xl mb-8" style={{ color: 'var(--color-storm)' }}>
+            Your story matters. Your community's wisdom deserves to be heard, respected, and rewarded. 
+            Together, we can build technology that serves rather than extracts.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link 
+              href="/auth/sign-in" 
+              className="btn-primary px-8 py-4 text-lg"
+            >
+              Begin Your Journey
+            </Link>
+            <Link 
+              href="/about" 
+              className="btn-secondary px-8 py-4 text-lg"
+            >
+              Learn Our Philosophy
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer - Community Values */}
+      <footer className="py-12" style={{ background: 'var(--foreground)', color: 'var(--background)' }}>
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <p className="text-lg italic mb-4" style={{ fontFamily: 'var(--font-serif)' }}>
+            "In every algorithm, a choice. In every analysis, a relationship. In every insight, a responsibility."
+          </p>
+          <p className="text-sm opacity-80">
+            Empathy Ledger - Building bridges between ancient wisdom and emerging technology
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
