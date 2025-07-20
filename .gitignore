@@ -30,8 +30,18 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# Environment files (NEVER commit these!)
 .env*
+!.env.example
+env-*.txt
+*.env
+*.env.*
+.env.local.backup*
+
+# Security files
+private-keys/
+secrets/
+certificates/
 
 # vercel
 .vercel
@@ -39,3 +49,38 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Database and Migration Files
+backups/
+migration-backups/
+migration-logs/
+*.sql.backup
+*.dump
+*.sql.gz
+
+# Airtable exports (may contain sensitive data)
+airtable-exports/
+*.airtable.json
+
+# Log files
+logs/
+*.log
+
+# Temporary files
+temp/
+tmp/
+.temp/
+
+# IDE files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# Backup and recovery files
+restore-points/
+snapshots/

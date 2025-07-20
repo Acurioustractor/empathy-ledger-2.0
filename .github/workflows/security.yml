@@ -1,0 +1,508 @@
+name: 🔒 Security & Compliance Checks
+
+on:
+  schedule:
+    # Run security checks daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'package*.json'
+      - '.github/workflows/security.yml'
+  pull_request:
+    branches: [ main, develop ]
+    types: [ opened, synchronize ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # ==============================================
+  # DEPENDENCY SECURITY AUDIT
+  # ==============================================
+  
+  dependency-audit:
+    name: 📦 Dependency Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: 📋 Install dependencies
+        run: npm ci
+        
+      - name: 🔍 Run npm audit
+        run: |
+          npm audit --audit-level=moderate --json > audit-report.json || true
+          npm audit --audit-level=moderate
+          
+      - name: 📊 Generate audit summary
+        run: |
+          echo "## 📦 Dependency Audit Summary" > audit-summary.md
+          echo "" >> audit-summary.md
+          node -e "
+            const audit = JSON.parse(require('fs').readFileSync('audit-report.json', 'utf8'));
+            const vulns = audit.vulnerabilities || {};
+            const counts = Object.values(vulns).reduce((acc, v) => {
+              acc[v.severity] = (acc[v.severity] || 0) + 1;
+              return acc;
+            }, {});
+            console.log('| Severity | Count |');
+            console.log('|----------|-------|');
+            Object.entries(counts).forEach(([sev, count]) => {
+              console.log('| ' + sev + ' | ' + count + ' |');
+            });
+          " >> audit-summary.md
+          
+      - name: 📤 Upload audit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-audit-report
+          path: |
+            audit-report.json
+            audit-summary.md
+          retention-days: 30
+
+  # ==============================================
+  # SECRET SCANNING
+  # ==============================================
+  
+  secret-scan:
+    name: 🕵️ Secret Detection
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for secret scanning
+          
+      - name: 🕵️ Run GitLeaks secret scanner
+        uses: zricethezav/gitleaks-action@v1.6.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+          
+      - name: 🔍 Run TruffleHog secret scanner
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  # ==============================================
+  # CODE SECURITY ANALYSIS
+  # ==============================================
+  
+  static-analysis:
+    name: 🔍 Static Security Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🔍 Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+          queries: +security-and-quality
+          
+      - name: 🏗️ Autobuild
+        uses: github/codeql-action/autobuild@v2
+        
+      - name: 🔍 Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:javascript"
+          
+      - name: 🔒 Run Semgrep security scanner
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/owasp-top-ten
+            p/javascript
+            p/typescript
+            p/react
+            p/nextjs
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+  # ==============================================
+  # INFRASTRUCTURE SECURITY
+  # ==============================================
+  
+  infrastructure-scan:
+    name: 🏗️ Infrastructure Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🔍 Run Trivy filesystem scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-fs-results.sarif'
+          
+      - name: 🔍 Run Trivy config scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+          
+      - name: 📤 Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-fs-results.sarif'
+          
+      - name: 🔍 Scan Docker configurations
+        run: |
+          if [ -f Dockerfile ]; then
+            docker run --rm -i hadolint/hadolint < Dockerfile
+          fi
+
+  # ==============================================
+  # COMPLIANCE CHECKS
+  # ==============================================
+  
+  compliance-check:
+    name: ⚖️ Compliance & Privacy Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: 📋 Install dependencies
+        run: npm ci
+        
+      - name: 🔍 Check for GDPR compliance
+        run: |
+          echo "## 🇪🇺 GDPR Compliance Check" > compliance-report.md
+          echo "" >> compliance-report.md
+          
+          # Check for privacy policy links
+          if grep -r "privacy" src/ --include="*.tsx" --include="*.ts"; then
+            echo "✅ Privacy policy references found" >> compliance-report.md
+          else
+            echo "❌ No privacy policy references found" >> compliance-report.md
+          fi
+          
+          # Check for cookie consent
+          if grep -r "cookie" src/ --include="*.tsx" --include="*.ts"; then
+            echo "✅ Cookie handling found" >> compliance-report.md
+          else
+            echo "❌ No cookie handling found" >> compliance-report.md
+          fi
+          
+          # Check for data export functionality
+          if grep -r "export.*data" src/ --include="*.tsx" --include="*.ts"; then
+            echo "✅ Data export functionality found" >> compliance-report.md
+          else
+            echo "❌ No data export functionality found" >> compliance-report.md
+          fi
+          
+      - name: 🔍 Check Indigenous data sovereignty compliance
+        run: |
+          echo "" >> compliance-report.md
+          echo "## 🏛️ Indigenous Data Sovereignty Check" >> compliance-report.md
+          echo "" >> compliance-report.md
+          
+          # Check for CARE principles implementation
+          if grep -r -i "care.principles\|collective.benefit\|authority.to.control" src/ --include="*.tsx" --include="*.ts"; then
+            echo "✅ CARE principles implementation found" >> compliance-report.md
+          else
+            echo "❌ CARE principles implementation not found" >> compliance-report.md
+          fi
+          
+          # Check for community governance
+          if grep -r -i "community.*governance\|cultural.*protocol" src/ --include="*.tsx" --include="*.ts"; then
+            echo "✅ Community governance features found" >> compliance-report.md
+          else
+            echo "❌ Community governance features not found" >> compliance-report.md
+          fi
+          
+      - name: 🔍 Security headers check
+        run: |
+          echo "" >> compliance-report.md
+          echo "## 🛡️ Security Configuration Check" >> compliance-report.md
+          echo "" >> compliance-report.md
+          
+          # Check for security headers configuration
+          if [ -f "next.config.ts" ] || [ -f "next.config.js" ]; then
+            if grep -r -i "security.*headers\|csp\|csrf" next.config.*; then
+              echo "✅ Security headers configuration found" >> compliance-report.md
+            else
+              echo "❌ Security headers configuration not found" >> compliance-report.md
+            fi
+          fi
+          
+          # Check for rate limiting
+          if grep -r -i "rate.limit" src/ --include="*.tsx" --include="*.ts"; then
+            echo "✅ Rate limiting implementation found" >> compliance-report.md
+          else
+            echo "❌ Rate limiting implementation not found" >> compliance-report.md
+          fi
+          
+      - name: 📤 Upload compliance report
+        uses: actions/upload-artifact@v3
+        with:
+          name: compliance-report
+          path: compliance-report.md
+          retention-days: 30
+
+  # ==============================================
+  # LICENSE COMPLIANCE
+  # ==============================================
+  
+  license-check:
+    name: ⚖️ License Compliance
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: 📋 Install dependencies
+        run: npm ci
+        
+      - name: 📋 Install license checker
+        run: npm install -g license-checker
+        
+      - name: 🔍 Check licenses
+        run: |
+          license-checker --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;CC0-1.0' --json > licenses.json
+          
+      - name: 📊 Generate license report
+        run: |
+          echo "## 📋 License Compliance Report" > license-report.md
+          echo "" >> license-report.md
+          echo "| Package | License | Repository |" >> license-report.md
+          echo "|---------|---------|------------|" >> license-report.md
+          node -e "
+            const licenses = JSON.parse(require('fs').readFileSync('licenses.json', 'utf8'));
+            Object.entries(licenses).forEach(([pkg, info]) => {
+              console.log('| ' + pkg + ' | ' + (info.licenses || 'Unknown') + ' | ' + (info.repository || 'N/A') + ' |');
+            });
+          " >> license-report.md
+          
+      - name: 📤 Upload license report
+        uses: actions/upload-artifact@v3
+        with:
+          name: license-report
+          path: |
+            licenses.json
+            license-report.md
+          retention-days: 30
+
+  # ==============================================
+  # SECURITY MONITORING
+  # ==============================================
+  
+  security-monitoring:
+    name: 📊 Security Monitoring Setup
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🔒 Configure Sentry security monitoring
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          # Configure security alerts in Sentry
+          curl -X POST "https://sentry.io/api/0/projects/$SENTRY_ORG/$SENTRY_PROJECT/rules/" \
+            -H "Authorization: Bearer $SENTRY_AUTH_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "Security Alert - High Severity Errors",
+              "conditions": [
+                {
+                  "id": "sentry.rules.conditions.level_change.LevelChangeEventCondition",
+                  "level": "40"
+                }
+              ],
+              "actions": [
+                {
+                  "id": "sentry.rules.actions.notify_event_service.SlackNotifyServiceAction",
+                  "channel": "#security-alerts"
+                }
+              ]
+            }'
+
+  # ==============================================
+  # NOTIFICATION & REPORTING
+  # ==============================================
+  
+  security-report:
+    name: 📊 Generate Security Report
+    runs-on: ubuntu-latest
+    needs: [dependency-audit, secret-scan, static-analysis, infrastructure-scan, compliance-check, license-check]
+    if: always()
+    
+    steps:
+      - name: 📥 Download all artifacts
+        uses: actions/download-artifact@v3
+        
+      - name: 📊 Compile security report
+        run: |
+          echo "# 🔒 Security & Compliance Report" > security-report.md
+          echo "" >> security-report.md
+          echo "**Date:** $(date)" >> security-report.md
+          echo "**Branch:** ${{ github.ref }}" >> security-report.md
+          echo "**Commit:** ${{ github.sha }}" >> security-report.md
+          echo "" >> security-report.md
+          
+          # Combine all reports
+          if [ -f dependency-audit-report/audit-summary.md ]; then
+            cat dependency-audit-report/audit-summary.md >> security-report.md
+            echo "" >> security-report.md
+          fi
+          
+          if [ -f compliance-report/compliance-report.md ]; then
+            cat compliance-report/compliance-report.md >> security-report.md
+            echo "" >> security-report.md
+          fi
+          
+          if [ -f license-report/license-report.md ]; then
+            cat license-report/license-report.md >> security-report.md
+            echo "" >> security-report.md
+          fi
+          
+      - name: 📧 Send security report
+        if: github.event_name == 'schedule'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              channel: '#security',
+              username: 'Security Bot',
+              icon_emoji: ':shield:',
+              attachments: [{
+                color: 'good',
+                title: '🔒 Daily Security Report',
+                text: 'Security scan completed. Check artifacts for detailed reports.',
+                fields: [{
+                  title: 'Repository',
+                  value: '${{ github.repository }}',
+                  short: true
+                }, {
+                  title: 'Branch',
+                  value: '${{ github.ref }}',
+                  short: true
+                }]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          
+      - name: 📤 Upload final security report
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-report
+          path: security-report.md
+          retention-days: 90
+
+  # ==============================================
+  # EMERGENCY RESPONSE
+  # ==============================================
+  
+  critical-security-alert:
+    name: 🚨 Critical Security Alert
+    runs-on: ubuntu-latest
+    needs: [dependency-audit, secret-scan, static-analysis]
+    if: failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    steps:
+      - name: 🚨 Send critical security alert
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          channel: '#security-alerts'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          custom_payload: |
+            {
+              username: 'Security Alert Bot',
+              icon_emoji: ':rotating_light:',
+              attachments: [{
+                color: 'danger',
+                title: '🚨 CRITICAL SECURITY ISSUE DETECTED',
+                text: 'Critical security vulnerabilities found in ${{ github.repository }}',
+                fields: [{
+                  title: 'Branch',
+                  value: '${{ github.ref }}',
+                  short: true
+                }, {
+                  title: 'Commit',
+                  value: '${{ github.sha }}',
+                  short: true
+                }, {
+                  title: 'Workflow',
+                  value: '${{ github.workflow }}',
+                  short: true
+                }, {
+                  title: 'Action Required',
+                  value: 'Immediate review and remediation required',
+                  short: false
+                }]
+              }]
+            }
+            
+      - name: 📧 Send email alert to security team
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: '🚨 CRITICAL: Security vulnerabilities detected in Empathy Ledger'
+          to: ${{ secrets.SECURITY_TEAM_EMAIL }}
+          from: 'security-alerts@empathyledger.com'
+          body: |
+            Critical security vulnerabilities have been detected in the Empathy Ledger repository.
+            
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref }}
+            Commit: ${{ github.sha }}
+            
+            Immediate action is required to review and remediate these issues.
+            
+            Please check the GitHub Actions workflow for detailed information.
+            
+            Workflow URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}

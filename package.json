@@ -1,27 +1,197 @@
 {
-  "name": "empathy-ledger-new",
-  "version": "0.1.0",
+  "name": "empathy-ledger",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "description": "A platform where storytellers own their narratives and communities control their data sovereignty",
+  "keywords": ["storytelling", "data sovereignty", "community empowerment", "indigenous rights"],
+  "author": "A Curious Tractor",
+  "license": "UNLICENSED",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "// Development": "===========================================",
+    "dev": "next dev",
+    "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "type-check": "tsc --noEmit",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    
+    "// Testing": "============================================",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:smoke:staging": "playwright test --grep @smoke --base-url=https://staging.empathyledger.com",
+    "test:smoke:production": "playwright test --grep @smoke --base-url=https://empathyledger.com",
+    
+    "// Database Management": "================================",
+    "db:setup": "node scripts/setup-database.js",
+    "db:setup:test": "NODE_ENV=test node scripts/setup-database.js",
+    "db:migrate": "node scripts/run-migrations.js",
+    "db:migrate:test": "NODE_ENV=test node scripts/run-migrations.js",
+    "db:migrate:production": "NODE_ENV=production node scripts/run-migrations.js",
+    "db:rollback": "node scripts/rollback-migration.js",
+    "db:rollback:test": "NODE_ENV=test node scripts/rollback-migration.js",
+    "db:seed": "node scripts/seed-database.js",
+    "db:seed:test": "NODE_ENV=test node scripts/seed-database.js",
+    "db:reset": "npm run db:rollback && npm run db:migrate && npm run db:seed",
+    "db:studio": "npx supabase studio",
+    
+    "// Migration & Data Transfer": "==========================",
+    "migrate:airtable": "node scripts/airtable-migration/migrate-airtable-to-supabase.js",
+    "migrate:dry-run": "DRY_RUN=true node scripts/airtable-migration/migrate-airtable-to-supabase.js",
+    "migrate:staging": "NODE_ENV=staging node scripts/airtable-migration/migrate-airtable-to-supabase.js",
+    "migrate:production": "NODE_ENV=production node scripts/airtable-migration/migrate-airtable-to-supabase.js",
+    "migration:report": "node scripts/generate-migration-report.js",
+    "airtable:export": "node scripts/export-airtable-data.js",
+    
+    "// Backup & Recovery": "==================================",
+    "backup:setup": "node scripts/backup-disaster-recovery/setup-backup-system.js",
+    "backup:full": "node scripts/backup-disaster-recovery/backup-system.js --type=full",
+    "backup:incremental": "node scripts/backup-disaster-recovery/backup-system.js --type=incremental",
+    "backup:verify": "node scripts/backup-disaster-recovery/verify-backups.js",
+    "backup:list": "node scripts/backup-disaster-recovery/list-backups.js",
+    "backup:emergency": "node scripts/backup-disaster-recovery/emergency-backup.js",
+    "restore": "node scripts/backup-disaster-recovery/restore-from-backup.js",
+    "recover": "node scripts/backup-disaster-recovery/disaster-recovery.js",
+    
+    "// Security & Compliance": "==============================",
+    "security:scan": "npm audit && npm run security:secrets",
+    "security:fix": "npm audit fix",
+    "security:secrets": "gitleaks detect --source . --verbose",
+    "compliance:check": "node scripts/compliance-check.js",
+    "compliance:report": "node scripts/generate-compliance-report.js",
+    
+    "// Health & Monitoring": "===============================",
+    "health:check": "node scripts/health-check.js",
+    "monitor:errors": "node scripts/monitor-errors.js",
+    "monitor:performance": "node scripts/monitor-performance.js",
+    "monitor:setup": "node scripts/setup-monitoring.js",
+    
+    "// Environment Management": "============================",
+    "env:setup": "cp .env.example .env.local && echo 'Please fill in your environment variables in .env.local'",
+    "env:validate": "node scripts/validate-environment.js",
+    "env:rotate-secrets": "node scripts/rotate-api-keys.js",
+    
+    "// Deployment": "======================================",
+    "deploy:staging": "npm run build && npm run db:migrate:staging && vercel --prod --build-env NODE_ENV=production --build-env NEXT_PUBLIC_APP_ENV=staging",
+    "deploy:production": "npm run backup:full && npm run build && npm run db:migrate:production && vercel --prod --build-env NODE_ENV=production --build-env NEXT_PUBLIC_APP_ENV=production",
+    "deploy:rollback": "node scripts/rollback-deployment.js",
+    
+    "// Code Quality": "====================================",
+    "quality:check": "npm run lint && npm run type-check && npm run test:coverage",
+    "quality:fix": "npm run lint:fix && npm run format",
+    "analyze": "npm run build && npx @next/bundle-analyzer",
+    
+    "// Development Tools": "===============================",
+    "codegen": "node scripts/generate-types.js",
+    "generate:migration": "node scripts/generate-migration.js",
+    "generate:component": "node scripts/generate-component.js",
+    "docs:build": "typedoc --out docs/api src",
+    "docs:serve": "serve docs/api",
+    
+    "// Maintenance": "====================================",
+    "maintenance:enable": "node scripts/enable-maintenance-mode.js",
+    "maintenance:disable": "node scripts/disable-maintenance-mode.js",
+    "cleanup:logs": "node scripts/cleanup-logs.js",
+    "cleanup:backups": "node scripts/cleanup-old-backups.js",
+    
+    "// Git Workflow Helpers": "============================",
+    "git:setup": "node scripts/setup-git-hooks.js",
+    "commit": "git-cz",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "release": "standard-version",
+    
+    "// Quick Commands": "=================================",
+    "setup": "npm run env:setup && npm run db:setup && npm run db:migrate && npm run db:seed",
+    "reset": "npm run db:reset && npm run cleanup:logs",
+    "ci": "npm run quality:check && npm run test",
+    "cd": "npm run ci && npm run build"
   },
   "dependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.4.1"
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.51.0",
+    "@tanstack/react-query": "^5.83.0",
+    "next": "15.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "airtable": "^0.12.2",
+    "@aws-sdk/client-s3": "^3.470.0",
+    "pg": "^8.11.3",
+    "node-cron": "^3.0.3",
+    "p-limit": "^4.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^18.3.14",
+    "@types/react-dom": "^18.3.5",
+    "@types/pg": "^8.10.9",
+    "@types/node-cron": "^3.0.11",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "jest": "^29.7.0",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/jest-dom": "^6.1.5",
+    "playwright": "^1.40.1",
+    "prettier": "^3.1.0",
+    "@next/bundle-analyzer": "^14.0.4",
+    "conventional-changelog-cli": "^4.1.0",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "standard-version": "^9.5.0",
+    "typedoc": "^0.25.4",
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+    "testPathIgnorePatterns": ["/node_modules/", "/.next/"],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/**/*.stories.{js,jsx,ts,tsx}"
+    ],
+    "moduleNameMapping": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/empathy-ledger.git"
+  },
+  "homepage": "https://empathyledger.com",
+  "bugs": {
+    "url": "https://github.com/your-org/empathy-ledger/issues"
   }
 }
