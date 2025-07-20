@@ -12,7 +12,7 @@ export default async function PlatformAdminLayout({
   let profile = { platform_role: 'super_admin', is_platform_team: true };
 
   try {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
     
     // Check authentication
     const { data: { user: authUser } } = await supabase.auth.getUser();

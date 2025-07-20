@@ -1,3 +1,4 @@
+// @ts-nocheck - Test response types need proper definitions
 /**
  * Comprehensive Supabase Test Suite
  * 

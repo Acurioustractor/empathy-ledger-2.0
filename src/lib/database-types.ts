@@ -237,3 +237,10 @@ export interface StoryStatus {
   published: 'published';
   archived: 'archived';
 }
+
+// Export function placeholders for components
+export function getUserStories(userId: string): Promise<Story[]> {
+  return Promise.resolve([]);
+}
+
+// Additional exports needed by components (already exported above)

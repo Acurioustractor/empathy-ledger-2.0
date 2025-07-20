@@ -8,7 +8,7 @@ export default async function ModulesPage() {
   let usageStats = null;
 
   try {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
 
     // Get all platform modules
     const { data: moduleData } = await supabase

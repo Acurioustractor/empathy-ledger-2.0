@@ -12,7 +12,7 @@ export default async function PlatformAdminDashboard() {
   let recentActivity: any[] = [];
 
   try {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
 
     // Get platform metrics
     const [

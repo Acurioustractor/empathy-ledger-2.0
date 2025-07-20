@@ -42,8 +42,8 @@ export default function EmbedIframePage({ searchParams }: EmbedIframePageProps) 
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
       <EmbedWidget
         projectId={project_id}
-        widgetType={type}
-        theme={theme}
+        widgetType={type as "story_card" | "story_carousel" | "story_list" | "featured_story"}
+        theme={theme as "light" | "dark"}
         storyId={story_id}
         limit={parseInt(limit)}
       />

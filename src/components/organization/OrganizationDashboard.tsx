@@ -328,15 +328,15 @@ export default function OrganizationDashboard({ organizationId }: OrganizationDa
                     <div className="text-sm text-gray-500 font-light">Total Stories</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-extralight text-gray-900">{fullInsights.story_metrics.media_distribution.withAudio}</div>
+                    <div className="text-3xl font-extralight text-gray-900">{fullInsights.story_metrics.media_distribution.with_audio}</div>
                     <div className="text-sm text-gray-500 font-light">With Audio</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-extralight text-gray-900">{fullInsights.story_metrics.media_distribution.withVideo}</div>
+                    <div className="text-3xl font-extralight text-gray-900">{fullInsights.story_metrics.media_distribution.with_video}</div>
                     <div className="text-sm text-gray-500 font-light">With Video</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-extralight text-gray-900">{fullInsights.story_metrics.media_distribution.withImages}</div>
+                    <div className="text-3xl font-extralight text-gray-900">{fullInsights.story_metrics.media_distribution.with_images}</div>
                     <div className="text-sm text-gray-500 font-light">With Images</div>
                   </div>
                 </div>

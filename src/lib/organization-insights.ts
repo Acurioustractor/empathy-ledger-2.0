@@ -248,7 +248,7 @@ function generateStoryMetrics(stories: any[]): StoryMetrics {
     new_stories: stories.length, // All stories in period are "new"
     stories_by_category: categoryCounts,
     stories_by_privacy_level: privacyCounts,
-    media_distribution: { textOnly, withAudio, withVideo, withImages },
+    media_distribution: { text_only: textOnly, with_audio: withAudio, with_video: withVideo, with_images: withImages },
     geographic_distribution: geoCounts,
     age_distribution: ageCounts
   };
