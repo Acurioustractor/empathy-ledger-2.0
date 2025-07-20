@@ -134,6 +134,7 @@ jobs:
 
       - name: 🗄️ Setup test database
         env:
+          NODE_ENV: test
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/empathy_ledger_test
         run: |
           npm run db:setup:test

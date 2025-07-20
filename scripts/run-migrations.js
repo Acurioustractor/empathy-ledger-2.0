@@ -11,10 +11,21 @@ import path from 'path';
 import dotenv from 'dotenv';
 
 // Load environment variables
-dotenv.config({ path: '.env.local' });
+if (process.env.NODE_ENV === 'test') {
+  dotenv.config({ path: '.env.test' });
+} else {
+  dotenv.config({ path: '.env.local' });
+}
 
 async function runMigrations() {
-  console.log('🗄️  Running database migrations...');
+  console.log(`🗄️  Running database migrations for ${process.env.NODE_ENV || 'development'} environment...`);
+
+  // Skip Supabase migrations for test environment (using local PostgreSQL)
+  if (process.env.NODE_ENV === 'test') {
+    console.log('🧪 Test environment detected - skipping Supabase migrations');
+    console.log('✅ Using local PostgreSQL for testing (no migrations needed)');
+    return;
+  }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

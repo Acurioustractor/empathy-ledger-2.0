@@ -20,6 +20,14 @@ async function setupDatabase() {
     `🗄️  Setting up database for ${process.env.NODE_ENV || 'development'} environment...`
   );
 
+  // Skip Supabase setup for test environment (using local PostgreSQL)
+  if (process.env.NODE_ENV === 'test') {
+    console.log('🧪 Test environment detected - skipping Supabase setup');
+    console.log('✅ Using local PostgreSQL for testing');
+    console.log('💡 Run "npm run db:migrate:test" to apply schema migrations');
+    return;
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
