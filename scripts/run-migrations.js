@@ -18,7 +18,9 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 async function runMigrations() {
-  console.log(`🗄️  Running database migrations for ${process.env.NODE_ENV || 'development'} environment...`);
+  console.log(
+    `🗄️  Running database migrations for ${process.env.NODE_ENV || 'development'} environment...`
+  );
 
   // Skip Supabase migrations for test environment (using local PostgreSQL)
   if (process.env.NODE_ENV === 'test') {
