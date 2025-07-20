@@ -12,9 +12,10 @@ describe('Header', () => {
   it('has navigation links', () => {
     render(<Header />);
 
-    expect(screen.getByText('About')).toBeInTheDocument();
-    expect(screen.getByText('How It Works')).toBeInTheDocument();
-    expect(screen.getByText('Case Studies')).toBeInTheDocument();
+    // Use getAllByText for links that appear in both desktop and mobile nav
+    expect(screen.getAllByText('About')).toHaveLength(2);
+    expect(screen.getAllByText('How It Works')).toHaveLength(2);
+    expect(screen.getAllByText('Case Studies')).toHaveLength(2);
   });
 
   it('has a share story button', () => {
