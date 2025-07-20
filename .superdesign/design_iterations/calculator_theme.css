@@ -1,0 +1,57 @@
+:root {
+  --background: oklch(0.1 0 0);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.15 0 0 / 0.7);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.2 0 0 / 0.8);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.7 0.15 130);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.3 0.05 130);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.25 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.6 0.2 40);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.7 0.25 30);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.3 0 0 / 0.2);
+  --input: oklch(0.2 0 0 / 0.2);
+  --ring: oklch(0.7 0.15 130 / 0.3);
+  --chart-1: oklch(0.7 0.15 130);
+  --chart-2: oklch(0.6 0.2 40);
+  --chart-3: oklch(0.5 0.15 200);
+  --chart-4: oklch(0.6 0.2 270);
+  --chart-5: oklch(0.7 0.25 30);
+  
+  /* Calculator specific colors */
+  --calc-display: oklch(0.2 0 0 / 0.6);
+  --calc-operator: oklch(0.6 0.2 40);
+  --calc-number: oklch(0.25 0 0 / 0.4);
+  --calc-equals: oklch(0.7 0.15 130);
+  
+  /* Font families */
+  --font-sans: 'Space Mono', monospace;
+  --font-serif: 'Space Mono', monospace;
+  --font-mono: 'Space Mono', monospace;
+  
+  /* Border radius */
+  --radius: 1rem;
+  --radius-sm: calc(var(--radius) - 0.4rem);
+  --radius-md: calc(var(--radius) - 0.2rem);
+  --radius-lg: calc(var(--radius) + 0.2rem);
+  --radius-xl: calc(var(--radius) + 0.4rem);
+  
+  /* Shadows for glass effect */
+  --shadow-2xs: 0 0 0.5rem 0 oklch(0 0 0 / 0.1);
+  --shadow-xs: 0 0 1rem 0 oklch(0 0 0 / 0.1);
+  --shadow-sm: 0 0.2rem 1.5rem -0.2rem oklch(0 0 0 / 0.1);
+  --shadow: 0 0.4rem 2rem -0.4rem oklch(0 0 0 / 0.15);
+  --shadow-md: 0 0.6rem 2.5rem -0.6rem oklch(0 0 0 / 0.2);
+  --shadow-lg: 0 1rem 3rem -0.8rem oklch(0 0 0 / 0.25);
+  --shadow-xl: 0 1.5rem 4rem -1rem oklch(0 0 0 / 0.3);
+  --shadow-2xl: 0 2rem 5rem -1.5rem oklch(0 0 0 / 0.4);
+  
+  /* Spacing */
+  --spacing: 0.5rem;
+}

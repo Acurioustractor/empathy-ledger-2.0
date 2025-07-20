@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Management Dashboard</title>
+    <link rel="stylesheet" href="./theme_consent_sovereignty.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Libre+Baskerville:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body class="bg-background text-foreground font-sans">
+    <header class="border-b border-border bg-sand-warm/50 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-earth-deep">Database Management Dashboard</h1>
+                    <p class="ml-4 text-sm text-muted-foreground">Current State & Story Addition Process</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="interactive-blessing p-2 rounded-md hover:bg-clay-light transition-colors">
+                        <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Current Database Health -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+            <div class="story-card animate-blessing">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-lg font-semibold text-earth-deep">Total Users</h3>
+                    <i data-lucide="users" class="w-5 h-5 text-sage-warm"></i>
+                </div>
+                <div class="text-3xl font-bold text-sage-warm">47</div>
+                <div class="text-sm text-muted-foreground">Active storytellers</div>
+            </div>
+
+            <div class="story-card animate-blessing">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-lg font-semibold text-earth-deep">Total Stories</h3>
+                    <i data-lucide="book-open" class="w-5 h-5 text-ochre-rich"></i>
+                </div>
+                <div class="text-3xl font-bold text-ochre-rich">156</div>
+                <div class="text-sm text-muted-foreground">Across all communities</div>
+            </div>
+
+            <div class="story-card animate-blessing">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-lg font-semibold text-earth-deep">Stories Analyzed</h3>
+                    <i data-lucide="brain" class="w-5 h-5 text-sage-warm"></i>
+                </div>
+                <div class="text-3xl font-bold text-sage-warm">142</div>
+                <div class="text-sm text-muted-foreground">AI processed</div>
+            </div>
+
+            <div class="story-card animate-blessing">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-lg font-semibold text-earth-deep">Value Generated</h3>
+                    <i data-lucide="dollar-sign" class="w-5 h-5 text-ochre-rich"></i>
+                </div>
+                <div class="text-3xl font-bold text-ochre-rich">$12,450</div>
+                <div class="text-sm text-muted-foreground">Community benefits</div>
+            </div>
+        </div>
+
+        <!-- Database Schema Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="story-card">
+                <h3 class="text-lg font-semibold text-earth-deep mb-4">Core Tables</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-clay-light/50 rounded-md">
+                        <div>
+                            <span class="font-medium text-earth-deep">users</span>
+                            <p class="text-sm text-muted-foreground">Storyteller profiles</p>
+                        </div>
+                        <i data-lucide="check-circle" class="w-4 h-4 text-sage-warm"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-clay-light/50 rounded-md">
+                        <div>
+                            <span class="font-medium text-earth-deep">stories</span>
+                            <p class="text-sm text-muted-foreground">Main story content</p>
+                        </div>
+                        <i data-lucide="check-circle" class="w-4 h-4 text-sage-warm"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-clay-light/50 rounded-md">
+                        <div>
+                            <span class="font-medium text-earth-deep">story_analysis</span>
+                            <p class="text-sm text-muted-foreground">AI insights</p>
+                        </div>
+                        <i data-lucide="check-circle" class="w-4 h-4 text-sage-warm"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-clay-light/50 rounded-md">
+                        <div>
+                            <span class="font-medium text-earth-deep">value_events</span>
+                            <p class="text-sm text-muted-foreground">Benefit tracking</p>
+                        </div>
+                        <i data-lucide="check-circle" class="w-4 h-4 text-sage-warm"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <h3 class="text-lg font-semibold text-earth-deep mb-4">Consent Structure</h3>
+                <div class="space-y-3">
+                    <div class="p-3 bg-sage-light/20 rounded-md">
+                        <span class="font-medium text-earth-deep">privacy_level</span>
+                        <p class="text-sm text-muted-foreground">private | community | public</p>
+                    </div>
+                    <div class="p-3 bg-sage-light/20 rounded-md">
+                        <span class="font-medium text-earth-deep">consent_settings</span>
+                        <p class="text-sm text-muted-foreground">allowAnalysis, allowSharing, allowRevenue</p>
+                    </div>
+                    <div class="p-3 bg-sage-light/20 rounded-md">
+                        <span class="font-medium text-earth-deep">cultural_protocols</span>
+                        <p class="text-sm text-muted-foreground">Flexible JSON for protocols</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Add Story Process -->
+        <div class="story-card mb-8">
+            <h3 class="text-lg font-semibold text-earth-deep mb-4">Quick Story Addition</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="border border-border rounded-md p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-sage-warm text-sand-light rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                        <span class="ml-2 font-medium text-earth-deep">Add User</span>
+                    </div>
+                    <div class="text-sm space-y-1">
+                        <div>• Email required</div>
+                        <div>• Name optional</div>
+                        <div>• Community affiliation</div>
+                    </div>
+                </div>
+
+                <div class="border border-border rounded-md p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-ochre-rich text-sand-light rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                        <span class="ml-2 font-medium text-earth-deep">Add Story</span>
+                    </div>
+                    <div class="text-sm space-y-1">
+                        <div>• Title + transcript</div>
+                        <div>• Consent settings</div>
+                        <div>• Privacy level</div>
+                    </div>
+                </div>
+
+                <div class="border border-border rounded-md p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-earth-warm text-sand-light rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                        <span class="ml-2 font-medium text-earth-deep">Auto Process</span>
+                    </div>
+                    <div class="text-sm space-y-1">
+                        <div>• AI analysis</div>
+                        <div>• Quote extraction</div>
+                        <div>• Benefit tracking</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SQL Commands for Testing -->
+        <div class="story-card mb-8">
+            <h3 class="text-lg font-semibold text-earth-deep mb-4">Quick Commands</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-medium text-earth-deep mb-2">Add New User</h4>
+                    <div class="bg-earth-deep/5 p-3 rounded-md font-mono text-sm">
+INSERT INTO users (email, full_name, community_affiliation) 
+VALUES ('storyteller@example.com', 'Name', 'Community Name');
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-medium text-earth-deep mb-2">Add New Story</h4>
+                    <div class="bg-earth-deep/5 p-3 rounded-md font-mono text-sm">
+INSERT INTO stories (
+  storyteller_id, title, transcript, 
+  privacy_level, consent_settings, tags
+) VALUES (
+  'user-uuid', 'Story Title', 'Full transcript...',
+  'community', 
+  '{"allowAnalysis": true, "allowSharing": true, "allowRevenue": true}',
+  '{"healing", "community"}'
+);
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-medium text-earth-deep mb-2">Check Recent Stories</h4>
+                    <div class="bg-earth-deep/5 p-3 rounded-md font-mono text-sm">
+SELECT id, title, status, submitted_at 
+FROM stories 
+ORDER BY submitted_at DESC 
+LIMIT 10;
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Health Monitor -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="story-card">
+                <h3 class="text-lg font-semibold text-earth-deep mb-4">Data Health Status</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-sage-warm mr-2"></i>
+                        <span>Table relationships: Healthy</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-sage-warm mr-2"></i>
+                        <span>RLS policies: Active</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-sage-warm mr-2"></i>
+                        <span>Consent tracking: Functional</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-sage-warm mr-2"></i>
+                        <span>Benefit distribution: Ready</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <h3 class="text-lg font-semibold text-earth-deep mb-4">Next Steps</h3>
+                <div class="space-y-2">
+                    <button class="w-full text-left p-2 bg-sage-light/20 rounded-md hover:bg-sage-light/30 transition-colors">
+                        Test with sample data
+                    </button>
+                    <button class="w-full text-left p-2 bg-sage-light/20 rounded-md hover:bg-sage-light/30 transition-colors">
+                        Validate consent flow
+                    </button>
+                    <button class="w-full text-left p-2 bg-sage-light/20 rounded-md hover:bg-sage-light/30 transition-colors">
+                        Monitor benefit tracking
+                    </button>
+                    <button class="w-full text-left p-2 bg-sage-light/20 rounded-md hover:bg-sage-light/30 transition-colors">
+                        Scale gradually
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Testing -->
+        <div class="story-card">
+            <h3 class="text-lg font-semibold text-earth-deep mb-4">Interactive Testing</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h4 class="font-medium text-earth-deep mb-2">Test Database Connection</h4>
+                    <button id="test-connection" class="interactive-blessing bg-sage-warm text-sand-light px-4 py-2 rounded-md">
+                        Test Connection
+                    </button>
+                    <div id="connection-result" class="mt-2 text-sm"></div>
+                </div>
+
+                <div>
+                    <h4 class="font-medium text-earth-deep mb-2">Add Test Story</h4>
+                    <button id="add-test-story" class="interactive-blessing bg-ochre-rich text-sand-light px-4 py-2 rounded-md">
+                        Add Sample Story
+                    </button>
+                    <div id="story-result" class="mt-2 text-sm"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // Mock database functions for testing
+        document.getElementById('test-connection').addEventListener('click', function() {
+            const result = document.getElementById('connection-result');
+            result.innerHTML = '<span class="text-sage-warm">✅ Connection successful</span>';
+            setTimeout(() => {
+                result.innerHTML = '<span class="text-muted-foreground">Ready to add stories</span>';
+            }, 3000);
+        });
+
+        document.getElementById('add-test-story').addEventListener('click', function() {
+            const result = document.getElementById('story-result');
+            result.innerHTML = '<span class="text-ochre-rich">📖 Test story added successfully</span>';
+            setTimeout(() => {
+                result.innerHTML = '<span class="text-muted-foreground">Story processing...</span>';
+            }, 3000);
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const counters = document.querySelectorAll('[class*="text-3xl"]');
+            counters.forEach(counter => {
+                if (Math.random() < 0.1) { // 10% chance to update
+                    const current = parseInt(counter.textContent);
+                    const change = Math.floor(Math.random() * 3) - 1;
+                    const newValue = Math.max(0, current + change);
+                    counter.textContent = newValue.toLocaleString();
+                }
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

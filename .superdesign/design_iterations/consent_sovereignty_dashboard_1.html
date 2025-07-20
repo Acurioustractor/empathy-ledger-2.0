@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Sovereignty Dashboard</title>
+    <link rel="stylesheet" href="./theme_consent_sovereignty.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Libre+Baskerville:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body class="bg-background text-foreground font-sans">
+    <!-- Header -->
+    <header class="border-b border-border bg-sand-warm/50 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-earth-deep">Story Sovereignty Dashboard</h1>
+                    <p class="ml-4 text-sm text-muted-foreground">Your Stories, Your Control, Your Benefit</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="interactive-blessing p-2 rounded-md hover:bg-clay-light transition-colors">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                    </button>
+                    <button class="interactive-blessing p-2 rounded-md hover:bg-clay-light transition-colors">
+                        <i data-lucide="help-circle" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Dashboard Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Portfolio Card -->
+            <div class="story-card animate-blessing">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-earth-deep">My Story Portfolio</h3>
+                    <i data-lucide="folder-open" class="w-5 h-5 text-ochre-rich"></i>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-muted-foreground">Total Stories</span>
+                        <span class="font-semibold text-lg">12</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-muted-foreground">Active Consents</span>
+                        <span class="font-semibold text-lg text-sage-warm">8</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-muted-foreground">Pending Review</span>
+                        <span class="font-semibold text-lg text-ochre-light">2</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-muted-foreground">Community Benefits</span>
+                        <span class="font-semibold text-lg text-sage-warm">$450</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consent Journey -->
+            <div class="story-card animate-blessing">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-earth-deep">Consent Journey</h3>
+                    <i data-lucide="shield-check" class="w-5 h-5 text-sage-warm"></i>
+                </div>
+                <div class="text-center mb-4">
+                    <div class="progress-ring mx-auto mb-2" style="--progress: 288deg;">
+                        <span class="progress-text">80%</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground">6 of 8 stories have full consent</p>
+                </div>
+                <button class="w-full interactive-blessing bg-ochre-rich text-sand-light py-2 px-4 rounded-md hover:bg-ochre-light transition-colors">
+                    Complete Missing Steps →
+                </button>
+            </div>
+
+            <!-- Value Tracking -->
+            <div class="story-card animate-blessing">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-earth-deep">Value Tracking</h3>
+                    <i data-lucide="trending-up" class="w-5 h-5 text-ochre-rich"></i>
+                </div>
+                <div class="space-y-3">
+                    <div class="bg-clay-light/50 rounded-md p-3">
+                        <div class="text-sm text-muted-foreground">Stories Contributed</div>
+                        <div class="text-lg font-semibold text-earth-deep">$1,200</div>
+                    </div>
+                    <div class="bg-sage-light/50 rounded-md p-3">
+                        <div class="text-sm text-muted-foreground">Your Share (70%)</div>
+                        <div class="text-lg font-semibold text-sage-warm">$840</div>
+                    </div>
+                    <div class="bg-ochre-light/50 rounded-md p-3">
+                        <div class="text-sm text-muted-foreground">Community Fund</div>
+                        <div class="text-lg font-semibold text-ochre-rich">$360</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cultural Safety Alerts -->
+        <div class="bg-earth-light/10 border border-earth-light/20 rounded-lg p-4 mb-6">
+            <div class="flex items-center mb-3">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-ochre-light mr-2"></i>
+                <h3 class="font-semibold text-earth-deep">Cultural Safety Alerts</h3>
+            </div>
+            <div class="space-y-2">
+                <div class="flex items-center text-sm">
+                    <span class="protocol-badge earth mr-2">Seasonal</span>
+                    <span class="text-muted-foreground">Some stories may have timing restrictions</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="protocol-badge water mr-2">Gender</span>
+                    <span class="text-muted-foreground">2 stories have gender-specific access requirements</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="protocol-badge spirit mr-2">Ceremony</span>
+                    <span class="text-muted-foreground">1 story requires community approval for sharing</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Story Consent Management -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-earth-deep mb-4">Story Consent Management</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Video Story -->
+                <div class="story-card consent-complete">
+                    <div class="aspect-video bg-earth-warm/20 rounded-md mb-3 flex items-center justify-center">
+                        <i data-lucide="video" class="w-8 h-8 text-earth-warm"></i>
+                    </div>
+                    <h4 class="font-semibold text-earth-deep mb-1">Finding Connection</h4>
+                    <p class="text-sm text-muted-foreground mb-3">Video • 3 min</p>
+                    <div class="flex items-center justify-between">
+                        <span class="protocol-badge sage text-xs">✅ Consent Complete</span>
+                        <button class="text-sm text-ochre-rich hover:underline">Review</button>
+                    </div>
+                </div>
+
+                <!-- Audio Story -->
+                <div class="story-card consent-pending">
+                    <div class="aspect-video bg-ochre-light/20 rounded-md mb-3 flex items-center justify-center">
+                        <i data-lucide="mic" class="w-8 h-8 text-ochre-light"></i>
+                    </div>
+                    <h4 class="font-semibold text-earth-deep mb-1">Cultural Healing</h4>
+                    <p class="text-sm text-muted-foreground mb-3">Audio • 5 min</p>
+                    <div class="flex items-center justify-between">
+                        <span class="protocol-badge ochre text-xs">⚠️ Pending Protocols</span>
+                        <button class="text-sm text-ochre-rich hover:underline">Complete</button>
+                    </div>
+                </div>
+
+                <!-- Text Story -->
+                <div class="story-card consent-complete">
+                    <div class="aspect-video bg-sage-light/20 rounded-md mb-3 flex items-center justify-center">
+                        <i data-lucide="file-text" class="w-8 h-8 text-sage-warm"></i>
+                    </div>
+                    <h4 class="font-semibold text-earth-deep mb-1">Family Stories</h4>
+                    <p class="text-sm text-muted-foreground mb-3">Text • 800 words</p>
+                    <div class="flex items-center justify-between">
+                        <span class="protocol-badge sage text-xs">✅ Consent Complete</span>
+                        <button class="text-sm text-ochre-rich hover:underline">Review</button>
+                    </div>
+                </div>
+
+                <!-- Image Story -->
+                <div class="story-card consent-missing">
+                    <div class="aspect-video bg-clay-light/20 rounded-md mb-3 flex items-center justify-center">
+                        <i data-lucide="image" class="w-8 h-8 text-clay-warm"></i>
+                    </div>
+                    <h4 class="font-semibold text-earth-deep mb-1">Elder Wisdom</h4>
+                    <p class="text-sm text-muted-foreground mb-3">Image • Photo</p>
+                    <div class="flex items-center justify-between">
+                        <span class="protocol-badge earth text-xs">❌ Missing Protocols</span>
+                        <button class="text-sm text-ochre-rich hover:underline">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Consent Form Modal (Hidden by default) -->
+        <div id="consent-modal" class="fixed inset-0 bg-earth-deep/50 backdrop-blur-sm z-50 hidden">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-sand-light rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="p-6 border-b border-border">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-semibold text-earth-deep">Story Consent Configuration</h3>
+                            <button onclick="closeModal()" class="interactive-blessing p-1 rounded-full hover:bg-clay-light">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <!-- Story Details -->
+                        <div>
+                            <h4 class="font-semibold text-earth-deep mb-2">Story: "Finding Connection"</h4>
+                            <p class="text-sm text-muted-foreground">Video story about community healing and resilience</p>
+                        </div>
+
+                        <!-- Granular Consent Levels -->
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-earth-deep">Consent Levels</h4>
+                            
+                            <div class="space-y-3">
+                                <label class="flex items-center justify-between p-3 bg-clay-light/50 rounded-md">
+                                    <div>
+                                        <span class="font-medium text-earth-deep">Full Story Sharing</span>
+                                        <p class="text-sm text-muted-foreground">Allow complete story to be shared</p>
+                                    </div>
+                                    <input type="checkbox" class="consent-toggle" checked>
+                                </label>
+
+                                <label class="flex items-center justify-between p-3 bg-clay-light/50 rounded-md">
+                                    <div>
+                                        <span class="font-medium text-earth-deep">Quote Extraction</span>
+                                        <p class="text-sm text-muted-foreground">Allow specific quotes to be used</p>
+                                    </div>
+                                    <input type="checkbox" class="consent-toggle" checked>
+                                </label>
+
+                                <label class="flex items-center justify-between p-3 bg-clay-light/50 rounded-md">
+                                    <div>
+                                        <span class="font-medium text-earth-deep">Pattern Analysis</span>
+                                        <p class="text-sm text-muted-foreground">Include in community insights</p>
+                                    </div>
+                                    <input type="checkbox" class="consent-toggle" checked>
+                                </label>
+
+                                <label class="flex items-center justify-between p-3 bg-clay-light/50 rounded-md">
+                                    <div>
+                                        <span class="font-medium text-earth-deep">Research Use</span>
+                                        <p class="text-sm text-muted-foreground">Allow academic research access</p>
+                                    </div>
+                                    <input type="checkbox" class="consent-toggle">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Cultural Protocols -->
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-earth-deep">Cultural Protocols</h4>
+                            <div class="space-y-3">
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" class="consent-toggle">
+                                    <div>
+                                        <span class="font-medium text-earth-deep">Seasonal Restrictions</span>
+                                        <p class="text-sm text-muted-foreground">Respect traditional timing for sharing</p>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" class="consent-toggle">
+                                    <div>
+                                        <span class="font-medium text-earth-deep">Gender-Specific Access</span>
+                                        <p class="text-sm text-muted-foreground">Restrict by traditional gender protocols</p>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" class="consent-toggle">
+                                    <div>
+                                        <span class="font-medium text-earth-deep">Elder Approval Required</span>
+                                        <p class="text-sm text-muted-foreground">Community Elder permission needed</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Benefit Sharing Preview -->
+                        <div class="bg-sage-light/20 rounded-md p-4">
+                            <h4 class="font-semibold text-earth-deep mb-2">Benefit Sharing Preview</h4>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="text-muted-foreground">Your Share</span>
+                                    <div class="font-semibold text-sage-warm">70%</div>
+                                </div>
+                                <div>
+                                    <span class="text-muted-foreground">Community Fund</span>
+                                    <div class="font-semibold text-sage-warm">30%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-3 pt-4">
+                            <button class="flex-1 interactive-blessing bg-sage-warm text-sand-light py-2 px-4 rounded-md hover:bg-sage-light transition-colors">
+                                Save Consent Settings
+                            </button>
+                            <button class="flex-1 interactive-blessing bg-earth-light text-foreground py-2 px-4 rounded-md hover:bg-earth-warm transition-colors">
+                                Preview Impact
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Governance -->
+        <div class="story-card">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-earth-deep">Community Governance</h3>
+                <i data-lucide="users" class="w-5 h-5 text-sage-warm"></i>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h4 class="font-medium text-earth-deep mb-2">Community: Palm Island</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-muted-foreground">Shared Protocols</span>
+                            <span class="font-medium">5</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-muted-foreground">Collective Decisions</span>
+                            <span class="font-medium">12</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-muted-foreground">Community Members</span>
+                            <span class="font-medium">47</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button class="w-full interactive-blessing bg-ochre-rich text-sand-light py-2 px-4 rounded-md hover:bg-ochre-light transition-colors mb-2">
+                        View Community Dashboard
+                    </button>
+                    <button class="w-full interactive-blessing bg-earth-light text-foreground py-2 px-4 rounded-md hover:bg-earth-warm transition-colors">
+                        Participate in Governance
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Modal functionality
+        function openModal() {
+            document.getElementById('consent-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('consent-modal').classList.add('hidden');
+        }
+
+        // Add click handlers to story cards
+        document.querySelectorAll('.story-card').forEach(card => {
+            const button = card.querySelector('button');
+            if (button && button.textContent.includes('Review') || button.textContent.includes('Complete') || button.textContent.includes('Add')) {
+                button.addEventListener('click', openModal);
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('consent-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Consent toggle interactions
+        document.querySelectorAll('.consent-toggle').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                // Add visual feedback for consent changes
+                const label = this.closest('label');
+                label.classList.add('animate-connection');
+                setTimeout(() => {
+                    label.classList.remove('animate-connection');
+                }, 2000);
+            });
+        });
+
+        // Simulate loading states
+        setTimeout(() => {
+            document.querySelectorAll('.animate-blessing').forEach(el => {
+                el.style.animationDelay = '0ms';
+            });
+        }, 100);
+    </script>
+</body>
+</html>

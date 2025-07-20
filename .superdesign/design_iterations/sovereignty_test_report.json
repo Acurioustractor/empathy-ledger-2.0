@@ -1,0 +1,95 @@
+[
+  {
+    "test": "User Sovereignty",
+    "passed": true,
+    "details": {
+      "user_data_accessible": true,
+      "community_affiliation_set": true,
+      "cultural_protocols_configurable": true,
+      "rls_protection_active": true
+    },
+    "timestamp": "2025-07-15T11:42:32.123Z"
+  },
+  {
+    "test": "Story Consent Flow",
+    "passed": false,
+    "details": {
+      "consent_settings_stored": true,
+      "sovereignty_acknowledged": true,
+      "cultural_protocols_valid": true,
+      "privacy_level_set": false
+    },
+    "timestamp": "2025-07-15T11:42:32.124Z"
+  },
+  {
+    "test": "Benefit Distribution",
+    "passed": false,
+    "details": {
+      "value_amount_recorded": true,
+      "split_ratio_correct": true,
+      "sovereignty_documented": false,
+      "transparent_tracking": false
+    },
+    "timestamp": "2025-07-15T11:42:32.124Z"
+  },
+  {
+    "test": "Cultural Protocol Handling",
+    "passed": true,
+    "details": {
+      "protocols": [
+        {
+          "name": "Elder Approval Required",
+          "protocol_valid": true,
+          "restrictions_clear": true,
+          "sovereignty_respected": true
+        },
+        {
+          "name": "Womens Business",
+          "protocol_valid": true,
+          "restrictions_clear": true,
+          "sovereignty_respected": true
+        },
+        {
+          "name": "Youth Voice",
+          "protocol_valid": true,
+          "restrictions_clear": true,
+          "sovereignty_respected": true
+        }
+      ]
+    },
+    "timestamp": "2025-07-15T11:42:32.125Z"
+  },
+  {
+    "test": "Data Retrieval Rights",
+    "passed": true,
+    "details": {
+      "data_exportable": true,
+      "stories_included": true,
+      "rls_protection_active": true,
+      "sovereignty_maintained": true
+    },
+    "timestamp": "2025-07-15T11:42:32.125Z"
+  },
+  {
+    "test": "Community Governance",
+    "passed": false,
+    "details": {
+      "communities_defined": true,
+      "sovereignty_declarations": true,
+      "benefit_agreements": true,
+      "cultural_protocols": false
+    },
+    "timestamp": "2025-07-15T11:42:32.125Z"
+  },
+  {
+    "test": "Consent Withdrawal",
+    "passed": true,
+    "details": {
+      "consent_modifiable": true,
+      "withdrawal_recorded": true,
+      "timestamp_set": "2025-07-15T11:42:32.125Z",
+      "sovereignty_respected": true
+    },
+    "timestamp": "2025-07-15T11:42:32.125Z"
+  }
+]
