@@ -10,7 +10,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 import * as cron from 'node-cron';
@@ -888,4 +888,4 @@ if (require.main === module) {
   backupSystem.initialize().catch(console.error);
 }
 
-export { BackupSystem, DisasterRecovery };
+export { BackupSystem };

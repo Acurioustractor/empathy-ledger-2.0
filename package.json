@@ -123,9 +123,11 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^14.0.4",
+    "@playwright/test": "^1.54.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/node-cron": "^3.0.11",
     "@types/pg": "^8.10.9",

@@ -106,7 +106,7 @@ export class SupabaseValidator {
   /**
    * Test basic Supabase connection
    */
-  private async validateConnection(): Promise<ValidationResult> {
+  public async validateConnection(): Promise<ValidationResult> {
     try {
       console.log('📡 Testing basic connection...');
       
@@ -204,7 +204,7 @@ export class SupabaseValidator {
   /**
    * Validate database schema and tables
    */
-  private async validateSchema(): Promise<ValidationResult> {
+  public async validateSchema(): Promise<ValidationResult> {
     try {
       console.log('🗄️ Validating database schema...');
       

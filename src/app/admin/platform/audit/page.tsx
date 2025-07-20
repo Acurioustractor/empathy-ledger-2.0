@@ -39,7 +39,7 @@ export default async function AuditLogPage({
   let totalPages = 1;
 
   try {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
     
     // Get audit log entries
     const { data: entries, error } = await supabase
