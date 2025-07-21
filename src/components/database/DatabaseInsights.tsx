@@ -26,6 +26,33 @@ interface DatabaseInsightsProps {
 async function fetchRealInsights(): Promise<DatabaseInsight[]> {
   const supabase = createClient();
 
+  if (!supabase) {
+    console.warn('Supabase client not available - using fallback data');
+    // Return fallback data when Supabase client is not available
+    return [
+      {
+        id: '1',
+        title: 'Total Stories',
+        value: '71',
+        trend: 'stable',
+        description: 'Community stories migrated from Airtable',
+        category: 'stories',
+        lastUpdated: 'From migration',
+        privacyLevel: 'aggregate',
+      },
+      {
+        id: '2',
+        title: 'Database Status',
+        value: 'Offline',
+        trend: 'stable',
+        description: 'Supabase database not configured',
+        category: 'insights',
+        lastUpdated: 'Build time',
+        privacyLevel: 'aggregate',
+      },
+    ];
+  }
+
   try {
     // Get real counts from database
     const [storiesResult, profilesResult, orgsResult] = await Promise.all([
