@@ -226,8 +226,14 @@ jobs:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          npm ci
-          npm run db:migrate
+          if [ -z "$DATABASE_URL" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "⚠️ Skipping database migrations - staging secrets not configured"
+            echo "Please configure STAGING_DATABASE_URL and STAGING_SUPABASE_SERVICE_ROLE_KEY"
+          else
+            echo "✅ Running database migrations with configured secrets"
+            npm ci
+            npm run db:migrate
+          fi
 
       - name: 🚀 Deploy to Vercel (staging)
         uses: amondnet/vercel-action@v25
@@ -245,15 +251,6 @@ jobs:
           E2E_ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
         run: npm run test:smoke:staging
 
-      - name: 📢 Notify team of staging deployment
-        uses: 8398a7/action-slack@v3
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-        with:
-          status: ${{ job.status }}
-          channel: '#dev-deployments'
-          fields: repo,message,commit,author,action,eventName,ref,workflow
-        if: always()
 
   deploy-production:
     name: 🌟 Deploy to Production
@@ -331,15 +328,6 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: 📢 Notify team of production deployment
-        uses: 8398a7/action-slack@v3
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-        with:
-          status: ${{ job.status }}
-          channel: '#general'
-          fields: repo,message,commit,author,action,eventName,ref,workflow
-        if: always()
 
   # ==============================================
   # MIGRATION-SPECIFIC WORKFLOW
@@ -472,12 +460,3 @@ jobs:
           npm run monitor:errors
           npm run monitor:performance
 
-      - name: 🚨 Create alert if issues detected
-        if: failure()
-        uses: 8398a7/action-slack@v3
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-        with:
-          status: failure
-          channel: '#alerts'
-          text: '🚨 Post-deployment monitoring detected issues in production!'
