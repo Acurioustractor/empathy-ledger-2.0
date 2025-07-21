@@ -1,6 +1,6 @@
 /**
  * Advanced Supabase Performance Monitoring and Optimization
- * 
+ *
  * Features:
  * - Query performance tracking
  * - Connection pool optimization
@@ -99,14 +99,16 @@ class QueryCache {
   }
 
   getStats(): { size: number; hitRate: number } {
-    const totalAccess = Array.from(this.cache.values())
-      .reduce((sum, entry) => sum + entry.accessCount, 0);
-    
+    const totalAccess = Array.from(this.cache.values()).reduce(
+      (sum, entry) => sum + entry.accessCount,
+      0
+    );
+
     const hitRate = totalAccess > 0 ? (this.cache.size / totalAccess) * 100 : 0;
-    
+
     return {
       size: this.cache.size,
-      hitRate: Math.round(hitRate * 100) / 100
+      hitRate: Math.round(hitRate * 100) / 100,
     };
   }
 }
@@ -129,8 +131,8 @@ class SupabasePerformanceMonitor {
   async monitorQuery<T>(
     queryId: string,
     queryFn: () => Promise<T>,
-    options: { 
-      cacheKey?: string; 
+    options: {
+      cacheKey?: string;
       cacheTTL?: number;
       enableCache?: boolean;
     } = {}
@@ -175,7 +177,7 @@ class SupabasePerformanceMonitor {
       return result;
     } catch (error) {
       const executionTime = performance.now() - startTime;
-      
+
       this.recordMetric({
         queryId,
         query: queryId,
@@ -213,29 +215,31 @@ class SupabasePerformanceMonitor {
     const totalQueries = metrics.length;
     const successfulQueries = metrics.filter(m => m.success);
     const cachedQueries = metrics.filter(m => m.cacheHit);
-    
-    const averageExecutionTime = totalQueries > 0
-      ? metrics.reduce((sum, m) => sum + m.executionTime, 0) / totalQueries
-      : 0;
+
+    const averageExecutionTime =
+      totalQueries > 0
+        ? metrics.reduce((sum, m) => sum + m.executionTime, 0) / totalQueries
+        : 0;
 
     const slowQueries = metrics
       .filter(m => m.executionTime > 1000) // Queries slower than 1 second
       .sort((a, b) => b.executionTime - a.executionTime)
       .slice(0, 10);
 
-    const cacheHitRate = totalQueries > 0
-      ? (cachedQueries.length / totalQueries) * 100
-      : 0;
+    const cacheHitRate =
+      totalQueries > 0 ? (cachedQueries.length / totalQueries) * 100 : 0;
 
-    const errorRate = totalQueries > 0
-      ? ((totalQueries - successfulQueries.length) / totalQueries) * 100
-      : 0;
+    const errorRate =
+      totalQueries > 0
+        ? ((totalQueries - successfulQueries.length) / totalQueries) * 100
+        : 0;
 
-    const peakPerformanceTime = metrics.length > 0
-      ? metrics.reduce((fastest, current) => 
-          current.executionTime < fastest.executionTime ? current : fastest
-        ).timestamp
-      : new Date();
+    const peakPerformanceTime =
+      metrics.length > 0
+        ? metrics.reduce((fastest, current) =>
+            current.executionTime < fastest.executionTime ? current : fastest
+          ).timestamp
+        : new Date();
 
     const recommendations = this.generateRecommendations(metrics);
 
@@ -257,20 +261,29 @@ class SupabasePerformanceMonitor {
     const cachedQueries = metrics.filter(m => m.cacheHit);
 
     if (slowQueries.length > metrics.length * 0.1) {
-      recommendations.push('Consider adding database indexes for frequently slow queries');
+      recommendations.push(
+        'Consider adding database indexes for frequently slow queries'
+      );
     }
 
     if (errorQueries.length > metrics.length * 0.05) {
-      recommendations.push('High error rate detected - review error handling and query validation');
+      recommendations.push(
+        'High error rate detected - review error handling and query validation'
+      );
     }
 
     if (cachedQueries.length < metrics.length * 0.3) {
-      recommendations.push('Low cache hit rate - consider caching more frequently accessed data');
+      recommendations.push(
+        'Low cache hit rate - consider caching more frequently accessed data'
+      );
     }
 
-    const avgExecutionTime = metrics.reduce((sum, m) => sum + m.executionTime, 0) / metrics.length;
+    const avgExecutionTime =
+      metrics.reduce((sum, m) => sum + m.executionTime, 0) / metrics.length;
     if (avgExecutionTime > 500) {
-      recommendations.push('Average query time is high - consider query optimization');
+      recommendations.push(
+        'Average query time is high - consider query optimization'
+      );
     }
 
     if (recommendations.length === 0) {
@@ -289,19 +302,22 @@ class SupabasePerformanceMonitor {
   } {
     const recentWindow = 5 * 60 * 1000; // 5 minutes
     const now = new Date().getTime();
-    
+
     const recentMetrics = this.queryMetrics.filter(
       m => now - m.timestamp.getTime() < recentWindow
     );
 
     const recentQueries = recentMetrics.length;
-    const averageResponseTime = recentQueries > 0
-      ? recentMetrics.reduce((sum, m) => sum + m.executionTime, 0) / recentQueries
-      : 0;
+    const averageResponseTime =
+      recentQueries > 0
+        ? recentMetrics.reduce((sum, m) => sum + m.executionTime, 0) /
+          recentQueries
+        : 0;
 
-    const errorRate = recentQueries > 0
-      ? (recentMetrics.filter(m => !m.success).length / recentQueries) * 100
-      : 0;
+    const errorRate =
+      recentQueries > 0
+        ? (recentMetrics.filter(m => !m.success).length / recentQueries) * 100
+        : 0;
 
     return {
       recentQueries,
@@ -329,12 +345,14 @@ export class PerformantSupabaseClient {
   }
 
   // Optimized story queries with caching
-  async getPublicStories(options: {
-    limit?: number;
-    offset?: number;
-    theme?: string;
-    location?: string;
-  } = {}) {
+  async getPublicStories(
+    options: {
+      limit?: number;
+      offset?: number;
+      theme?: string;
+      location?: string;
+    } = {}
+  ) {
     const { limit = 50, offset = 0, theme, location } = options;
     const cacheKey = `public_stories_${limit}_${offset}_${theme || 'all'}_${location || 'all'}`;
 
@@ -343,7 +361,8 @@ export class PerformantSupabaseClient {
       async () => {
         let query = this.client
           .from('stories')
-          .select(`
+          .select(
+            `
             id,
             title,
             transcript,
@@ -353,7 +372,8 @@ export class PerformantSupabaseClient {
             geographic_region,
             submitted_at,
             users!inner(full_name, community_affiliation)
-          `)
+          `
+          )
           .eq('privacy_level', 'public')
           .eq('status', 'published')
           .order('submitted_at', { ascending: false })
@@ -382,11 +402,13 @@ export class PerformantSupabaseClient {
     return this.monitor.monitorQuery(
       'getCommunityInsights',
       async () => {
-        const { data, error } = await this.client
-          .rpc('get_community_insights', {
+        const { data, error } = await this.client.rpc(
+          'get_community_insights',
+          {
             target_community: community,
-            days_back: daysBack
-          });
+            days_back: daysBack,
+          }
+        );
 
         if (error) throw error;
         return data;

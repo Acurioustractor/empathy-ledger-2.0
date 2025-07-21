@@ -1,6 +1,6 @@
 /**
  * Real-time Supabase Subscriptions for Empathy Ledger
- * 
+ *
  * Features:
  * - Story updates in real-time
  * - Community activity feeds
@@ -38,7 +38,9 @@ export interface UserPresenceEvent {
 export type StoryUpdateHandler = (event: StoryUpdateEvent) => void;
 export type CommunityActivityHandler = (event: CommunityActivityEvent) => void;
 export type UserPresenceHandler = (event: UserPresenceEvent) => void;
-export type ConnectionStatusHandler = (status: 'connected' | 'disconnected' | 'reconnecting') => void;
+export type ConnectionStatusHandler = (
+  status: 'connected' | 'disconnected' | 'reconnecting'
+) => void;
 
 // Real-time manager
 export class SupabaseRealtimeManager {
@@ -75,7 +77,7 @@ export class SupabaseRealtimeManager {
 
   private processBatchedEvents(): void {
     const events = this.eventQueue.splice(0, this.batchSize);
-    
+
     events.forEach(event => {
       switch (event.type) {
         case 'story_update':
@@ -105,24 +107,24 @@ export class SupabaseRealtimeManager {
             event: '*',
             schema: 'public',
             table: 'stories',
-            filter: 'privacy_level=eq.public'
+            filter: 'privacy_level=eq.public',
           },
-          (payload) => {
+          payload => {
             const event: StoryUpdateEvent = {
               eventType: payload.eventType as 'INSERT' | 'UPDATE' | 'DELETE',
               new: payload.new as Database['public']['Tables']['stories']['Row'],
               old: payload.old as Database['public']['Tables']['stories']['Row'],
-              timestamp: new Date()
+              timestamp: new Date(),
             };
 
             // Add to batch queue
             this.eventQueue.push({
               type: 'story_update',
-              data: event
+              data: event,
             });
           }
         )
-        .subscribe((status) => {
+        .subscribe(status => {
           this.handleChannelStatus(channelName, status);
         });
 
@@ -140,7 +142,7 @@ export class SupabaseRealtimeManager {
 
   // Subscribe to community activity
   subscribeToCommunityActivity(
-    communityId: string, 
+    communityId: string,
     handler: CommunityActivityHandler
   ): () => void {
     this.communityHandlers.push(handler);
@@ -154,9 +156,9 @@ export class SupabaseRealtimeManager {
           {
             event: 'INSERT',
             schema: 'public',
-            table: 'stories'
+            table: 'stories',
           },
-          async (payload) => {
+          async payload => {
             // Get user info to check community affiliation
             const { data: user } = await this.client
               .from('users')
@@ -169,12 +171,12 @@ export class SupabaseRealtimeManager {
                 type: 'new_story',
                 communityId,
                 data: payload.new,
-                timestamp: new Date()
+                timestamp: new Date(),
               };
 
               this.eventQueue.push({
                 type: 'community_activity',
-                data: event
+                data: event,
               });
             }
           }
@@ -184,23 +186,23 @@ export class SupabaseRealtimeManager {
           {
             event: 'INSERT',
             schema: 'public',
-            table: 'story_analysis'
+            table: 'story_analysis',
           },
-          (payload) => {
+          payload => {
             const event: CommunityActivityEvent = {
               type: 'analysis_completed',
               communityId,
               data: payload.new,
-              timestamp: new Date()
+              timestamp: new Date(),
             };
 
             this.eventQueue.push({
               type: 'community_activity',
-              data: event
+              data: event,
             });
           }
         )
-        .subscribe((status) => {
+        .subscribe(status => {
           this.handleChannelStatus(channelName, status);
         });
 
@@ -233,12 +235,12 @@ export class SupabaseRealtimeManager {
               userId: key,
               status: 'online',
               lastSeen: new Date(),
-              currentPage: (presence as any)?.[0]?.currentPage
+              currentPage: (presence as any)?.[0]?.currentPage,
             };
 
             this.eventQueue.push({
               type: 'user_presence',
-              data: event
+              data: event,
             });
           });
         })
@@ -247,27 +249,27 @@ export class SupabaseRealtimeManager {
             userId: key,
             status: 'online',
             lastSeen: new Date(),
-            currentPage: newPresences?.[0]?.currentPage
+            currentPage: newPresences?.[0]?.currentPage,
           };
 
           this.eventQueue.push({
             type: 'user_presence',
-            data: event
+            data: event,
           });
         })
         .on('presence', { event: 'leave' }, ({ key }) => {
           const event: UserPresenceEvent = {
             userId: key,
             status: 'offline',
-            lastSeen: new Date()
+            lastSeen: new Date(),
           };
 
           this.eventQueue.push({
             type: 'user_presence',
-            data: event
+            data: event,
           });
         })
-        .subscribe((status) => {
+        .subscribe(status => {
           this.handleChannelStatus(channelName, status);
         });
 
@@ -277,7 +279,8 @@ export class SupabaseRealtimeManager {
       channel.track({
         userId,
         status: 'online',
-        currentPage: typeof window !== 'undefined' ? window.location.pathname : '/'
+        currentPage:
+          typeof window !== 'undefined' ? window.location.pathname : '/',
       });
     }
 
@@ -312,14 +315,18 @@ export class SupabaseRealtimeManager {
   // Reconnection logic
   private async attemptReconnect(channelName: string): Promise<void> {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error(`Max reconnection attempts reached for channel ${channelName}`);
+      console.error(
+        `Max reconnection attempts reached for channel ${channelName}`
+      );
       return;
     }
 
     this.reconnectAttempts++;
     this.notifyConnectionHandlers('reconnecting');
 
-    await new Promise(resolve => setTimeout(resolve, this.reconnectDelay * this.reconnectAttempts));
+    await new Promise(resolve =>
+      setTimeout(resolve, this.reconnectDelay * this.reconnectAttempts)
+    );
 
     const channel = this.channels.get(channelName);
     if (channel) {
@@ -339,7 +346,9 @@ export class SupabaseRealtimeManager {
     };
   }
 
-  private notifyConnectionHandlers(status: 'connected' | 'disconnected' | 'reconnecting'): void {
+  private notifyConnectionHandlers(
+    status: 'connected' | 'disconnected' | 'reconnecting'
+  ): void {
     this.connectionHandlers.forEach(handler => handler(status));
   }
 
@@ -347,12 +356,12 @@ export class SupabaseRealtimeManager {
   updatePresencePage(userId: string, page: string): void {
     const channelName = `presence_${userId}`;
     const channel = this.channels.get(channelName);
-    
+
     if (channel) {
       channel.track({
         userId,
         status: 'online',
-        currentPage: page
+        currentPage: page,
       });
     }
   }
@@ -366,7 +375,7 @@ export class SupabaseRealtimeManager {
     }
 
     // Unsubscribe from all channels
-    this.channels.forEach((channel) => {
+    this.channels.forEach(channel => {
       this.client.removeChannel(channel);
     });
 
@@ -389,7 +398,7 @@ export class SupabaseRealtimeManager {
       isConnected: this.isConnected,
       activeChannels: this.channels.size,
       reconnectAttempts: this.reconnectAttempts,
-      queuedEvents: this.eventQueue.length
+      queuedEvents: this.eventQueue.length,
     };
   }
 }
