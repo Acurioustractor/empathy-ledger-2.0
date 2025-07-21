@@ -1,10 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+// Initialize Supabase client conditionally
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Only create client if environment variables are available
+export const supabase = supabaseUrl && supabaseAnonKey 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
 // Media types
 export interface MediaItem {
@@ -24,6 +27,11 @@ export async function getRandomMedia(
   count: number = 1,
   type?: 'image' | 'video'
 ): Promise<MediaItem[]> {
+  if (!supabase) {
+    console.warn('Supabase client not available - using placeholder data');
+    return [];
+  }
+
   try {
     let query = supabase.from('media').select('*').eq('status', 'approved');
 
@@ -46,6 +54,11 @@ export async function getMediaByCategory(
   category: string,
   limit: number = 10
 ): Promise<MediaItem[]> {
+  if (!supabase) {
+    console.warn('Supabase client not available - using placeholder data');
+    return [];
+  }
+
   try {
     const { data, error } = await supabase
       .from('media')
@@ -65,6 +78,11 @@ export async function getMediaByCategory(
 
 // Get featured media
 export async function getFeaturedMedia(): Promise<MediaItem[]> {
+  if (!supabase) {
+    console.warn('Supabase client not available - using placeholder data');
+    return [];
+  }
+
   try {
     const { data, error } = await supabase
       .from('media')
@@ -86,6 +104,11 @@ export async function uploadMedia(
   file: File,
   metadata: Partial<MediaItem>
 ): Promise<MediaItem | null> {
+  if (!supabase) {
+    console.error('Supabase client not available - cannot upload media');
+    return null;
+  }
+
   try {
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random()}.${fileExt}`;
