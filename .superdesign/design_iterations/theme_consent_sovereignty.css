@@ -1,0 +1,425 @@
+:root {
+  /* Indigenous Data Sovereignty Color Palette */
+  --earth-deep: oklch(0.25 0.08 35);
+  --earth-warm: oklch(0.35 0.12 45);
+  --earth-light: oklch(0.65 0.15 55);
+  --ochre-rich: oklch(0.55 0.25 65);
+  --ochre-light: oklch(0.75 0.2 70);
+  --sage-deep: oklch(0.3 0.1 145);
+  --sage-warm: oklch(0.5 0.12 135);
+  --sage-light: oklch(0.8 0.1 125);
+  --clay-warm: oklch(0.6 0.18 75);
+  --clay-light: oklch(0.85 0.08 85);
+  --sand-warm: oklch(0.95 0.05 95);
+  --sand-light: oklch(0.98 0.02 100);
+
+  /* Semantic Colors */
+  --background: var(--sand-light);
+  --foreground: var(--earth-deep);
+  --card: var(--sand-warm);
+  --card-foreground: var(--earth-deep);
+  --popover: var(--sand-light);
+  --popover-foreground: var(--earth-deep);
+  --primary: var(--ochre-rich);
+  --primary-foreground: var(--sand-light);
+  --secondary: var(--sage-warm);
+  --secondary-foreground: var(--earth-deep);
+  --muted: var(--clay-light);
+  --muted-foreground: var(--earth-warm);
+  --accent: var(--ochre-light);
+  --accent-foreground: var(--earth-deep);
+  --destructive: oklch(0.55 0.25 25);
+  --destructive-foreground: var(--sand-light);
+  --border: var(--clay-warm);
+  --input: var(--sand-warm);
+  --ring: var(--ochre-rich);
+  --chart-1: var(--ochre-rich);
+  --chart-2: var(--sage-warm);
+  --chart-3: var(--clay-warm);
+  --chart-4: var(--earth-warm);
+  --chart-5: var(--sage-light);
+  --sidebar: var(--sand-warm);
+  --sidebar-foreground: var(--earth-deep);
+  --sidebar-primary: var(--ochre-rich);
+  --sidebar-primary-foreground: var(--sand-light);
+  --sidebar-accent: var(--sage-light);
+  --sidebar-accent-foreground: var(--earth-deep);
+  --sidebar-border: var(--clay-warm);
+  --sidebar-ring: var(--ochre-rich);
+
+  /* Typography - Respecting Indigenous Knowledge Systems */
+  --font-sans: 'Source Serif Pro', 'Libre Baskerville', serif;
+  --font-serif: 'Playfair Display', 'Lora', serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-handwritten: 'Architects Daughter', cursive;
+
+  /* Spacing - Reflecting natural rhythms */
+  --spacing-xs: 0.125rem;
+  --spacing-sm: 0.375rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2.5rem;
+  --spacing-2xl: 4rem;
+
+  /* Borders - Earth-inspired */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2.25rem;
+  --radius-full: 9999px;
+
+  /* Shadows - Natural depth */
+  --shadow-sm: 0 1px 2px 0 rgba(101, 67, 33, 0.05);
+  --shadow-md:
+    0 4px 6px -1px rgba(101, 67, 33, 0.1),
+    0 2px 4px -1px rgba(101, 67, 33, 0.06);
+  --shadow-lg:
+    0 10px 15px -3px rgba(101, 67, 33, 0.1),
+    0 4px 6px -2px rgba(101, 67, 33, 0.05);
+  --shadow-xl:
+    0 20px 25px -5px rgba(101, 67, 33, 0.1),
+    0 10px 10px -5px rgba(101, 67, 33, 0.04);
+
+  /* Animation timing - Respectful transitions */
+  --transition-fast: 150ms ease-out;
+  --transition-base: 300ms ease-out;
+  --transition-slow: 500ms ease-out;
+  --transition-slower: 700ms ease-out;
+}
+
+/* Dark mode - Evening ceremony colors */
+[data-theme='dark'] {
+  --background: var(--earth-deep);
+  --foreground: var(--sand-light);
+  --card: var(--earth-warm);
+  --card-foreground: var(--sand-light);
+  --popover: var(--earth-deep);
+  --popover-foreground: var(--sand-light);
+  --primary: var(--ochre-light);
+  --primary-foreground: var(--earth-deep);
+  --secondary: var(--sage-light);
+  --secondary-foreground: var(--earth-deep);
+  --muted: var(--earth-warm);
+  --muted-foreground: var(--clay-light);
+  --accent: var(--ochre-rich);
+  --accent-foreground: var(--sand-light);
+  --border: var(--clay-warm);
+  --input: var(--earth-warm);
+  --ring: var(--ochre-light);
+}
+
+/* Cultural protocol indicators */
+.cultural-protocol-indicator {
+  --protocol-earth: var(--earth-deep);
+  --protocol-water: oklch(0.4 0.15 240);
+  --protocol-fire: oklch(0.6 0.25 35);
+  --protocol-air: oklch(0.7 0.1 180);
+  --protocol-spirit: oklch(0.5 0.2 300);
+}
+
+/* Consent status colors */
+.consent-status {
+  --consent-granted: var(--sage-warm);
+  --consent-pending: var(--ochre-light);
+  --consent-denied: var(--destructive);
+  --consent-withdrawn: oklch(0.5 0.1 45);
+}
+
+/* Typography scale */
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+/* Spacing utilities */
+.space-y-1 > * + * {
+  margin-top: 0.25rem;
+}
+.space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+.space-y-8 > * + * {
+  margin-top: 2rem;
+}
+
+/* Cultural pattern backgrounds */
+.bg-earth-pattern {
+  background-image:
+    radial-gradient(circle at 25% 25%, var(--clay-light) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, var(--sage-light) 0%, transparent 50%);
+  background-size:
+    40px 40px,
+    60px 60px;
+  background-position:
+    0 0,
+    20px 20px;
+}
+
+.bg-ochre-pattern {
+  background-image:
+    linear-gradient(45deg, var(--ochre-light) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--ochre-light) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--ochre-light) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--ochre-light) 75%);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    0 10px,
+    10px -10px,
+    -10px 0px;
+}
+
+/* Interactive states with cultural meaning */
+.interactive-blessing {
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.interactive-blessing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent,
+    var(--ochre-light),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  border-radius: inherit;
+}
+
+.interactive-blessing:hover::before {
+  opacity: 0.1;
+}
+
+.interactive-blessing:active {
+  transform: scale(0.98);
+  transition: transform var(--transition-fast);
+}
+
+/* Consent toggle styling */
+.consent-toggle {
+  --toggle-size: 1.5rem;
+  --toggle-padding: 0.125rem;
+  --toggle-width: 3rem;
+  appearance: none;
+  width: var(--toggle-width);
+  height: var(--toggle-size);
+  background: var(--muted);
+  border-radius: var(--radius-full);
+  position: relative;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.consent-toggle::before {
+  content: '';
+  position: absolute;
+  width: calc(var(--toggle-size) - 2 * var(--toggle-padding));
+  height: calc(var(--toggle-size) - 2 * var(--toggle-padding));
+  background: var(--background);
+  border-radius: 50%;
+  top: var(--toggle-padding);
+  left: var(--toggle-padding);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.consent-toggle:checked {
+  background: var(--sage-warm);
+}
+
+.consent-toggle:checked::before {
+  transform: translateX(calc(var(--toggle-width) - var(--toggle-size)));
+}
+
+/* Cultural protocol badges */
+.protocol-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.protocol-badge.earth {
+  background: var(--earth-light);
+  color: var(--earth-deep);
+}
+
+.protocol-badge.water {
+  background: var(--protocol-water);
+  color: var(--sand-light);
+}
+
+.protocol-badge.fire {
+  background: var(--protocol-fire);
+  color: var(--sand-light);
+}
+
+.protocol-badge.air {
+  background: var(--protocol-air);
+  color: var(--earth-deep);
+}
+
+.protocol-badge.spirit {
+  background: var(--protocol-spirit);
+  color: var(--sand-light);
+}
+
+/* Story card styling */
+.story-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+
+.story-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.story-card.consent-complete {
+  border-left: 4px solid var(--sage-warm);
+}
+
+.story-card.consent-pending {
+  border-left: 4px solid var(--ochre-light);
+}
+
+.story-card.consent-missing {
+  border-left: 4px solid var(--destructive);
+}
+
+/* Progress indicators */
+.progress-ring {
+  --size: 60px;
+  --stroke-width: 4px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--sage-warm) 0deg,
+    var(--sage-warm) var(--progress, 0deg),
+    var(--muted) var(--progress, 0deg),
+    var(--muted) 360deg
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.progress-ring::before {
+  content: '';
+  position: absolute;
+  inset: var(--stroke-width);
+  background: var(--background);
+  border-radius: 50%;
+}
+
+.progress-text {
+  position: relative;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  :root {
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.5rem;
+    --spacing-2xl: 2rem;
+  }
+
+  .text-4xl {
+    font-size: 1.875rem;
+  }
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+}
+
+/* Focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--ochre-rich);
+  outline-offset: 2px;
+}
+
+/* Respectful animations */
+@keyframes fadeInBlessing {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseConnection {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-blessing {
+  animation: fadeInBlessing var(--transition-slow) ease-out;
+}
+
+.animate-connection {
+  animation: pulseConnection 2s ease-in-out infinite;
+}

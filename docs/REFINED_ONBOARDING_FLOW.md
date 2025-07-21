@@ -9,6 +9,7 @@ Building on the existing community-centered onboarding foundation, this refined 
 ### 1. Platform Onboarding (New Organizations)
 
 **Entry Points:**
+
 - Direct outreach from Empathy Ledger team
 - Application via website
 - Referral from existing project
@@ -22,21 +23,21 @@ interface PlatformOnboarding {
     organizationType: string;
     primaryUseCase: string;
   };
-  
+
   consultation: {
     introCall: boolean;
     needsAssessment: string[];
     culturalConsiderations: string[];
     technicalRequirements: string[];
   };
-  
+
   provisioning: {
     projectName: string;
     projectSlug: string;
     initialModules: Module[];
     subscriptionTier: 'community' | 'organization' | 'enterprise';
   };
-  
+
   setupGuidance: {
     assignedOnboardingSpecialist?: string;
     scheduledTrainingSessions: Date[];
@@ -51,32 +52,34 @@ interface PlatformOnboarding {
 // app/apply/page.tsx
 export default function ApplyForPlatform() {
   return (
-    <OnboardingWizard steps={[
-      {
-        id: 'organization-info',
-        title: 'Tell Us About Your Organization',
-        component: OrganizationInfoStep,
-        fields: ['name', 'type', 'size', 'location', 'website']
-      },
-      {
-        id: 'use-case',
-        title: 'How Will You Use Empathy Ledger?',
-        component: UseCaseStep,
-        fields: ['primary_purpose', 'story_types', 'community_size']
-      },
-      {
-        id: 'values-alignment',
-        title: 'Platform Values',
-        component: ValuesAlignmentStep,
-        description: 'Ensuring alignment with sovereignty principles'
-      },
-      {
-        id: 'technical-needs',
-        title: 'Technical Requirements',
-        component: TechnicalNeedsStep,
-        fields: ['custom_domain', 'integrations', 'data_residency']
-      }
-    ]} />
+    <OnboardingWizard
+      steps={[
+        {
+          id: 'organization-info',
+          title: 'Tell Us About Your Organization',
+          component: OrganizationInfoStep,
+          fields: ['name', 'type', 'size', 'location', 'website'],
+        },
+        {
+          id: 'use-case',
+          title: 'How Will You Use Empathy Ledger?',
+          component: UseCaseStep,
+          fields: ['primary_purpose', 'story_types', 'community_size'],
+        },
+        {
+          id: 'values-alignment',
+          title: 'Platform Values',
+          component: ValuesAlignmentStep,
+          description: 'Ensuring alignment with sovereignty principles',
+        },
+        {
+          id: 'technical-needs',
+          title: 'Technical Requirements',
+          component: TechnicalNeedsStep,
+          fields: ['custom_domain', 'integrations', 'data_residency'],
+        },
+      ]}
+    />
   );
 }
 ```
@@ -90,14 +93,14 @@ export default function ApplyForPlatform() {
 export default function ProjectCreatorOnboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [projectData, setProjectData] = useState<ProjectOnboardingData>({});
-  
+
   const steps: OnboardingStep[] = [
     {
       id: 'welcome',
       title: 'Welcome to Your Empathy Ledger Project',
       component: WelcomeStep,
-      description: 'Let\'s set up your ethical storytelling infrastructure',
-      skippable: false
+      description: "Let's set up your ethical storytelling infrastructure",
+      skippable: false,
     },
     {
       id: 'project-identity',
@@ -107,8 +110,8 @@ export default function ProjectCreatorOnboarding() {
         'Choose project name',
         'Set custom URL slug',
         'Upload logo',
-        'Write project description'
-      ]
+        'Write project description',
+      ],
     },
     {
       id: 'branding',
@@ -117,8 +120,8 @@ export default function ProjectCreatorOnboarding() {
       tasks: [
         'Select primary colors',
         'Choose fonts',
-        'Preview branded experience'
-      ]
+        'Preview branded experience',
+      ],
     },
     {
       id: 'philosophy',
@@ -128,8 +131,8 @@ export default function ProjectCreatorOnboarding() {
         'Set story collection goals',
         'Define community values',
         'Configure consent approach',
-        'Set cultural protocols'
-      ]
+        'Set cultural protocols',
+      ],
     },
     {
       id: 'modules',
@@ -138,8 +141,8 @@ export default function ProjectCreatorOnboarding() {
       tasks: [
         'Review recommended modules',
         'Enable desired features',
-        'Configure module settings'
-      ]
+        'Configure module settings',
+      ],
     },
     {
       id: 'team',
@@ -149,8 +152,8 @@ export default function ProjectCreatorOnboarding() {
         'Invite administrators',
         'Add storytellers',
         'Set up cultural reviewers',
-        'Configure permissions'
-      ]
+        'Configure permissions',
+      ],
     },
     {
       id: 'first-story',
@@ -159,20 +162,20 @@ export default function ProjectCreatorOnboarding() {
       tasks: [
         'Create example story',
         'Test submission flow',
-        'Review consent process'
+        'Review consent process',
       ],
-      celebration: true
-    }
+      celebration: true,
+    },
   ];
-  
+
   return (
     <OnboardingLayout>
-      <OnboardingProgress 
-        steps={steps} 
+      <OnboardingProgress
+        steps={steps}
         currentStep={currentStep}
         completedSteps={projectData.completedSteps || []}
       />
-      
+
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
@@ -184,7 +187,7 @@ export default function ProjectCreatorOnboarding() {
             projectData,
             onUpdate: setProjectData,
             onNext: () => setCurrentStep(currentStep + 1),
-            onBack: () => setCurrentStep(currentStep - 1)
+            onBack: () => setCurrentStep(currentStep - 1),
           })}
         </motion.div>
       </AnimatePresence>
@@ -199,18 +202,18 @@ export default function ProjectCreatorOnboarding() {
 
 ```tsx
 // components/CommunityProfileSetup.tsx (enhanced)
-export function CommunityProfileSetup({ 
+export function CommunityProfileSetup({
   onComplete,
-  projectContext 
+  projectContext,
 }: CommunityProfileSetupProps) {
   const steps = [
     {
       id: 'welcome',
-      title: projectContext 
-        ? `Welcome to ${projectContext.name}` 
+      title: projectContext
+        ? `Welcome to ${projectContext.name}`
         : 'Welcome to Empathy Ledger',
       component: WelcomeStep,
-      description: 'Your stories matter. Let\'s get you set up safely.'
+      description: "Your stories matter. Let's get you set up safely.",
     },
     {
       id: 'identity',
@@ -222,8 +225,8 @@ export function CommunityProfileSetup({
         'pronouns',
         'community_affiliation',
         'traditional_name', // New: optional
-        'bio'
-      ]
+        'bio',
+      ],
     },
     {
       id: 'cultural-context',
@@ -232,8 +235,8 @@ export function CommunityProfileSetup({
       fields: [
         'languages',
         'cultural_background', // New
-        'connection_to_country' // New for Indigenous users
-      ]
+        'connection_to_country', // New for Indigenous users
+      ],
     },
     {
       id: 'protocols',
@@ -244,8 +247,8 @@ export function CommunityProfileSetup({
       content: [
         'Understanding cultural protocols',
         'Why we ask these questions',
-        'How your preferences are protected'
-      ]
+        'How your preferences are protected',
+      ],
     },
     {
       id: 'platform-tour', // New step
@@ -256,8 +259,8 @@ export function CommunityProfileSetup({
         'Story sovereignty explained',
         'How consent works',
         'Your rights and control',
-        'Community benefits'
-      ]
+        'Community benefits',
+      ],
     },
     {
       id: 'project-specific', // New conditional step
@@ -267,32 +270,32 @@ export function CommunityProfileSetup({
       content: [
         'Project mission and values',
         'How stories are used',
-        'Your role in the community'
-      ]
-    }
+        'Your role in the community',
+      ],
+    },
   ];
-  
+
   return (
     <OnboardingContainer>
       {/* Progress indicator */}
-      <StepProgress 
+      <StepProgress
         steps={steps}
         currentStep={currentStep}
         isInteractive={true}
       />
-      
+
       {/* Cultural acknowledgment banner */}
       {projectContext?.sovereignty_framework?.acknowledgment && (
         <AcknowledgmentBanner>
           {projectContext.sovereignty_framework.acknowledgment}
         </AcknowledgmentBanner>
       )}
-      
+
       {/* Step content with animations */}
       <StepContent>
         {/* ... existing implementation enhanced ... */}
       </StepContent>
-      
+
       {/* Completion celebration */}
       {isComplete && (
         <CompletionCelebration
@@ -317,12 +320,12 @@ CREATE TABLE onboarding_progress (
     user_id UUID REFERENCES profiles(id),
     project_id UUID REFERENCES projects(id),
     onboarding_type TEXT, -- 'platform', 'project_creator', 'member'
-    
+
     -- Progress tracking
     current_step TEXT,
     completed_steps TEXT[],
     step_data JSONB DEFAULT '{}',
-    
+
     -- Milestones
     milestones JSONB DEFAULT '{
         "profile_completed": false,
@@ -331,12 +334,12 @@ CREATE TABLE onboarding_progress (
         "team_invited": false,
         "project_launched": false
     }',
-    
+
     -- Analytics
     time_per_step JSONB DEFAULT '{}',
     abandoned_at TIMESTAMPTZ,
     completed_at TIMESTAMPTZ,
-    
+
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -348,29 +351,29 @@ CREATE TABLE onboarding_progress (
 // components/OnboardingHelp.tsx
 export function OnboardingHelp({ currentStep, userRole }) {
   const [showHelper, setShowHelper] = useState(false);
-  
+
   const helpContent = {
     'project-identity': {
       title: 'Creating Your Project Identity',
       tips: [
         'Choose a name that reflects your community',
         'Your URL will be: yourname.empathyledger.org',
-        'You can add a custom domain later'
+        'You can add a custom domain later',
       ],
       resources: [
         { label: 'Naming Best Practices', url: '/docs/naming' },
-        { label: 'Example Projects', url: '/showcase' }
-      ]
-    }
+        { label: 'Example Projects', url: '/showcase' },
+      ],
+    },
     // ... more help content
   };
-  
+
   return (
     <HelpWidget>
       <HelpButton onClick={() => setShowHelper(!showHelper)}>
         Need help?
       </HelpButton>
-      
+
       {showHelper && (
         <HelpPanel>
           <h3>{helpContent[currentStep]?.title}</h3>
@@ -388,10 +391,10 @@ export function OnboardingHelp({ currentStep, userRole }) {
 
 ```tsx
 // components/CulturalTraining.tsx
-export function CulturalTrainingModule({ 
+export function CulturalTrainingModule({
   projectId,
   trainingType,
-  onComplete 
+  onComplete,
 }) {
   const modules = [
     {
@@ -399,24 +402,24 @@ export function CulturalTrainingModule({
       title: 'Understanding Story Sovereignty',
       duration: '10 min',
       content: InteractiveSovereigntyLesson,
-      quiz: SovereigntyQuiz
+      quiz: SovereigntyQuiz,
     },
     {
       id: 'protocols',
       title: 'Respecting Cultural Protocols',
       duration: '15 min',
       content: ProtocolsLesson,
-      activities: ['scenario-based learning', 'protocol matching']
+      activities: ['scenario-based learning', 'protocol matching'],
     },
     {
       id: 'consent',
       title: 'Consent in Practice',
       duration: '10 min',
       content: ConsentPractice,
-      certification: true
-    }
+      certification: true,
+    },
   ];
-  
+
   return (
     <TrainingContainer>
       <ModuleList modules={modules} />
@@ -437,25 +440,25 @@ export function MilestoneCelebration({ milestone, userName }) {
       title: `Welcome to the community, ${userName}!`,
       animation: 'confetti',
       message: 'Your voice is now part of something bigger.',
-      reward: 'Community Member Badge'
+      reward: 'Community Member Badge',
     },
     first_story_submitted: {
       title: 'Your First Story is Sacred',
       animation: 'stars',
       message: 'Thank you for trusting us with your story.',
-      reward: 'Storyteller Badge'
+      reward: 'Storyteller Badge',
     },
     project_launched: {
       title: 'Your Project is Live!',
       animation: 'fireworks',
       message: 'Ready to amplify community voices.',
       reward: 'Project Creator Badge',
-      shareOptions: ['twitter', 'linkedin', 'email']
-    }
+      shareOptions: ['twitter', 'linkedin', 'email'],
+    },
   };
-  
+
   const celebration = celebrations[milestone];
-  
+
   return (
     <CelebrationModal>
       <Animation type={celebration.animation} />
@@ -480,27 +483,27 @@ export const projectTemplates = {
     defaultModules: ['story_core', 'cultural_protocols', 'cultural_knowledge'],
     brandingSuggestions: {
       fonts: ['Roboto', 'Open Sans'],
-      colorSchemes: ['earth_tones', 'ocean_palette']
+      colorSchemes: ['earth_tones', 'ocean_palette'],
     },
     philosophyPrompts: [
       'How do stories connect to Country in your community?',
       'What protocols guide knowledge sharing?',
-      'How can technology respect cultural boundaries?'
-    ]
+      'How can technology respect cultural boundaries?',
+    ],
   },
   youth_service: {
     name: 'Youth Service Organization',
     defaultModules: ['story_core', 'youth_tracker', 'service_finder'],
     brandingSuggestions: {
       fonts: ['Poppins', 'Inter'],
-      colorSchemes: ['vibrant', 'approachable']
+      colorSchemes: ['vibrant', 'approachable'],
     },
     philosophyPrompts: [
       'How do you create safe spaces for youth voices?',
       'What does empowerment mean in your context?',
-      'How do you measure positive outcomes?'
-    ]
-  }
+      'How do you measure positive outcomes?',
+    ],
+  },
   // ... more templates
 };
 ```
@@ -508,24 +511,28 @@ export const projectTemplates = {
 ## Implementation Priority
 
 ### Phase 1: Complete Existing Gaps (Week 1)
+
 1. Implement sign-in page
 2. Complete invitation acceptance flow
 3. Add onboarding progress tracking
 4. Create completion celebrations
 
 ### Phase 2: Enhance Project Creator Path (Week 2)
+
 1. Build project onboarding wizard
 2. Add contextual help system
 3. Implement module selection UI
 4. Create first story celebration
 
 ### Phase 3: Add Educational Content (Week 3)
+
 1. Develop cultural training modules
 2. Create interactive platform tour
 3. Add help videos/resources
 4. Build certification system
 
 ### Phase 4: Polish & Optimize (Week 4)
+
 1. Add animations and transitions
 2. Implement smart defaults
 3. Create abandonment recovery
@@ -534,16 +541,19 @@ export const projectTemplates = {
 ## Success Metrics
 
 ### Completion Rates
+
 - **Target**: 80% complete profile setup
 - **Target**: 60% submit first story within 7 days
 - **Target**: 90% of project creators launch project
 
 ### Time to Value
+
 - **Member**: < 10 minutes to complete profile
 - **Creator**: < 30 minutes to launch project
 - **First Story**: < 24 hours after profile completion
 
 ### Satisfaction
+
 - **NPS**: > 8 for onboarding experience
 - **Support Tickets**: < 5% need help during onboarding
 - **Return Rate**: > 70% return within first week

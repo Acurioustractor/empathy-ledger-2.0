@@ -1,7 +1,9 @@
 # The Empathy Ledger Database Architecture Strategy
+
 ## From Community Stories to Global Impact
 
 ### Table of Contents
+
 1. [Executive Summary](#executive-summary)
 2. [Project Evolution & Current State](#project-evolution--current-state)
 3. [Vision & Future State](#vision--future-state)
@@ -21,6 +23,7 @@
 The Empathy Ledger is evolving from a single-purpose storytelling platform into the foundational data layer for A Curious Tractor's ecosystem of social impact projects. This document outlines a bulletproof strategy for establishing a Supabase database architecture that prioritizes data sovereignty, community agency, and scalable multi-tenant support while ensuring zero data loss during migration from Airtable.
 
 ### Key Principles
+
 - **Data Sovereignty First**: Communities and storytellers maintain control over their narratives
 - **Zero Data Loss**: Professional backup systems and migration safeguards
 - **Scalable Architecture**: Supporting multiple organizations and projects
@@ -31,14 +34,18 @@ The Empathy Ledger is evolving from a single-purpose storytelling platform into 
 ## Project Evolution & Current State
 
 ### Where We Started
+
 The Empathy Ledger began as a platform to collect and share community stories with a focus on:
+
 - Indigenous storytelling traditions
 - Community-controlled narratives
 - Benefit distribution tracking
 - Cultural protocol preservation
 
 ### Where We Are Now
+
 Current implementation includes:
+
 - **30+ database tables** with comprehensive schema
 - **TypeScript-first development** with full type safety
 - **Row Level Security (RLS)** on all sensitive data
@@ -46,11 +53,11 @@ Current implementation includes:
 - **Legacy data in Airtable** requiring migration
 
 ### Lessons Learned
+
 1. **Data deletion incidents** taught us the critical importance of:
    - Automated backups before any schema changes
    - Migration scripts with rollback capabilities
    - Clear separation between development and production
-   
 2. **Community feedback** emphasized needs for:
    - More granular consent controls
    - Better storyteller attribution
@@ -61,6 +68,7 @@ Current implementation includes:
 ## Vision & Future State
 
 ### The Empathy Ledger as Foundation
+
 ```
 ┌─────────────────────────────────────────┐
 │      A Curious Tractor Ecosystem        │
@@ -76,6 +84,7 @@ Current implementation includes:
 ```
 
 ### Target Capabilities
+
 1. **Multiple Organizations** can build on the platform
 2. **Storytellers** maintain ownership and control
 3. **Communities** govern their collective narratives
@@ -140,11 +149,11 @@ graph TD
     C --> D[Communities]
     D --> E[Stories]
     E --> F[Value Events]
-    
+
     G[Storytellers] --> E
     G --> H[Consent Settings]
     H --> E
-    
+
     I[Public Users] --> J[Story Views]
     J --> K[Aggregated Insights]
 ```
@@ -152,6 +161,7 @@ graph TD
 ### Security Layers
 
 1. **Row Level Security (RLS)**
+
    ```sql
    -- Example: Stories visible based on privacy settings
    CREATE POLICY "story_visibility" ON stories
@@ -180,18 +190,20 @@ graph TD
 ### Phase 1: Data Audit & Mapping (Week 1)
 
 1. **Export All Airtable Data**
+
    ```javascript
    // scripts/airtable-export.js
    const exportAirtableData = async () => {
      const tables = ['Stories', 'Storytellers', 'Communities', 'Projects'];
      const exports = {};
-     
+
      for (const table of tables) {
-       exports[table] = await airtable.base(AIRTABLE_BASE)[table]
-         .select({ view: 'All Records' })
+       exports[table] = await airtable
+         .base(AIRTABLE_BASE)
+         [table].select({ view: 'All Records' })
          .all();
      }
-     
+
      // Save with timestamp
      fs.writeFileSync(
        `backups/airtable-export-${Date.now()}.json`,
@@ -208,29 +220,29 @@ graph TD
 ### Phase 2: Staging Migration (Week 2)
 
 1. **Set Up Staging Database**
+
    ```sql
    -- Create staging schema
    CREATE SCHEMA staging;
-   
+
    -- Mirror production tables in staging
    CREATE TABLE staging.stories AS TABLE public.stories WITH NO DATA;
    ```
 
 2. **Run Migration Scripts**
+
    ```javascript
    // scripts/migrate-to-staging.js
-   const migrateToStaging = async (airtableData) => {
+   const migrateToStaging = async airtableData => {
      const { Stories } = airtableData;
-     
+
      for (const story of Stories) {
        // Transform and validate
        const transformed = transformStoryData(story);
        const validated = await validateStoryData(transformed);
-       
+
        // Insert into staging
-       await supabase
-         .from('staging.stories')
-         .insert(validated);
+       await supabase.from('staging.stories').insert(validated);
      }
    };
    ```
@@ -238,14 +250,15 @@ graph TD
 ### Phase 3: Validation & Testing (Week 3)
 
 1. **Data Integrity Checks**
+
    ```sql
    -- Verify record counts
-   SELECT 
-     'airtable' as source, COUNT(*) as count 
+   SELECT
+     'airtable' as source, COUNT(*) as count
    FROM staging.airtable_stories
    UNION ALL
-   SELECT 
-     'migrated' as source, COUNT(*) as count 
+   SELECT
+     'migrated' as source, COUNT(*) as count
    FROM staging.stories;
    ```
 
@@ -257,6 +270,7 @@ graph TD
 ### Phase 4: Production Migration (Week 4)
 
 1. **Final Backup**
+
    ```bash
    # Create point-in-time backup
    pg_dump $SUPABASE_DB_URL > backups/pre-migration-$(date +%s).sql
@@ -279,6 +293,7 @@ graph TD
 ### Automated Backup Strategy
 
 1. **Continuous Replication**
+
    ```yaml
    # supabase/backup-config.yml
    backup:
@@ -289,17 +304,18 @@ graph TD
    ```
 
 2. **Daily Snapshots**
+
    ```bash
    # scripts/daily-backup.sh
    #!/bin/bash
    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-   
+
    # Database backup
    pg_dump $SUPABASE_DB_URL | gzip > backups/db_$TIMESTAMP.sql.gz
-   
+
    # Storage backup
    supabase storage download --recursive / backups/storage_$TIMESTAMP/
-   
+
    # Upload to S3
    aws s3 sync backups/ s3://empathy-ledger-backups/
    ```
@@ -313,6 +329,7 @@ graph TD
 ### Recovery Procedures
 
 1. **Point-in-Time Recovery**
+
    ```sql
    -- Restore to specific timestamp
    SELECT pg_restore_to_timestamp('2024-01-15 14:30:00');
@@ -343,6 +360,7 @@ graph TD
    - Right to deletion
 
 2. **Access Hierarchy**
+
    ```
    Storyteller (Full Control)
    ├── Story Editor (Designated Editors)
@@ -370,7 +388,7 @@ graph TD
 ```sql
 -- Storyteller dashboard view
 CREATE VIEW storyteller_dashboard AS
-SELECT 
+SELECT
   s.id,
   s.title,
   s.created_at,
@@ -394,6 +412,7 @@ GROUP BY s.id;
 ### Project Isolation
 
 1. **Data Segregation**
+
    ```sql
    -- Project-specific views
    CREATE VIEW project_stories AS
@@ -402,12 +421,13 @@ GROUP BY s.id;
    ```
 
 2. **Custom Domains**
+
    ```typescript
    // middleware.ts
    export async function middleware(request: NextRequest) {
      const hostname = request.headers.get('host');
      const project = await getProjectByDomain(hostname);
-     
+
      if (project) {
        // Set project context
        request.headers.set('X-Project-Id', project.id);
@@ -424,10 +444,11 @@ GROUP BY s.id;
 ### Cross-Project Analytics
 
 1. **Aggregated Insights**
+
    ```sql
    -- Platform-wide analytics (privacy-respecting)
    CREATE MATERIALIZED VIEW platform_insights AS
-   SELECT 
+   SELECT
      DATE_TRUNC('month', created_at) as month,
      COUNT(DISTINCT storyteller_id) as unique_storytellers,
      COUNT(*) as total_stories,
@@ -450,6 +471,7 @@ GROUP BY s.id;
 ### CARE Principles Implementation
 
 1. **Collective Benefit**
+
    ```typescript
    interface CommunityBenefitSettings {
      benefit_sharing_model: 'equal' | 'contribution' | 'custom';
@@ -485,6 +507,7 @@ GROUP BY s.id;
 ### Implementation Features
 
 1. **Community Data Stewards**
+
    ```typescript
    interface DataSteward {
      user_id: string;
@@ -509,12 +532,15 @@ GROUP BY s.id;
 ## Public Communication Strategy
 
 ### For Storytellers
+
 > "Your stories remain yours. You control who sees them, how they're shared, and what benefits they generate. We're just the platform that amplifies your voice while respecting your sovereignty."
 
 ### For Communities
+
 > "The Empathy Ledger operates like a digital gathering place where your community's stories are shared according to your protocols. You maintain collective governance over your narratives."
 
 ### For Organizations
+
 > "Build on a platform that prioritizes ethical data practices. Access community insights while respecting sovereignty. Create positive impact through story-driven development."
 
 ### Technical Transparency
@@ -536,30 +562,35 @@ GROUP BY s.id;
 ## Implementation Roadmap
 
 ### Month 1: Foundation
+
 - [ ] Complete Airtable data export and backup
 - [ ] Finalize Supabase schema design
 - [ ] Implement automated backup systems
 - [ ] Create staging environment
 
 ### Month 2: Migration
+
 - [ ] Execute staging migration
 - [ ] Comprehensive testing
 - [ ] Fix identified issues
 - [ ] Production migration
 
 ### Month 3: Enhancement
+
 - [ ] Implement storyteller dashboards
 - [ ] Deploy multi-tenant features
 - [ ] Launch sovereignty controls
 - [ ] Public documentation
 
 ### Month 4: Scale
+
 - [ ] Onboard first external organization
 - [ ] Implement cross-project analytics
 - [ ] Launch community steward program
 - [ ] Performance optimization
 
 ### Ongoing: Maintenance
+
 - Weekly backup verification
 - Monthly security audits
 - Quarterly community reviews
@@ -580,6 +611,7 @@ GROUP BY s.id;
 ## Appendices
 
 ### A. Migration Checklist
+
 - [ ] All Airtable data exported
 - [ ] Backup systems tested
 - [ ] Staging migration successful
@@ -590,12 +622,14 @@ GROUP BY s.id;
 - [ ] Support team briefed
 
 ### B. Emergency Contacts
+
 - Database Administrator: [Contact]
 - Security Lead: [Contact]
 - Community Liaison: [Contact]
 - Legal Counsel: [Contact]
 
 ### C. Related Documents
+
 - Technical Architecture Diagram
 - API Documentation
 - Security Audit Reports
@@ -604,4 +638,4 @@ GROUP BY s.id;
 
 ---
 
-*This document is a living guide that will evolve with community needs and technological capabilities. Last updated: [Date]*
+_This document is a living guide that will evolve with community needs and technological capabilities. Last updated: [Date]_

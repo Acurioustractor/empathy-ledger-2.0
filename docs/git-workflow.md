@@ -17,30 +17,35 @@ main (production)
 ### Branch Descriptions
 
 **`main`** - Production branch
+
 - Always deployable
 - Protected with required reviews
 - Automatic deployment to production
 - Only accepts merges from `develop` or `hotfix/*`
 
-**`develop`** - Staging branch  
+**`develop`** - Staging branch
+
 - Integration branch for new features
 - Deployed to staging environment
 - All features merge here first
 - Must pass all tests before merging to `main`
 
 **`feature/*`** - Feature branches
+
 - New features and improvements
 - Branch from `develop`
 - Merge back to `develop` via PR
 - Naming: `feature/story-submission-ui`
 
 **`migration/*`** - Database migration branches
+
 - Special branch type for database changes
 - Requires additional review process
 - Must include rollback scripts
 - Naming: `migration/add-sovereignty-tables`
 
 **`hotfix/*`** - Emergency fixes
+
 - Branch from `main`
 - Can merge directly to `main` and `develop`
 - For critical production issues only
@@ -93,6 +98,7 @@ git push origin feature/your-feature-name
 ### Special Process for Database Changes
 
 1. **Create Migration Branch**
+
    ```bash
    git checkout develop
    git checkout -b migration/add-new-tables
@@ -122,6 +128,7 @@ git push origin feature/your-feature-name
 ### PR Requirements
 
 **All PRs must include:**
+
 - [ ] Clear description of changes
 - [ ] Link to related issue/task
 - [ ] Screenshots for UI changes
@@ -129,6 +136,7 @@ git push origin feature/your-feature-name
 - [ ] Breaking change documentation
 
 **Database PRs additionally require:**
+
 - [ ] Migration script included
 - [ ] Rollback script included
 - [ ] Performance impact assessment
@@ -137,46 +145,57 @@ git push origin feature/your-feature-name
 ### PR Templates
 
 #### Feature PR Template
+
 ```markdown
 ## Summary
+
 Brief description of what this PR does.
 
 ## Changes Made
+
 - List of specific changes
 - Any breaking changes
 - New dependencies
 
 ## Testing
+
 - [ ] Unit tests pass
 - [ ] Integration tests pass
 - [ ] Manual testing completed
 
 ## Screenshots
+
 (Include for UI changes)
 
 ## Additional Notes
+
 Any other context or concerns.
 ```
 
 #### Migration PR Template
+
 ```markdown
 ## Database Migration
 
 ### Summary
+
 Description of database changes and rationale.
 
 ### Migration Details
-- **Tables affected:** 
-- **Estimated duration:** 
-- **Downtime required:** 
-- **Data size impact:** 
+
+- **Tables affected:**
+- **Estimated duration:**
+- **Downtime required:**
+- **Data size impact:**
 
 ### Migration Files
+
 - [ ] Up migration: `supabase/migrations/YYYYMMDD_description.sql`
 - [ ] Down migration: `supabase/migrations/YYYYMMDD_description_rollback.sql`
 - [ ] Migration script: `scripts/migrations/migrate-YYYYMMDD.js`
 
 ### Testing Checklist
+
 - [ ] Tested on empty database
 - [ ] Tested with production-like data
 - [ ] Rollback tested and verified
@@ -184,12 +203,14 @@ Description of database changes and rationale.
 - [ ] Backup/restore tested
 
 ### Rollback Plan
+
 1. Stop application
 2. Run rollback script
 3. Restore from backup if needed
 4. Verify data integrity
 
 ### Team Notifications
+
 - [ ] Team notified of migration window
 - [ ] Users notified if downtime required
 - [ ] Support team briefed
@@ -231,6 +252,7 @@ Each environment uses different configuration:
 ## Commit Message Standards
 
 ### Format
+
 ```
 type(scope): description
 
@@ -240,6 +262,7 @@ footer (optional)
 ```
 
 ### Types
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -251,6 +274,7 @@ footer (optional)
 - `security`: Security-related changes
 
 ### Examples
+
 ```bash
 feat(stories): add consent management system
 
@@ -276,6 +300,7 @@ BREAKING CHANGE: Requires database migration
 ## Release Process
 
 ### Version Numbering
+
 We use semantic versioning: `MAJOR.MINOR.PATCH`
 
 - **MAJOR**: Breaking changes (database schema changes)
@@ -285,6 +310,7 @@ We use semantic versioning: `MAJOR.MINOR.PATCH`
 ### Release Steps
 
 1. **Create Release Branch**
+
    ```bash
    git checkout develop
    git checkout -b release/v1.2.0
@@ -316,6 +342,7 @@ We use semantic versioning: `MAJOR.MINOR.PATCH`
 ## Emergency Procedures
 
 ### Hotfix Process
+
 ```bash
 # Create hotfix from main
 git checkout main
@@ -338,6 +365,7 @@ git branch -d hotfix/critical-fix
 ```
 
 ### Rollback Process
+
 ```bash
 # If deployment fails
 git checkout main
@@ -351,6 +379,7 @@ npm run migration:rollback --to=<backup-point>
 ## Security Considerations
 
 ### Protected Branches
+
 - `main` and `develop` are protected
 - Require PR reviews
 - Require status checks to pass
@@ -358,12 +387,14 @@ npm run migration:rollback --to=<backup-point>
 - No force pushes allowed
 
 ### Secrets Management
+
 - Environment variables in GitHub secrets
 - Database credentials never in code
 - API keys rotated regularly
 - Separate secrets per environment
 
 ### Code Review Requirements
+
 - **Minimum 1 reviewer** for features
 - **Database admin review** for migrations
 - **Security review** for auth/privacy changes
@@ -372,18 +403,21 @@ npm run migration:rollback --to=<backup-point>
 ## Monitoring & Alerts
 
 ### GitHub Actions Monitor
+
 - Build status
 - Test results
 - Deployment status
 - Security scans
 
 ### Database Monitoring
+
 - Migration success/failure
 - Backup completion
 - Performance metrics
 - Error rates
 
 ### Communication Channels
+
 - **Slack #dev-alerts**: Automated notifications
 - **Slack #dev-team**: Team discussions
 - **Email alerts**: Critical issues only
@@ -408,7 +442,7 @@ git checkout develop && git checkout -b migration/add-tables
 # Deploy to staging
 git checkout develop && git push origin develop
 
-# Deploy to production  
+# Deploy to production
 # (via PR only - no direct pushes)
 ```
 

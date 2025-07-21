@@ -1,9 +1,11 @@
 # The Empathy Ledger Implementation Roadmap
 
 ## Overview
+
 This document provides a clear, actionable roadmap for implementing The Empathy Ledger's bulletproof database architecture and migration strategy. Follow these steps in order to ensure zero data loss and a smooth transition.
 
 ## Quick Links
+
 - [Database Architecture Strategy](/docs/database-architecture-strategy.md)
 - [Bulletproof Schema](/supabase/migrations/20240120_bulletproof_schema.sql)
 - [Migration Scripts](/scripts/airtable-migration/migrate-airtable-to-supabase.js)
@@ -12,32 +14,35 @@ This document provides a clear, actionable roadmap for implementing The Empathy 
 ## Pre-Implementation Checklist
 
 ### Environment Setup
+
 - [ ] Supabase project created
 - [ ] AWS S3 bucket for backups configured
 - [ ] Environment variables set:
+
   ```env
   # Supabase
   SUPABASE_URL=
   SUPABASE_SERVICE_KEY=
   DATABASE_URL=
-  
+
   # Airtable
   AIRTABLE_API_KEY=
   AIRTABLE_BASE_ID=
-  
+
   # AWS Backup
   AWS_REGION=
   AWS_ACCESS_KEY_ID=
   AWS_SECRET_ACCESS_KEY=
   BACKUP_BUCKET=
   BACKUP_ENCRYPTION_PASSWORD=
-  
+
   # Notifications
   BACKUP_WEBHOOK_URL=
   BACKUP_EMAIL_RECIPIENTS=
   ```
 
 ### Team Preparation
+
 - [ ] All team members have read the architecture strategy document
 - [ ] Database administrator identified and briefed
 - [ ] Support team ready for migration window
@@ -46,6 +51,7 @@ This document provides a clear, actionable roadmap for implementing The Empathy 
 ## Phase 1: Foundation (Week 1)
 
 ### Day 1-2: Backup Current State
+
 ```bash
 # 1. Export all Airtable data
 node scripts/airtable-migration/migrate-airtable-to-supabase.js --export-only
@@ -60,6 +66,7 @@ pg_dump $DATABASE_URL > backups/baseline-$(date +%s).sql
 ```
 
 ### Day 3-4: Setup Infrastructure
+
 ```bash
 # 1. Initialize backup system
 npm run setup:backup
@@ -73,6 +80,7 @@ npm run backup:test
 ```
 
 ### Day 5: Staging Environment
+
 ```bash
 # 1. Create staging Supabase project
 # 2. Apply bulletproof schema
@@ -85,6 +93,7 @@ npm run verify:schema
 ## Phase 2: Migration Testing (Week 2)
 
 ### Day 1-2: Dry Run Migration
+
 ```bash
 # 1. Run migration in dry-run mode
 DRY_RUN=true node scripts/airtable-migration/migrate-airtable-to-supabase.js
@@ -96,6 +105,7 @@ DRY_RUN=true node scripts/airtable-migration/migrate-airtable-to-supabase.js
 ```
 
 ### Day 3-4: Staging Migration
+
 ```bash
 # 1. Full migration to staging
 node scripts/airtable-migration/migrate-airtable-to-supabase.js --target=staging
@@ -110,6 +120,7 @@ npm run test:migration
 ```
 
 ### Day 5: Performance Testing
+
 ```bash
 # 1. Load testing
 npm run test:load
@@ -123,6 +134,7 @@ npm run test:load
 ## Phase 3: Production Migration (Week 3)
 
 ### Pre-Migration (Day Before)
+
 ```bash
 # 1. Final Airtable export
 node scripts/airtable-migration/migrate-airtable-to-supabase.js --export-only --final
@@ -134,6 +146,7 @@ npm run backup:full
 ```
 
 ### Migration Day
+
 ```bash
 # 1. Enable maintenance mode (2 AM)
 npm run maintenance:enable
@@ -158,6 +171,7 @@ npm run maintenance:disable
 ```
 
 ### Post-Migration
+
 ```bash
 # 1. Monitor error logs
 tail -f logs/application.log
@@ -170,12 +184,14 @@ tail -f logs/application.log
 ## Phase 4: Stabilization (Week 4)
 
 ### Days 1-3: Monitoring & Fixes
+
 - Monitor application performance
 - Address any data issues
 - Optimize slow queries
 - User support for any issues
 
 ### Days 4-5: Documentation
+
 - Update all technical documentation
 - Create user guides for new features
 - Document lessons learned
@@ -184,6 +200,7 @@ tail -f logs/application.log
 ## Critical Commands Reference
 
 ### Backup Operations
+
 ```bash
 # Manual full backup
 npm run backup:full
@@ -199,6 +216,7 @@ npm run backup:list
 ```
 
 ### Migration Operations
+
 ```bash
 # Export Airtable data
 npm run airtable:export
@@ -217,6 +235,7 @@ npm run migrate:verify
 ```
 
 ### Emergency Procedures
+
 ```bash
 # Rollback to previous state
 npm run rollback --to=checkpoint-id
@@ -234,6 +253,7 @@ npm run db:health
 ## Success Criteria
 
 ### Technical Metrics
+
 - [ ] Zero data loss during migration
 - [ ] All automated tests passing
 - [ ] Query performance within acceptable ranges
@@ -241,6 +261,7 @@ npm run db:health
 - [ ] RLS policies enforced correctly
 
 ### Business Metrics
+
 - [ ] All users can access their data
 - [ ] Stories display correctly
 - [ ] Community features functional
@@ -250,6 +271,7 @@ npm run db:health
 ## Risk Mitigation
 
 ### High-Risk Areas
+
 1. **Data Relationships**
    - Mitigation: Extensive testing in staging
    - Rollback: Restore from checkpoint
@@ -263,6 +285,7 @@ npm run db:health
    - Rollback: Scale up resources temporarily
 
 ### Communication Plan
+
 - **-1 Week**: Email all users about maintenance
 - **-1 Day**: Final reminder with exact times
 - **During**: Status page updates every hour
@@ -271,16 +294,19 @@ npm run db:health
 ## Support Contacts
 
 ### Technical Team
+
 - Database Admin: [Contact]
 - Backend Lead: [Contact]
 - DevOps: [Contact]
 
 ### Business Team
+
 - Product Manager: [Contact]
 - Community Manager: [Contact]
 - Support Lead: [Contact]
 
 ### Emergency Escalation
+
 1. Try technical team first
 2. Escalate to CTO if needed
 3. Emergency vendor support available
@@ -288,6 +314,7 @@ npm run db:health
 ## Post-Implementation Review
 
 ### Week 5: Review Meeting
+
 - What went well?
 - What could be improved?
 - Any remaining issues?
@@ -295,7 +322,9 @@ npm run db:health
 - Process improvements for future?
 
 ### Success Celebration
+
 Once everything is stable and verified:
+
 - Team appreciation
 - User communication about new capabilities
 - Plan for leveraging new architecture

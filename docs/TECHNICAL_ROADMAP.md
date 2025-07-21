@@ -1,5 +1,6 @@
 # Empathy Ledger Technical Roadmap
-*Community Knowledge Sovereignty Platform Implementation Guide*
+
+_Community Knowledge Sovereignty Platform Implementation Guide_
 
 ---
 
@@ -14,6 +15,7 @@ Build a community knowledge sovereignty platform where storytellers own their na
 ### Database Schema (Supabase)
 
 #### Users Table - Community Identity
+
 ```sql
 create table users (
   id uuid primary key default gen_random_uuid(),
@@ -31,6 +33,7 @@ create table users (
 ```
 
 #### Stories Table - Narrative Sovereignty
+
 ```sql
 create table stories (
   id uuid primary key default gen_random_uuid(),
@@ -51,6 +54,7 @@ create table stories (
 ```
 
 #### Story Analysis Table - Community-Centered Intelligence
+
 ```sql
 create table story_analysis (
   id uuid primary key default gen_random_uuid(),
@@ -70,6 +74,7 @@ create table story_analysis (
 ```
 
 #### Community Insights Table - Collective Intelligence
+
 ```sql
 create table community_insights (
   id uuid primary key default gen_random_uuid(),
@@ -87,6 +92,7 @@ create table community_insights (
 ```
 
 #### Value Events Table - Benefit Distribution
+
 ```sql
 create table value_events (
   id uuid primary key default gen_random_uuid(),
@@ -107,9 +113,11 @@ create table value_events (
 ## Implementation Phases
 
 ### Phase 1: Foundation (Weeks 1-2)
-*Building the sovereign foundation*
+
+_Building the sovereign foundation_
 
 #### Week 1: Database & Authentication
+
 - [ ] Set up Supabase project with sovereignty-first schema
 - [ ] Implement Row Level Security (RLS) policies
 - [ ] Create user authentication with community protocols support
@@ -117,6 +125,7 @@ create table value_events (
 - [ ] Set up proper foreign key relationships and indexes
 
 #### Week 2: Story Submission & Management
+
 - [ ] Multi-channel story submission (web form, audio upload)
 - [ ] Granular consent management interface
 - [ ] Privacy controls (private/community/public)
@@ -124,15 +133,18 @@ create table value_events (
 - [ ] Story editing and management for storytellers
 
 **Success Criteria:**
+
 - Users can create accounts with community affiliation
 - Stories can be submitted with full consent controls
 - Privacy levels are respected throughout the system
 - Cultural protocols can be specified and honored
 
 ### Phase 2: Community-Centered AI (Weeks 3-4)
-*AI that serves rather than extracts*
+
+_AI that serves rather than extracts_
 
 #### Week 3: Analysis Engine
+
 - [ ] Claude API integration with philosophy-aligned prompts
 - [ ] Analysis pipeline that preserves community language
 - [ ] Empowerment scoring system (measures community benefit)
@@ -140,6 +152,7 @@ create table value_events (
 - [ ] Consent verification before analysis
 
 #### Week 4: Community Intelligence
+
 - [ ] Cross-story pattern recognition within communities
 - [ ] Community insights dashboard
 - [ ] Asset-based analysis (strengths before challenges)
@@ -147,6 +160,7 @@ create table value_events (
 - [ ] Collective wisdom aggregation tools
 
 **Success Criteria:**
+
 - Analysis preserves storyteller's language and concepts
 - Community assets are identified before challenges
 - Cultural protocols are respected in analysis
@@ -154,9 +168,11 @@ create table value_events (
 - Insights belong to and benefit communities
 
 ### Phase 3: Empowerment Tools (Weeks 5-6)
-*Technology that increases community power*
+
+_Technology that increases community power_
 
 #### Week 5: Community Dashboards
+
 - [ ] Storyteller profile pages with authentic data
 - [ ] Community insights visualization
 - [ ] Story connection mapping (with consent)
@@ -164,6 +180,7 @@ create table value_events (
 - [ ] Grant application support tools
 
 #### Week 6: Value Distribution
+
 - [ ] Value event tracking system
 - [ ] Automatic benefit distribution workflows
 - [ ] Community fund management
@@ -171,15 +188,18 @@ create table value_events (
 - [ ] Policy influence tracking
 
 **Success Criteria:**
+
 - Communities can see how their stories create value
 - Storytellers receive appropriate recognition and compensation
 - Value flows demonstrably back to communities
 - Communities have tools to leverage their collective intelligence
 
 ### Phase 4: Sovereignty & Scale (Weeks 7-8)
-*Full community control and expansion*
+
+_Full community control and expansion_
 
 #### Week 7: Advanced Controls
+
 - [ ] Seasonal/ceremonial content restrictions
 - [ ] Community-specific analysis frameworks
 - [ ] Advanced privacy and sharing controls
@@ -187,6 +207,7 @@ create table value_events (
 - [ ] Data sovereignty audit tools
 
 #### Week 8: Publishing & Advocacy
+
 - [ ] Community-controlled content calendar
 - [ ] Social media integration with consent
 - [ ] Grant application generators
@@ -194,6 +215,7 @@ create table value_events (
 - [ ] Media kit generation
 
 **Success Criteria:**
+
 - Communities have full control over their data and insights
 - Platform can scale while maintaining sovereignty principles
 - Tools enable communities to influence systems and attract resources
@@ -204,9 +226,11 @@ create table value_events (
 ## Key Features to Build
 
 ### 1. Story Submission Interface
+
 **Philosophy**: "Share your experience" not "Submit content"
 
 **Features:**
+
 - **Multi-channel input**: Web form, WhatsApp integration, SMS gateway
 - **Voice-to-text**: Audio upload with automatic transcription
 - **Privacy controls**: Granular consent checkboxes for different uses
@@ -214,6 +238,7 @@ create table value_events (
 - **Mobile-first**: Accessible on any device, works offline
 
 **Implementation:**
+
 ```jsx
 function StorySubmission() {
   const [story, setStory] = useState('');
@@ -222,23 +247,25 @@ function StorySubmission() {
     allowCommunitySharing: false,
     allowPublicSharing: false,
     allowResearch: false,
-    allowValueCreation: false
+    allowValueCreation: false,
   });
   const [culturalProtocols, setCulturalProtocols] = useState({
     seasonalRestrictions: false,
     genderSpecific: false,
     ceremonialContent: false,
-    requiresElderReview: false
+    requiresElderReview: false,
   });
-  
+
   // Implementation focuses on dignity and community control
 }
 ```
 
 ### 2. AI Analysis Engine
+
 **Philosophy**: Serve community wisdom, don't extract insights
 
 **Analysis Framework:**
+
 ```javascript
 const analysisPrompt = `
 When analyzing this story, remember:
@@ -272,9 +299,11 @@ Provide analysis in this structure:
 ```
 
 ### 3. Community Intelligence Dashboard
+
 **Philosophy**: Communities see patterns in their own wisdom
 
 **Features:**
+
 - **Pattern Recognition**: Cross-story analysis showing community-wide themes
 - **Trend Identification**: Changes in story themes over time
 - **Collective Insights**: What multiple stories reveal about systemic issues
@@ -282,9 +311,11 @@ Provide analysis in this structure:
 - **Community Sovereignty**: Full control over who sees aggregated insights
 
 ### 4. Value Tracking & Distribution
+
 **Philosophy**: Communities benefit from their knowledge
 
 **Features:**
+
 - **Value Events**: Track when stories influence grants, policy, media
 - **Automatic Distribution**: Smart contracts for revenue sharing
 - **Community Funds**: Collective investment in community projects
@@ -296,18 +327,21 @@ Provide analysis in this structure:
 ## Technical Standards
 
 ### Code Quality Requirements
+
 - **Philosophy alignment**: Every component must include comment explaining how it serves community empowerment
 - **Cultural safety**: No hardcoded assumptions about community structures
 - **Performance**: Pages load in <2 seconds with real data
 - **Accessibility**: All features work with screen readers and keyboard navigation
 
 ### Security & Privacy
+
 - **Community control**: Communities can see and control all uses of their data
 - **Granular permissions**: Fine-grained control over story and insight sharing
 - **Audit logging**: Complete record of data access and use
 - **Cultural protocols**: Technical enforcement of community-defined restrictions
 
 ### Database Integrity
+
 - **Referential integrity**: All foreign keys properly configured
 - **Performance optimization**: Indexes on commonly queried fields
 - **Data sovereignty**: Clear audit trails for all data access
@@ -318,6 +352,7 @@ Provide analysis in this structure:
 ## Technology Stack
 
 ### Frontend (Next.js 15)
+
 ```typescript
 // Modern React with sovereignty-first design
 app/
@@ -330,12 +365,14 @@ app/
 ```
 
 ### Backend (Supabase)
+
 - **Database**: PostgreSQL with RLS
 - **Authentication**: Supabase Auth with community protocols
 - **Storage**: Community-controlled file storage
 - **Real-time**: Live updates for community features
 
 ### AI Integration
+
 - **Claude API**: For story analysis and insight generation
 - **Privacy-preserving**: Analysis without external data storage
 - **Community training**: AI learns patterns specific to each community
@@ -346,18 +383,21 @@ app/
 ## Success Metrics
 
 ### Technical Metrics
+
 - **Performance**: <2s page load, <500ms API response
 - **Reliability**: 99.9% uptime, zero data breaches
 - **Accuracy**: 100% of stories correctly linked to storytellers
 - **Consent**: 95% analysis completion rate for consented stories
 
 ### Community Empowerment Metrics
+
 - **Representation**: Communities report accurate representation of their wisdom
 - **Benefit**: Stories lead to concrete community benefits (grants, policy changes)
 - **Growth**: Communities increase rather than decrease sharing over time
 - **Recommendation**: Platform becomes tool communities recommend to others
 
 ### Philosophy Alignment Metrics
+
 - **Empowerment**: Community feedback validates features empower rather than extract
 - **Language**: Analysis respects community language and frameworks
 - **Value**: Value flows demonstrably back to communities
@@ -368,18 +408,21 @@ app/
 ## Next Steps
 
 ### Immediate Actions (This Week)
+
 1. Set up clean Next.js project with Supabase integration
 2. Implement sovereignty-first database schema
 3. Create user authentication with community protocols
 4. Build basic story submission with consent controls
 
 ### Month 1 Goals
+
 - Complete Phase 1: Foundation with working story submission
 - Begin Phase 2: AI analysis that preserves community language
 - Test with 2-3 community partners
 - Validate philosophy alignment in practice
 
 ### Long-term Vision
+
 - 1000+ stories collected in first year
 - 90%+ storyteller satisfaction and retention
 - $100K+ flowing back to communities

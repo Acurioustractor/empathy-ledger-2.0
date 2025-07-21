@@ -7,6 +7,7 @@ This document outlines the safe migration path from the current project-based sy
 ## Current State Analysis
 
 ### What We Have (Projects)
+
 - ✅ Multi-tenant structure via projects
 - ✅ Role-based access control
 - ✅ Story management with consent
@@ -14,6 +15,7 @@ This document outlines the safe migration path from the current project-based sy
 - ✅ Subscription tiers
 
 ### What We're Adding
+
 - 🔄 Platform-level admin roles
 - 🔄 Modular feature system
 - 🔄 Enhanced white-labeling
@@ -31,6 +33,7 @@ This document outlines the safe migration path from the current project-based sy
 ## Phase 1: Database Extension (Week 1)
 
 ### Step 1.1: Add Platform Tables
+
 ```sql
 -- These are NEW tables, no changes to existing ones
 BEGIN;
@@ -78,12 +81,13 @@ COMMIT;
 ```
 
 ### Step 1.2: Extend Existing Tables Safely
+
 ```sql
 -- Add columns with defaults that maintain current behavior
 BEGIN;
 
 -- Add platform role to profiles (defaults to regular user)
-ALTER TABLE profiles 
+ALTER TABLE profiles
 ADD COLUMN IF NOT EXISTS platform_role TEXT DEFAULT 'user',
 ADD COLUMN IF NOT EXISTS is_platform_team BOOLEAN DEFAULT FALSE;
 
@@ -103,6 +107,7 @@ COMMIT;
 ```
 
 ### Step 1.3: Populate Module Registry
+
 ```sql
 -- Insert core modules that map to existing features
 BEGIN;
@@ -131,7 +136,7 @@ INSERT INTO platform_modules (key, name, category, is_active, default_config) VA
 
 -- Link existing projects to their current modules
 INSERT INTO project_modules (project_id, module_key, enabled, configuration)
-SELECT 
+SELECT
     p.id,
     m.key,
     true,
@@ -147,22 +152,24 @@ COMMIT;
 ## Phase 2: Code Migration (Week 1-2)
 
 ### Step 2.1: Add Platform Admin Routes
+
 ```typescript
 // app/admin/platform/layout.tsx
 export default function PlatformAdminLayout({ children }) {
   // Check platform_role without breaking existing auth
   const { data: profile } = useProfile();
-  
+
   if (profile?.platform_role !== 'super_admin') {
     // Redirect to regular admin, not error
     return redirect('/admin');
   }
-  
+
   return <>{children}</>;
 }
 ```
 
 ### Step 2.2: Create Module Compatibility Layer
+
 ```typescript
 // lib/modules/compatibility.ts
 // Ensures existing features work with or without module system
@@ -172,14 +179,14 @@ export function getProjectFeatures(project: Project) {
   if (project.modules_enabled) {
     return project.modules_enabled;
   }
-  
+
   // Otherwise, return current feature flags
   return {
     story_core: project.story_submission_enabled ?? true,
     consent_privacy: true,
     user_management: true,
     community_analytics: project.community_insights_enabled ?? true,
-    cultural_protocols: !!project.sovereignty_framework?.cultural_protocols
+    cultural_protocols: !!project.sovereignty_framework?.cultural_protocols,
   };
 }
 
@@ -191,6 +198,7 @@ if (features.story_core) {
 ```
 
 ### Step 2.3: Gradual Component Migration
+
 ```typescript
 // Before: Direct feature check
 if (project.story_submission_enabled) {
@@ -213,16 +221,16 @@ export function useProjectModules(projectId: string) {
         .from('project_modules')
         .select('*')
         .eq('project_id', projectId);
-      
+
       if (response.data?.length > 0) {
         return response.data;
       }
-      
+
       // Fall back to legacy feature flags
       return getLegacyModules(projectId);
     }
   });
-  
+
   return {
     isEnabled: (key: string) => modules?.find(m => m.module_key === key)?.enabled ?? false,
     getConfig: (key: string) => modules?.find(m => m.module_key === key)?.configuration ?? {}
@@ -233,6 +241,7 @@ export function useProjectModules(projectId: string) {
 ## Phase 3: Data Migration (Week 2)
 
 ### Step 3.1: Migrate Project Settings to Modules
+
 ```sql
 -- Run after code is deployed and tested
 BEGIN;
@@ -240,8 +249,8 @@ BEGIN;
 -- Migrate story submission settings
 UPDATE project_modules pm
 SET configuration = jsonb_build_object(
-    'submission_methods', 
-    CASE 
+    'submission_methods',
+    CASE
         WHEN p.submission_channels ? 'whatsapp' THEN '["web", "whatsapp", "sms"]'::jsonb
         ELSE '["web"]'::jsonb
     END,
@@ -253,7 +262,7 @@ AND pm.module_key = 'story_core';
 
 -- Migrate analytics settings
 UPDATE project_modules pm
-SET 
+SET
     enabled = COALESCE(p.community_insights_enabled, true),
     configuration = jsonb_build_object(
         'cross_project_insights', p.cross_project_collaboration,
@@ -267,6 +276,7 @@ COMMIT;
 ```
 
 ### Step 3.2: Create Migration Status Tracking
+
 ```sql
 CREATE TABLE migration_status (
     project_id UUID PRIMARY KEY REFERENCES projects(id),
@@ -286,6 +296,7 @@ ON CONFLICT DO NOTHING;
 ## Phase 4: Feature Rollout (Week 3)
 
 ### Step 4.1: Enable Platform Features for Specific Projects
+
 ```typescript
 // lib/feature-flags.ts
 export const platformFeatures = {
@@ -293,25 +304,29 @@ export const platformFeatures = {
   MODULE_SYSTEM: process.env.ENABLE_MODULE_SYSTEM === 'true',
   WHITE_LABEL: process.env.ENABLE_WHITE_LABEL === 'true',
   PLATFORM_ADMIN: process.env.ENABLE_PLATFORM_ADMIN === 'true',
-  
+
   // Per-project feature flags
   isModuleSystemEnabled: (projectId: string) => {
-    const enabledProjects = process.env.MODULE_SYSTEM_PROJECTS?.split(',') || [];
-    return enabledProjects.includes(projectId) || platformFeatures.MODULE_SYSTEM;
-  }
+    const enabledProjects =
+      process.env.MODULE_SYSTEM_PROJECTS?.split(',') || [];
+    return (
+      enabledProjects.includes(projectId) || platformFeatures.MODULE_SYSTEM
+    );
+  },
 };
 ```
 
 ### Step 4.2: Gradual UI Migration
+
 ```typescript
 // components/project-settings.tsx
 export function ProjectSettings({ project }) {
   const hasModuleSystem = platformFeatures.isModuleSystemEnabled(project.id);
-  
+
   if (hasModuleSystem) {
     return <ModularProjectSettings project={project} />;
   }
-  
+
   // Keep showing legacy settings UI
   return <LegacyProjectSettings project={project} />;
 }
@@ -320,6 +335,7 @@ export function ProjectSettings({ project }) {
 ## Phase 5: Cleanup (Week 4)
 
 ### Step 5.1: Remove Legacy Code
+
 ```typescript
 // After all projects migrated
 // 1. Remove legacy feature flag checks
@@ -328,6 +344,7 @@ export function ProjectSettings({ project }) {
 ```
 
 ### Step 5.2: Optimize Database
+
 ```sql
 -- After migration complete
 -- 1. Drop deprecated columns (keep for 6 months as backup)
@@ -339,6 +356,7 @@ CREATE INDEX idx_platform_audit_log_actor ON platform_audit_log(actor_id, create
 ## Rollback Plan
 
 ### Database Rollback
+
 ```sql
 -- Keep for emergency rollback
 BEGIN;
@@ -349,7 +367,7 @@ DROP TABLE IF EXISTS platform_modules CASCADE;
 DROP TABLE IF EXISTS platform_audit_log CASCADE;
 
 -- Remove new columns
-ALTER TABLE profiles 
+ALTER TABLE profiles
 DROP COLUMN IF EXISTS platform_role,
 DROP COLUMN IF EXISTS is_platform_team;
 
@@ -362,6 +380,7 @@ COMMIT;
 ```
 
 ### Code Rollback
+
 - Git revert to previous release
 - Redeploy previous Docker images
 - Restore environment variables
@@ -369,18 +388,21 @@ COMMIT;
 ## Testing Strategy
 
 ### 1. Development Environment
+
 - Full migration on dev database
 - Test all existing features
 - Test new platform features
 - Performance benchmarks
 
 ### 2. Staging Environment
+
 - Migration with production-like data
 - Load testing
 - User acceptance testing
 - Rollback testing
 
 ### 3. Production Rollout
+
 - Read-only mode during migration
 - Incremental rollout by project
 - Monitor error rates
@@ -389,12 +411,14 @@ COMMIT;
 ## Success Metrics
 
 ### Technical Metrics
+
 - [ ] Zero data loss
 - [ ] < 5 minute migration time
 - [ ] No increase in error rate
 - [ ] Performance maintained or improved
 
 ### Business Metrics
+
 - [ ] Existing projects unaffected
 - [ ] New projects onboard faster
 - [ ] Platform admins have needed tools
@@ -403,6 +427,7 @@ COMMIT;
 ## Migration Checklist
 
 ### Pre-Migration
+
 - [ ] Full database backup
 - [ ] Code deployment tested
 - [ ] Rollback plan verified
@@ -410,6 +435,7 @@ COMMIT;
 - [ ] Users notified (if needed)
 
 ### During Migration
+
 - [ ] Enable read-only mode
 - [ ] Run migration scripts
 - [ ] Verify data integrity
@@ -417,6 +443,7 @@ COMMIT;
 - [ ] Monitor error logs
 
 ### Post-Migration
+
 - [ ] Disable read-only mode
 - [ ] Monitor performance
 - [ ] Gather user feedback
