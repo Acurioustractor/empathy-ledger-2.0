@@ -8,7 +8,10 @@
 const https = require('https');
 
 const config = {
-  baseUrl: process.env.VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://empathy-ledger-2-0.vercel.app',
+  baseUrl:
+    process.env.VERCEL_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    'https://empathy-ledger-2-0.vercel.app',
   healthEndpoint: '/api/health',
   timeout: 15000, // 15 seconds
   maxResponseTime: 5000, // 5 seconds
@@ -16,37 +19,37 @@ const config = {
     { name: 'Home Page', path: '/' },
     { name: 'Health API', path: '/api/health' },
     { name: 'Supabase Health', path: '/api/health/supabase' },
-  ]
+  ],
 };
 
 async function measurePerformance(url) {
   return new Promise((resolve, reject) => {
     const startTime = Date.now();
-    
-    const request = https.get(url, { timeout: config.timeout }, (response) => {
+
+    const request = https.get(url, { timeout: config.timeout }, response => {
       const endTime = Date.now();
       const responseTime = endTime - startTime;
-      
+
       let data = '';
-      response.on('data', (chunk) => {
+      response.on('data', chunk => {
         data += chunk;
       });
-      
+
       response.on('end', () => {
         resolve({
           statusCode: response.statusCode,
           responseTime,
           contentLength: data.length,
-          success: response.statusCode >= 200 && response.statusCode < 400
+          success: response.statusCode >= 200 && response.statusCode < 400,
         });
       });
     });
 
-    request.on('error', (error) => {
+    request.on('error', error => {
       const endTime = Date.now();
       reject({
         error: error.message,
-        responseTime: endTime - startTime
+        responseTime: endTime - startTime,
       });
     });
 
@@ -54,7 +57,7 @@ async function measurePerformance(url) {
       request.destroy();
       reject({
         error: 'Request timeout',
-        responseTime: config.timeout
+        responseTime: config.timeout,
       });
     });
   });
@@ -70,33 +73,39 @@ async function runPerformanceChecks() {
 
   for (const check of config.performanceChecks) {
     const url = `${config.baseUrl}${check.path}`;
-    
+
     try {
       console.log(`⏱️  Testing ${check.name}...`);
       const result = await measurePerformance(url);
-      
+
       results.push({
         ...check,
-        ...result
+        ...result,
       });
 
       if (result.success) {
         successCount++;
         totalResponseTime += result.responseTime;
-        
-        const status = result.responseTime <= config.maxResponseTime ? '🟢' : '🟡';
-        console.log(`${status} ${check.name}: ${result.responseTime}ms (${result.statusCode})`);
+
+        const status =
+          result.responseTime <= config.maxResponseTime ? '🟢' : '🟡';
+        console.log(
+          `${status} ${check.name}: ${result.responseTime}ms (${result.statusCode})`
+        );
       } else {
-        console.log(`🔴 ${check.name}: Failed (${result.statusCode}) - ${result.responseTime}ms`);
+        console.log(
+          `🔴 ${check.name}: Failed (${result.statusCode}) - ${result.responseTime}ms`
+        );
       }
-      
     } catch (error) {
-      console.log(`💥 ${check.name}: Error - ${error.error} (${error.responseTime}ms)`);
+      console.log(
+        `💥 ${check.name}: Error - ${error.error} (${error.responseTime}ms)`
+      );
       results.push({
         ...check,
         success: false,
         error: error.error,
-        responseTime: error.responseTime
+        responseTime: error.responseTime,
       });
     }
   }
@@ -105,12 +114,14 @@ async function runPerformanceChecks() {
   console.log('\n📈 Performance Summary:');
   console.log(`Total endpoints tested: ${config.performanceChecks.length}`);
   console.log(`Successful responses: ${successCount}`);
-  console.log(`Success rate: ${Math.round((successCount / config.performanceChecks.length) * 100)}%`);
+  console.log(
+    `Success rate: ${Math.round((successCount / config.performanceChecks.length) * 100)}%`
+  );
 
   if (successCount > 0) {
     const avgResponseTime = Math.round(totalResponseTime / successCount);
     console.log(`Average response time: ${avgResponseTime}ms`);
-    
+
     if (avgResponseTime <= config.maxResponseTime) {
       console.log('🚀 Performance is excellent!');
     } else {
@@ -133,7 +144,9 @@ async function runPerformanceChecks() {
     console.log('\n🎉 All performance checks passed!');
     process.exit(0);
   } else if (successCount >= Math.ceil(config.performanceChecks.length * 0.7)) {
-    console.log('\n✅ Performance monitoring completed with acceptable results.');
+    console.log(
+      '\n✅ Performance monitoring completed with acceptable results.'
+    );
     process.exit(0);
   } else {
     console.log('\n🚨 Performance issues detected. Manual review recommended.');

@@ -8,7 +8,10 @@
 const https = require('https');
 
 const config = {
-  baseUrl: process.env.VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://empathy-ledger-2-0.vercel.app',
+  baseUrl:
+    process.env.VERCEL_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    'https://empathy-ledger-2-0.vercel.app',
   healthEndpoint: '/api/health',
   supabaseHealthEndpoint: '/api/health/supabase',
   maxErrors: 5,
@@ -17,26 +20,26 @@ const config = {
 
 async function makeRequest(url) {
   return new Promise((resolve, reject) => {
-    const request = https.get(url, { timeout: config.timeout }, (response) => {
+    const request = https.get(url, { timeout: config.timeout }, response => {
       let data = '';
-      
-      response.on('data', (chunk) => {
+
+      response.on('data', chunk => {
         data += chunk;
       });
-      
+
       response.on('end', () => {
         try {
           const jsonData = JSON.parse(data);
           resolve({
             statusCode: response.statusCode,
             data: jsonData,
-            headers: response.headers
+            headers: response.headers,
           });
         } catch (error) {
           resolve({
             statusCode: response.statusCode,
             data: data,
-            headers: response.headers
+            headers: response.headers,
           });
         }
       });
@@ -52,7 +55,7 @@ async function makeRequest(url) {
 
 async function checkHealth() {
   console.log('🔍 Starting post-deployment health check...');
-  
+
   const checks = [
     {
       name: 'Application Health',
@@ -71,7 +74,7 @@ async function checkHealth() {
     try {
       console.log(`📡 Checking ${check.name}...`);
       const result = await makeRequest(check.url);
-      
+
       if (result.statusCode === 200) {
         console.log(`✅ ${check.name}: OK`);
         results.push({ ...check, status: 'ok', response: result });
@@ -97,10 +100,14 @@ async function checkHealth() {
     console.log('🎉 All health checks passed! Deployment is healthy.');
     process.exit(0);
   } else if (errorCount <= config.maxErrors) {
-    console.log(`⚠️  Some checks failed (${errorCount}), but within acceptable limits.`);
+    console.log(
+      `⚠️  Some checks failed (${errorCount}), but within acceptable limits.`
+    );
     process.exit(0);
   } else {
-    console.log(`🚨 Critical: Too many failures (${errorCount}). Deployment may have issues.`);
+    console.log(
+      `🚨 Critical: Too many failures (${errorCount}). Deployment may have issues.`
+    );
     process.exit(1);
   }
 }
