@@ -1,10 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Only create client if environment variables are available
+export const supabase =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : null;
 
 // ===================================
 // EMPATHY LEDGER CMS DATA TYPES
@@ -88,6 +92,13 @@ export async function getStoriesByCategory(
   limit: number = 10
 ): Promise<Story[]> {
   try {
+    if (!supabase) {
+      console.warn('Supabase client not available - using mock data');
+      return mockStories
+        .filter(story => story.category === category)
+        .slice(0, limit);
+    }
+
     const { data, error } = await supabase
       .from('stories')
       .select('*')
@@ -249,6 +260,11 @@ export async function getPageContent(
   pageSlug: string
 ): Promise<ContentBlock[]> {
   try {
+    if (!supabase) {
+      console.warn('Supabase client not available - returning empty content');
+      return [];
+    }
+
     const { data, error } = await supabase
       .from('content_blocks')
       .select('*')
@@ -291,6 +307,11 @@ export async function updatePageContent(
 
 export async function getSiteMetrics(): Promise<SiteMetric[]> {
   try {
+    if (!supabase) {
+      console.warn('Supabase client not available - using mock data');
+      return mockSiteMetrics;
+    }
+
     const { data, error } = await supabase
       .from('site_metrics')
       .select('*')
@@ -311,6 +332,11 @@ export async function updateMetric(
   value: string | number
 ): Promise<boolean> {
   try {
+    if (!supabase) {
+      console.warn('Supabase client not available - cannot update metric');
+      return false;
+    }
+
     const { error } = await supabase
       .from('site_metrics')
       .update({
