@@ -222,19 +222,12 @@ jobs:
           name: build-files
 
       - name: 🗄️ Run database migrations (staging)
-        if: ${{ secrets.STAGING_DATABASE_URL && secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           npm ci
           npm run db:migrate
-      
-      - name: ⚠️ Skip database migrations (missing secrets)
-        if: ${{ !secrets.STAGING_DATABASE_URL || !secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
-        run: |
-          echo "⚠️ Skipping database migrations - staging secrets not configured"
-          echo "Please configure STAGING_DATABASE_URL and STAGING_SUPABASE_SERVICE_ROLE_KEY in repository secrets"
 
       - name: 🚀 Deploy to Vercel (staging)
         uses: amondnet/vercel-action@v25
