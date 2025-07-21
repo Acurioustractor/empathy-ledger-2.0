@@ -82,7 +82,7 @@ class QueryCache {
     let oldestKey: string | undefined;
     let oldestTime = new Date().getTime();
 
-    for (const [key, entry] of this.cache.entries()) {
+    for (const [key, entry] of Array.from(this.cache.entries())) {
       if (entry.timestamp.getTime() < oldestTime) {
         oldestTime = entry.timestamp.getTime();
         oldestKey = key;
