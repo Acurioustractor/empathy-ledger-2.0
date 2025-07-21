@@ -252,6 +252,15 @@ jobs:
           E2E_ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
         run: npm run test:smoke:staging
 
+      - name: 📢 Notify team of staging deployment
+        uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        with:
+          status: ${{ job.status }}
+          channel: '#dev-deployments'
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        if: always()
 
   deploy-production:
     name: 🌟 Deploy to Production
@@ -329,6 +338,15 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: 📢 Notify team of production deployment
+        uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        with:
+          status: ${{ job.status }}
+          channel: '#general'
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        if: always()
 
   # ==============================================
   # MIGRATION-SPECIFIC WORKFLOW
@@ -461,3 +479,12 @@ jobs:
           npm run monitor:errors
           npm run monitor:performance
 
+      - name: 🚨 Create alert if issues detected
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        with:
+          status: failure
+          channel: '#alerts'
+          text: '🚨 Post-deployment monitoring detected issues in production!'
