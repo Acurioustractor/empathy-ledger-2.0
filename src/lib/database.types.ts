@@ -1822,6 +1822,37 @@ export type Database = {
           avg_relevance: number;
         }[];
       };
+      get_community_insights: {
+        Args: {
+          target_community: string;
+          days_back?: number;
+        };
+        Returns: {
+          total_stories: number;
+          active_storytellers: number;
+          common_themes: string[];
+          story_locations: string[];
+          recent_activity_count: number;
+        }[];
+      };
+      refresh_analytics_views: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
+      analyze_table_performance: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          table_name: string;
+          row_count: number;
+          table_size: string;
+          index_size: string;
+          total_size: string;
+        }[];
+      };
+      archive_old_analysis: {
+        Args: { days_old?: number };
+        Returns: number;
+      };
     };
     Enums: {
       organization_type:
