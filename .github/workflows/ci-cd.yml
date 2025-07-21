@@ -252,6 +252,7 @@ jobs:
           E2E_ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
         run: npm run test:smoke:staging
 
+
   deploy-production:
     name: 🌟 Deploy to Production
     runs-on: ubuntu-latest
@@ -327,6 +328,7 @@ jobs:
             - Deployed at: $(date)
           draft: false
           prerelease: false
+
 
   # ==============================================
   # MIGRATION-SPECIFIC WORKFLOW
@@ -458,3 +460,4 @@ jobs:
           sleep 300  # Wait 5 minutes
           npm run monitor:errors
           npm run monitor:performance
+
