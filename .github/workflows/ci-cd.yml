@@ -10,7 +10,8 @@ on:
 permissions:
   contents: read
   security-events: write
-  actions: read
+  actions: write
+  id-token: write
 
 env:
   NODE_VERSION: '18'
@@ -221,12 +222,19 @@ jobs:
           name: build-files
 
       - name: 🗄️ Run database migrations (staging)
+        if: ${{ secrets.STAGING_DATABASE_URL && secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           npm ci
           npm run db:migrate
+      
+      - name: ⚠️ Skip database migrations (missing secrets)
+        if: ${{ !secrets.STAGING_DATABASE_URL || !secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "⚠️ Skipping database migrations - staging secrets not configured"
+          echo "Please configure STAGING_DATABASE_URL and STAGING_SUPABASE_SERVICE_ROLE_KEY in repository secrets"
 
       - name: 🚀 Deploy to Vercel (staging)
         uses: amondnet/vercel-action@v25
@@ -246,10 +254,11 @@ jobs:
 
       - name: 📢 Notify team of staging deployment
         uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
         with:
           status: ${{ job.status }}
           channel: '#dev-deployments'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
           fields: repo,message,commit,author,action,eventName,ref,workflow
         if: always()
 
@@ -331,10 +340,11 @@ jobs:
 
       - name: 📢 Notify team of production deployment
         uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
         with:
           status: ${{ job.status }}
           channel: '#general'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
           fields: repo,message,commit,author,action,eventName,ref,workflow
         if: always()
 
@@ -424,22 +434,29 @@ jobs:
     steps:
       - name: 🗑️ Clean up artifacts
         uses: actions/github-script@v6
+        continue-on-error: true
         with:
           script: |
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.runId,
-            });
+            try {
+              const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: context.runId,
+              });
 
-            for (const artifact of artifacts.data.artifacts) {
-              if (artifact.name === 'build-files') {
-                await github.rest.actions.deleteArtifact({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  artifact_id: artifact.id,
-                });
+              for (const artifact of artifacts.data.artifacts) {
+                if (artifact.name === 'build-files') {
+                  console.log(`Attempting to delete artifact: ${artifact.name}`);
+                  await github.rest.actions.deleteArtifact({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    artifact_id: artifact.id,
+                  });
+                  console.log(`Successfully deleted artifact: ${artifact.name}`);
+                }
               }
+            } catch (error) {
+              console.log(`Cleanup failed (non-critical): ${error.message}`);
             }
 
   post-deployment-monitoring:
@@ -465,8 +482,9 @@ jobs:
       - name: 🚨 Create alert if issues detected
         if: failure()
         uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
         with:
           status: failure
           channel: '#alerts'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
           text: '🚨 Post-deployment monitoring detected issues in production!'
