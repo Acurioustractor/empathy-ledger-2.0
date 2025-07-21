@@ -140,6 +140,10 @@ jobs:
           npm run db:setup:test
           npm run db:migrate:test
 
+      - name: 🎭 Install Playwright browsers
+        if: matrix.test-type == 'e2e'
+        run: npx playwright install --with-deps
+
       - name: 🧪 Run ${{ matrix.test-type }} tests
         env:
           NODE_ENV: test
