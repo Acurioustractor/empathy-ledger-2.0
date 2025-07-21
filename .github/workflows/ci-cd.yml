@@ -320,22 +320,24 @@ jobs:
               console.log(`Cleanup failed (non-critical): ${error.message}`);
             }
 
-  post-deployment-monitoring:
-    name: 📊 Post-Deployment Monitoring
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📊 Monitor application health
-        env:
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        run: |
-          sleep 300  # Wait 5 minutes
-          npm run monitor:errors
-          npm run monitor:performance
+  # post-deployment-monitoring:
+  #   name: 📊 Post-Deployment Monitoring
+  #   runs-on: ubuntu-latest
+  #   needs: [build]
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #
+  #   steps:
+  #     - name: 📥 Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: 📊 Monitor application health
+  #       env:
+  #         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  #         SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  #         SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+  #       run: |
+  #         sleep 300  # Wait 5 minutes
+  #         npm run monitor:errors
+  #         npm run monitor:performance
+  #
+  # NOTE: Monitoring disabled until actual deployment is configured
