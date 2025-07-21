@@ -32,6 +32,10 @@ interface ClientConfig {
   timeout?: number;
   circuitBreakerThreshold?: number;
   healthCheckInterval?: number;
+  connectionPoolSize?: number;
+  maxConnectionAge?: number;
+  enableCompression?: boolean;
+  enableKeepAlive?: boolean;
 }
 
 interface ConnectionMetrics {
