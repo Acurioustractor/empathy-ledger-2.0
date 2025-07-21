@@ -223,12 +223,12 @@ jobs:
 
       - name: 🗄️ Run database migrations (staging)
         env:
-          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.STAGING_NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          if [ -z "$DATABASE_URL" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
             echo "⚠️ Skipping database migrations - staging secrets not configured"
-            echo "Please configure STAGING_DATABASE_URL and STAGING_SUPABASE_SERVICE_ROLE_KEY"
+            echo "Please configure STAGING_NEXT_PUBLIC_SUPABASE_URL and STAGING_SUPABASE_SERVICE_ROLE_KEY"
           else
             echo "✅ Running database migrations with configured secrets"
             npm ci
