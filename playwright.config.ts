@@ -70,7 +70,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: process.env.CI ? 'npm run build && PORT=3001 npm run start' : 'PORT=3001 npm run dev',
+    command: process.env.CI
+      ? 'npm run build && PORT=3001 npm run start'
+      : 'PORT=3001 npm run dev',
     url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
