@@ -236,6 +236,7 @@ jobs:
           fi
 
       - name: 🚀 Deploy to Vercel (staging)
+        if: false  # Temporarily disabled - need to configure Vercel secrets
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -286,6 +287,7 @@ jobs:
           npm run db:migrate:production
 
       - name: 🚀 Deploy to Vercel (production)
+        if: false  # Temporarily disabled - need to configure Vercel secrets
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
