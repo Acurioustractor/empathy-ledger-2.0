@@ -1,14 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from './supabase-client';
 
-// Initialize Supabase client conditionally
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Get shared Supabase client instance
+let supabase: any = null;
 
-// Only create client if environment variables are available
-export const supabase =
-  supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey)
-    : null;
+async function getSupabase() {
+  if (!supabase) {
+    supabase = await createClient();
+  }
+  return supabase;
+}
 
 // Media types
 export interface MediaItem {
@@ -55,6 +55,7 @@ export async function getMediaByCategory(
   category: string,
   limit: number = 10
 ): Promise<MediaItem[]> {
+  const supabase = await getSupabase();
   if (!supabase) {
     console.warn('Supabase client not available - using placeholder data');
     return [];
@@ -79,6 +80,7 @@ export async function getMediaByCategory(
 
 // Get featured media
 export async function getFeaturedMedia(): Promise<MediaItem[]> {
+  const supabase = await getSupabase();
   if (!supabase) {
     console.warn('Supabase client not available - using placeholder data');
     return [];
@@ -105,6 +107,7 @@ export async function uploadMedia(
   file: File,
   metadata: Partial<MediaItem>
 ): Promise<MediaItem | null> {
+  const supabase = await getSupabase();
   if (!supabase) {
     console.error('Supabase client not available - cannot upload media');
     return null;

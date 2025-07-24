@@ -43,23 +43,23 @@ const Button: React.FC<ButtonProps> = ({
 
   const variantClasses = {
     primary:
-      'bg-gray-900 text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2',
+      'bg-[var(--primary)] text-white hover:bg-[var(--primary)]/90 focus:ring-2 focus:ring-[var(--primary)]/50 focus:ring-offset-2',
     secondary:
-      'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2',
-    cta: 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 hover:scale-105',
+      'bg-[var(--secondary)] text-white hover:bg-[var(--secondary)]/90 focus:ring-2 focus:ring-[var(--secondary)]/50 focus:ring-offset-2',
+    cta: 'bg-[var(--accent)] text-[var(--foreground)] hover:bg-[var(--accent)]/90 focus:ring-2 focus:ring-[var(--accent)]/50 focus:ring-offset-2 hover:scale-105',
     ghost:
-      'text-gray-700 hover:text-gray-900 hover:bg-gray-50 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2',
+      'text-[var(--foreground)] hover:text-[var(--primary)] hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--primary)]/50 focus:ring-offset-2',
     danger:
       'bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-400 focus:ring-offset-2',
     'outline-white':
-      'border border-white text-white hover:bg-white hover:text-gray-900 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent',
+      'border border-white text-white hover:bg-white hover:text-[var(--foreground)] focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent',
   };
 
   const sizeClasses = {
-    sm: 'px-4 py-2 text-sm rounded-full',
-    md: 'px-6 py-2.5 text-base rounded-full',
-    lg: 'px-8 py-3 text-lg rounded-full',
-    xl: 'px-10 py-4 text-xl rounded-full',
+    sm: 'px-4 py-2 text-sm rounded-[var(--radius-button)]',
+    md: 'px-6 py-2.5 text-base rounded-[var(--radius-button)]',
+    lg: 'px-8 py-3 text-lg rounded-[var(--radius-button)]',
+    xl: 'px-10 py-4 text-xl rounded-[var(--radius-button)]',
   };
 
   const widthClass = fullWidth ? 'w-full' : '';

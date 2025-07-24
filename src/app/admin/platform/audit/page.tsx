@@ -3,6 +3,8 @@ import { AuditLogTable } from '@/components/platform/audit-log-table';
 import { AuditLogFilters } from '@/components/platform/audit-log-filters';
 import { AuditLogStats } from '@/components/platform/audit-log-stats';
 
+export const dynamic = 'force-dynamic';
+
 interface SearchParams {
   action?: string;
   target_type?: string;
@@ -15,19 +17,20 @@ interface SearchParams {
 export default async function AuditLogPage({
   searchParams,
 }: {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 }) {
-  const page = parseInt(searchParams.page || '1');
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
   const limit = 50;
   const offset = (page - 1) * limit;
 
   // Build filter conditions
   const filters = {
-    action: searchParams.action,
-    target_type: searchParams.target_type,
-    target_id: searchParams.target_id,
-    start_date: searchParams.start_date,
-    end_date: searchParams.end_date,
+    action: params.action,
+    target_type: params.target_type,
+    target_id: params.target_id,
+    start_date: params.start_date,
+    end_date: params.end_date,
     limit,
     offset,
   };

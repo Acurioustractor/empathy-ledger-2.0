@@ -10,8 +10,9 @@ import { createServerClient } from '@/lib/supabase-server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -30,7 +31,7 @@ export async function GET(
     const { data: membership } = await supabase
       .from('project_members')
       .select('role, permissions')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -60,7 +61,7 @@ export async function GET(
         )
       `
       )
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .order('generated_at', { ascending: false })
       .limit(limit);
 
@@ -116,7 +117,7 @@ export async function GET(
         transparency: 'Communities can see exactly how insights are generated',
       },
       project_context: {
-        project_id: params.projectId,
+        project_id: projectId,
         insight_generation:
           'Asset-based analysis identifying community strengths first',
         cultural_framework: 'Community-defined protocols guide all analysis',
@@ -132,8 +133,9 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -152,7 +154,7 @@ export async function POST(
     const { data: membership } = await supabase
       .from('project_members')
       .select('role, permissions')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -178,7 +180,7 @@ export async function POST(
         .from('stories')
         .select('id, consent_settings, project_id')
         .in('id', insight_data.supporting_stories)
-        .eq('project_id', params.projectId);
+        .eq('project_id', projectId);
 
       // Verify all stories have consent for community sharing/insights
       const unconsented_stories =
@@ -206,13 +208,13 @@ export async function POST(
     const { data: project } = await supabase
       .from('projects')
       .select('organization_name, sovereignty_framework')
-      .eq('id', params.projectId)
+      .eq('id', projectId)
       .single();
 
     // Create sovereignty-compliant insight
     const sovereignty_compliant_insight = {
       ...insight_data,
-      project_id: params.projectId,
+      project_id: projectId,
       community_id: project?.organization_name || 'Unknown Community',
       generated_at: new Date().toISOString(),
       community_validated: false, // Requires community validation

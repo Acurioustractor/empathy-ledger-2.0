@@ -84,3 +84,15 @@ ehthumbs.db
 # Backup and recovery files
 restore-points/
 snapshots/
+
+# Development and testing files
+scripts/archive/
+scripts/utilities/temp-*
+scripts/testing/
+test-results/
+playwright-report/
+
+# Temporary documentation
+*TEMP*.md
+*GUIDE*.md.bak
+\n# Secure environment files\n.env.secure\n.env.local\n.env.*.local\n

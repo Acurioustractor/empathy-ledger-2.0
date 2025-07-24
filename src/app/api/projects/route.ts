@@ -1,4 +1,3 @@
-// @ts-nocheck - Project schema fields need proper type generation
 /**
  * Main Projects API - Organization Management
  *
@@ -12,6 +11,31 @@ import {
   projectOperations,
   CreateProjectRequest,
 } from '@/lib/project-operations';
+
+// Helper function to calculate stories submitted this month
+async function calculateStoriesThisMonth(projectId: string): Promise<number> {
+  try {
+    const supabase = await createServerClient();
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    const { count, error } = await supabase
+      .from('stories')
+      .select('*', { count: 'exact', head: true })
+      .eq('project_id', projectId)
+      .gte('created_at', startOfMonth.toISOString());
+    
+    if (error) {
+      console.error('Error calculating stories this month:', error);
+      return 0;
+    }
+    
+    return count || 0;
+  } catch (error) {
+    console.error('Error calculating stories this month:', error);
+    return 0;
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -70,27 +94,32 @@ export async function GET(request: NextRequest) {
     }
 
     // Add sovereignty metadata and role context
-    const enriched_projects =
-      projects?.map(project => ({
-        ...project,
-        user_role: project.project_members[0]?.role,
-        sovereignty_status: {
-          compliance_score: project.sovereignty_compliance_score,
-          status:
-            project.sovereignty_compliance_score >= 90
-              ? 'excellent'
-              : project.sovereignty_compliance_score >= 70
-                ? 'good'
-                : 'needs_attention',
-          community_controlled: true,
-          data_sovereignty_maintained: true,
-        },
-        project_health: {
-          stories_this_month: 0, // TODO: Calculate from recent submissions
-          active_storytellers: project.total_storytellers,
-          engagement_trend: 'stable',
-        },
-      })) || [];
+    const enriched_projects = [];
+    if (projects) {
+      for (const project of projects) {
+        const stories_this_month = await calculateStoriesThisMonth(project.id);
+        enriched_projects.push({
+          ...project,
+          user_role: project.project_members[0]?.role,
+          sovereignty_status: {
+            compliance_score: project.sovereignty_compliance_score,
+            status:
+              project.sovereignty_compliance_score >= 90
+                ? 'excellent'
+                : project.sovereignty_compliance_score >= 70
+                  ? 'good'
+                  : 'needs_attention',
+            community_controlled: true,
+            data_sovereignty_maintained: true,
+          },
+          project_health: {
+            stories_this_month,
+            active_storytellers: project.total_storytellers,
+            engagement_trend: 'stable',
+          },
+        });
+      }
+    }
 
     return NextResponse.json({
       projects: enriched_projects,
@@ -233,7 +262,7 @@ export async function POST(request: NextRequest) {
         project_endpoint: `/api/projects/${project.id}`,
         stories_endpoint: `/api/projects/${project.id}/stories`,
         insights_endpoint: `/api/projects/${project.id}/insights`,
-        public_api: project.api_configuration?.public_api_enabled || false,
+        public_api: false, // TODO: Implement API configuration
       },
     });
   } catch (error: any) {

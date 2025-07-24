@@ -11,8 +11,9 @@ import { projectOperations } from '@/lib/project-operations';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -42,7 +43,7 @@ export async function GET(
 
     // Get project stories with sovereignty filtering
     const { stories, total_count, error } =
-      await projectOperations.getProjectStories(params.projectId, user.id, {
+      await projectOperations.getProjectStories(projectId, user.id, {
         privacy_levels,
         limit,
         offset,
@@ -100,8 +101,9 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -120,7 +122,7 @@ export async function POST(
     const { data: membership } = await supabase
       .from('project_members')
       .select('role, permissions')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -150,13 +152,13 @@ export async function POST(
     const { data: project } = await supabase
       .from('projects')
       .select('sovereignty_framework, cultural_protocols')
-      .eq('id', params.projectId)
+      .eq('id', projectId)
       .single();
 
     // Apply project-specific sovereignty defaults
     const sovereignty_compliant_story = {
       ...story_data,
-      project_id: params.projectId,
+      project_id: projectId,
       storyteller_id: user.id,
       consent_settings: {
         // Ensure minimum consent requirements

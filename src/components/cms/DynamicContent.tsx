@@ -161,7 +161,7 @@ export function LiveStoryCollection({
               "{story.content.substring(0, 200)}..."
             </p>
             <footer className="text-sm text-gray-500 font-light">
-              — {story.title}, {story.category}
+              — {story.title}, {'story'}
             </footer>
           </blockquote>
         ))}
@@ -209,7 +209,7 @@ export function LiveStoryCollection({
         >
           <div className="flex justify-between items-start mb-3">
             <span className="text-xs text-gray-500 font-light uppercase tracking-wide">
-              {story.category}
+              {'story'}
             </span>
             {story.sentiment_score && (
               <div

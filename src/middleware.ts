@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Handle protected routes
-    const protectedPaths = ['/submit', '/stories/edit'];
+    const protectedPaths = ['/stories/edit'];
     const isProtectedPath = protectedPaths.some(path =>
       request.nextUrl.pathname.startsWith(path)
     );
@@ -54,5 +54,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/auth/:path*', '/submit/:path*', '/stories/edit/:path*'],
+  matcher: ['/auth/:path*', '/stories/edit/:path*'],
 };

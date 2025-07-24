@@ -193,7 +193,7 @@ export default async function HomePage() {
                     <div className="storyteller-info">
                       <h3 className="storyteller-name">{person.full_name}</h3>
                       <p className="storyteller-community">
-                        {person.organization?.name || person.location?.name || 'Community Member'}
+                        {(person.organization as any)?.name || (person.location as any)?.name || 'Community Member'}
                       </p>
                     </div>
                   </div>

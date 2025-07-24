@@ -5,6 +5,8 @@ import { SystemHealth } from '@/components/platform/system-health';
 import { QuickActions } from '@/components/platform/quick-actions';
 import { RecentActivity } from '@/components/platform/recent-activity';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PlatformAdminDashboard() {
   // Initialize with empty data for build-time
   let platformStats = null;
@@ -15,16 +17,25 @@ export default async function PlatformAdminDashboard() {
     const supabase = await createServerClient();
 
     // Get platform metrics
-    const [{ data: stats }, { data: projects }, { data: activity }] =
-      await Promise.all([
-        // Basic platform statistics (may not exist during build)
-        supabase.rpc('get_platform_stats').catch(() => ({ data: null })),
+    let stats = null;
+    let projects: any[] = [];
+    let activity: any[] = [];
 
-        // Recent projects
-        supabase
-          .from('projects')
-          .select(
-            `
+    // Basic platform statistics (may not exist during build)
+    try {
+      const { data } = await supabase.rpc('get_platform_stats');
+      stats = data;
+    } catch (error) {
+      console.log('Platform stats RPC not available');
+      stats = null;
+    }
+
+    // Recent projects
+    try {
+      const { data } = await supabase
+        .from('projects')
+        .select(
+          `
           id,
           name,
           subscription_tier,
@@ -32,16 +43,22 @@ export default async function PlatformAdminDashboard() {
           created_at,
           updated_at
         `
-          )
-          .order('created_at', { ascending: false })
-          .limit(5)
-          .catch(() => ({ data: [] })),
+        )
+        .order('created_at', { ascending: false })
+        .limit(5);
+      
+      projects = data || [];
+    } catch (error) {
+      console.log('Error fetching projects:', error);
+      projects = [];
+    }
 
-        // Recent audit activity
-        supabase
-          .from('platform_audit_log')
-          .select(
-            `
+    // Recent audit activity
+    try {
+      const { data } = await supabase
+        .from('platform_audit_log')
+        .select(
+          `
           id,
           action,
           target_type,
@@ -49,11 +66,15 @@ export default async function PlatformAdminDashboard() {
           created_at,
           actor:profiles(display_name, email)
         `
-          )
-          .order('created_at', { ascending: false })
-          .limit(10)
-          .catch(() => ({ data: [] })),
-      ]);
+        )
+        .order('created_at', { ascending: false })
+        .limit(10);
+      
+      activity = data || [];
+    } catch (error) {
+      console.log('Error fetching audit log:', error);
+      activity = [];
+    }
 
     platformStats = stats;
     recentProjects = projects || [];

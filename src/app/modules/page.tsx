@@ -1,280 +1,578 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import PlatformModules from '@/components/modules/PlatformModules';
-import MediaDisplay from '@/components/ui/MediaDisplay';
-import { placeholderImages } from '@/lib/supabase-media';
+
+// Module data with consistent icons and descriptions
+const modules = [
+  {
+    id: 'story-collection',
+    name: 'Story Collection',
+    category: 'Core',
+    description: 'Secure, multi-format story submission with complete privacy control',
+    features: [
+      'Text, audio, video, and image stories',
+      'End-to-end encryption',
+      'Flexible consent management',
+      'Cultural protocol support'
+    ],
+    icon: '📝',
+    color: 'blue',
+    href: '/modules/story-collection'
+  },
+  {
+    id: 'privacy-vault',
+    name: 'Privacy Vault',
+    category: 'Core',
+    description: 'Advanced privacy controls ensuring complete data sovereignty',
+    features: [
+      'Granular consent settings',
+      'Anonymous story options',
+      'Data portability',
+      'Right to deletion'
+    ],
+    icon: '🔐',
+    color: 'purple',
+    href: '/modules/privacy-vault'
+  },
+  {
+    id: 'insight-engine',
+    name: 'Insight Engine',
+    category: 'Analytics',
+    description: 'AI-powered analysis that respects privacy and community values',
+    features: [
+      'Theme extraction',
+      'Sentiment analysis',
+      'Pattern recognition',
+      'Impact measurement'
+    ],
+    icon: '🧠',
+    color: 'green',
+    href: '/modules/insight-engine'
+  },
+  {
+    id: 'community-dashboard',
+    name: 'Community Dashboard',
+    category: 'Engagement',
+    description: 'Real-time community health and engagement metrics',
+    features: [
+      'Story submission trends',
+      'Engagement analytics',
+      'Theme evolution tracking',
+      'Community pulse'
+    ],
+    icon: '📊',
+    color: 'amber',
+    href: '/modules/community-dashboard'
+  },
+  {
+    id: 'story-studio',
+    name: 'Story Studio',
+    category: 'Creation',
+    description: 'Professional tools for story development and curation',
+    features: [
+      'Rich media editing',
+      'Collaborative storytelling',
+      'Template library',
+      'Translation support'
+    ],
+    icon: '🎬',
+    color: 'red',
+    href: '/modules/story-studio'
+  },
+  {
+    id: 'impact-tracker',
+    name: 'Impact Tracker',
+    category: 'Measurement',
+    description: 'Track real-world change driven by community stories',
+    features: [
+      'Policy influence metrics',
+      'Service improvement tracking',
+      'Community outcome measurement',
+      'ROI calculations'
+    ],
+    icon: '📈',
+    color: 'teal',
+    href: '/modules/impact-tracker'
+  },
+  {
+    id: 'cultural-protocols',
+    name: 'Cultural Protocols',
+    category: 'Governance',
+    description: 'Implement community-specific rules and cultural requirements',
+    features: [
+      'Custom approval workflows',
+      'Elder review processes',
+      'Sacred story protection',
+      'Language preservation'
+    ],
+    icon: '🌍',
+    color: 'indigo',
+    href: '/modules/cultural-protocols'
+  },
+  {
+    id: 'value-distribution',
+    name: 'Value Distribution',
+    category: 'Economics',
+    description: 'Fair compensation when stories create economic value',
+    features: [
+      'Smart contract automation',
+      'Transparent revenue sharing',
+      'Community fund allocation',
+      'Impact-based rewards'
+    ],
+    icon: '💎',
+    color: 'pink',
+    href: '/modules/value-distribution'
+  },
+  {
+    id: 'research-portal',
+    name: 'Research Portal',
+    category: 'Knowledge',
+    description: 'Ethical research access with community oversight',
+    features: [
+      'Anonymized data sets',
+      'Ethics review board',
+      'Citation tracking',
+      'Knowledge commons'
+    ],
+    icon: '🔬',
+    color: 'cyan',
+    href: '/modules/research-portal'
+  }
+];
+
+const categories = ['Core', 'Analytics', 'Engagement', 'Creation', 'Measurement', 'Governance', 'Economics', 'Knowledge'];
 
 export default function ModulesPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section - Clean and Minimal */}
-      <section className="min-h-[70vh] flex items-center justify-center px-8 md:px-12">
-        <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extralight text-gray-900 mb-8 leading-[1.1]">
-            Platform modules.
-          </h1>
-          <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto leading-relaxed">
-            Building blocks for community storytelling and privacy-preserving
-            insights.
-          </p>
+    <div>
+      {/* Hero Section */}
+      <section className="hero-constellation">
+        <div className="container">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="hero-badge">PLATFORM MODULES</div>
+            <h1 className="hero-title">
+              Everything You Need to Transform Stories into Impact
+            </h1>
+            <p className="hero-description">
+              A comprehensive suite of modules designed for communities to collect, protect, 
+              analyse, and leverage their collective wisdom while maintaining complete sovereignty.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Platform Overview - Clean Principles */}
-      <section className="py-32 md:py-40 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              Building blocks for empowerment
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              Each module designed with privacy, community sovereignty, and
-              ethical data practices at its core.
-            </p>
+      {/* Module Categories Overview */}
+      <section className="section values-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Complete Platform Ecosystem</h2>
+            <p>Each module works independently or as part of an integrated system</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12">
+          {/* Quick Stats */}
+          <div className="grid-3" style={{marginBottom: 'var(--space-3xl)'}}>
             <div className="text-center">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <svg
-                  className="w-10 h-10 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Modular
-              </h3>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Use individual modules or combine them to create custom
-                solutions. Each module is independent.
-              </p>
+              <h3 style={{fontSize: '48px', marginBottom: 'var(--space-sm)'}}>9</h3>
+              <p>Core Modules</p>
             </div>
-
             <div className="text-center">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <svg
-                  className="w-10 h-10 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Private
-              </h3>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Privacy protection built from the ground up, ensuring individual
-                stories remain secure and anonymous.
-              </p>
+              <h3 style={{fontSize: '48px', marginBottom: 'var(--space-sm)'}}>100%</h3>
+              <p>Privacy Compliant</p>
             </div>
-
             <div className="text-center">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <svg
-                  className="w-10 h-10 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Community-led
-              </h3>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Communities control how modules are configured and used,
-                ensuring technology serves their needs.
-              </p>
+              <h3 style={{fontSize: '48px', marginBottom: 'var(--space-sm)'}}>∞</h3>
+              <p>Customization Options</p>
             </div>
           </div>
+
+          {/* Module Grid */}
+          <div className="modules-grid">
+            {modules.map((module) => (
+              <Link key={module.id} href={module.href} className="module-card-link">
+                <div className={`module-card module-${module.color}`}>
+                  <div className="module-header">
+                    <div className="module-icon">{module.icon}</div>
+                    <div className="module-category">{module.category}</div>
+                  </div>
+                  
+                  <h3 className="module-name">{module.name}</h3>
+                  <p className="module-description">{module.description}</p>
+                  
+                  <ul className="module-features">
+                    {module.features.slice(0, 3).map((feature, index) => (
+                      <li key={index}>{feature}</li>
+                    ))}
+                  </ul>
+                  
+                  <div className="module-action">
+                    <span className="learn-more">Learn More →</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Module Categories */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Explore All Platform Modules
-            </h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              From core storytelling tools to advanced analytics, our modules
-              provide everything needed for privacy-preserving community
-              insights.
-            </p>
+      {/* Integration Section */}
+      <section className="section storytellers-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Seamless Integration</h2>
+            <p>All modules work together to create a unified platform</p>
           </div>
 
-          <PlatformModules showCategories={true} layout="grid" />
-        </div>
-      </section>
-
-      {/* Module Showcase */}
-      <section className="py-32 md:py-40">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              Available modules
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              Comprehensive platform modules
-            </p>
-          </div>
-
-          <PlatformModules />
-        </div>
-      </section>
-
-      {/* Integration Options */}
-      <section className="py-32 md:py-40 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              Deployment options
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              Choose how you want to implement modules in your organization
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-10 rounded-3xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-8">
-                <svg
-                  className="w-8 h-8 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-                  />
-                </svg>
+          <div className="integration-diagram">
+            <div className="integration-flow">
+              <div className="flow-step">
+                <div className="step-icon">📝</div>
+                <h4>Collect</h4>
+                <p>Stories gathered with consent</p>
               </div>
-              <h3 className="text-2xl font-normal text-gray-900 mb-4">
-                Cloud Hosted
-              </h3>
-              <p className="text-gray-600 font-light mb-8 leading-relaxed">
-                Fully managed platform on Australian servers with automatic
-                updates.
-              </p>
-              <Link href="/contact" className="no-underline">
-                <button className="w-full bg-gray-900 text-white px-6 py-3 rounded-full text-base font-light hover:bg-gray-800 transition-all duration-200">
-                  Get Started
-                </button>
+              <div className="flow-arrow">→</div>
+              <div className="flow-step">
+                <div className="step-icon">🔐</div>
+                <h4>Protect</h4>
+                <p>Privacy and sovereignty ensured</p>
+              </div>
+              <div className="flow-arrow">→</div>
+              <div className="flow-step">
+                <div className="step-icon">🧠</div>
+                <h4>Analyze</h4>
+                <p>Insights extracted ethically</p>
+              </div>
+              <div className="flow-arrow">→</div>
+              <div className="flow-step">
+                <div className="step-icon">📈</div>
+                <h4>Impact</h4>
+                <p>Real-world change measured</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Deployment Options */}
+      <section className="section values-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Choose Your Deployment</h2>
+            <p>Flexible options to match your community's needs</p>
+          </div>
+
+          <div className="grid" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))'}}>
+            <div className="deployment-card">
+              <div className="deployment-icon">☁️</div>
+              <h3>Cloud Hosted</h3>
+              <p>We handle everything while you maintain control</p>
+              <ul className="deployment-features">
+                <li>✓ Zero maintenance required</li>
+                <li>✓ Automatic updates</li>
+                <li>✓ 99.9% uptime SLA</li>
+                <li>✓ Full data portability</li>
+                <li>✓ 24/7 support</li>
+              </ul>
+              <Link href="/contact?deployment=cloud" className="btn btn-primary" style={{marginTop: 'var(--space-lg)'}}>
+                Start with Cloud
               </Link>
             </div>
-
-            <div className="bg-white p-10 rounded-3xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-8">
-                <svg
-                  className="w-8 h-8 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-normal text-gray-900 mb-4">
-                Self-Hosted
-              </h3>
-              <p className="text-gray-600 font-light mb-8 leading-relaxed">
-                Deploy on your infrastructure with complete data control.
-              </p>
-              <Link href="/docs/self-hosting" className="no-underline">
-                <button className="w-full border border-gray-300 text-gray-700 px-6 py-3 rounded-full text-base font-light hover:bg-gray-50 transition-all duration-200">
-                  Documentation
-                </button>
-              </Link>
-            </div>
-
-            <div className="bg-white p-10 rounded-3xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-8">
-                <svg
-                  className="w-8 h-8 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-normal text-gray-900 mb-4">
-                API Integration
-              </h3>
-              <p className="text-gray-600 font-light mb-8 leading-relaxed">
-                Integrate modules into existing systems via comprehensive APIs.
-              </p>
-              <Link href="/docs/api" className="no-underline">
-                <button className="w-full border border-gray-300 text-gray-700 px-6 py-3 rounded-full text-base font-light hover:bg-gray-50 transition-all duration-200">
-                  API Docs
-                </button>
+            
+            <div className="deployment-card">
+              <div className="deployment-icon">🏠</div>
+              <h3>Self-Hosted</h3>
+              <p>Complete control on your infrastructure</p>
+              <ul className="deployment-features">
+                <li>✓ Run on your servers</li>
+                <li>✓ Custom integrations</li>
+                <li>✓ Air-gapped options</li>
+                <li>✓ Full source code access</li>
+                <li>✓ Enterprise support</li>
+              </ul>
+              <Link href="/contact?deployment=self-hosted" className="btn btn-secondary" style={{marginTop: 'var(--space-lg)'}}>
+                Explore Self-Hosting
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Developer Resources - Simple CTA */}
-      <section className="py-32 md:py-40">
-        <div className="max-w-4xl mx-auto px-8 md:px-12 text-center">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-gray-900 mb-10 leading-[1.1]">
-            Ready to build with
-            <br />
-            our modules?
-          </h2>
-          <p className="text-xl text-gray-600 mb-16 max-w-2xl mx-auto font-light">
-            Get started with comprehensive documentation and community support.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link href="/docs" className="no-underline">
-              <button className="bg-gray-900 text-white px-10 py-4 rounded-full text-base font-light hover:bg-gray-800 transition-all duration-200 hover:scale-[1.02]">
-                Browse Documentation
-              </button>
-            </Link>
-            <Link href="/contact" className="no-underline">
-              <button className="text-gray-700 px-10 py-4 rounded-full text-base font-light hover:bg-gray-50 transition-all duration-200">
-                Get Support
-              </button>
-            </Link>
+      {/* CTA Section */}
+      <section className="section cta-section">
+        <div className="container">
+          <div className="cta-content">
+            <h2>Ready to Transform Your Community's Stories?</h2>
+            <p>Start with one module or deploy the complete platform</p>
+            <div className="flex justify-center gap-4">
+              <Link href="/contact" className="btn btn-primary btn-large">
+                Schedule Demo
+              </Link>
+              <Link href="/case-studies" className="btn btn-secondary btn-large">
+                See Success Stories
+              </Link>
+            </div>
           </div>
         </div>
       </section>
+
+      <style jsx>{`
+        .modules-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          gap: var(--space-xl);
+          margin-top: var(--space-2xl);
+        }
+
+        .module-card-link {
+          text-decoration: none;
+          display: block;
+          height: 100%;
+        }
+
+        .module-card-link * {
+          text-decoration: none;
+        }
+
+        .module-card {
+          background: var(--color-white);
+          border: 2px solid var(--color-gray-light);
+          border-radius: 16px;
+          padding: var(--space-xl);
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .module-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: var(--color-gray-light);
+          transition: all 0.3s ease;
+        }
+
+        .module-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+          border-color: transparent;
+        }
+
+        .module-blue::before,
+        .module-blue:hover { border-color: var(--color-brand-blue); }
+        .module-blue::before { background: var(--color-brand-blue); }
+
+        .module-purple::before,
+        .module-purple:hover { border-color: #8b5cf6; }
+        .module-purple::before { background: #8b5cf6; }
+
+        .module-green::before,
+        .module-green:hover { border-color: var(--color-brand-green); }
+        .module-green::before { background: var(--color-brand-green); }
+
+        .module-amber::before,
+        .module-amber:hover { border-color: #f59e0b; }
+        .module-amber::before { background: #f59e0b; }
+
+        .module-red::before,
+        .module-red:hover { border-color: var(--color-brand-red); }
+        .module-red::before { background: var(--color-brand-red); }
+
+        .module-teal::before,
+        .module-teal:hover { border-color: #14b8a6; }
+        .module-teal::before { background: #14b8a6; }
+
+        .module-indigo::before,
+        .module-indigo:hover { border-color: #6366f1; }
+        .module-indigo::before { background: #6366f1; }
+
+        .module-pink::before,
+        .module-pink:hover { border-color: #ec4899; }
+        .module-pink::before { background: #ec4899; }
+
+        .module-cyan::before,
+        .module-cyan:hover { border-color: #06b6d4; }
+        .module-cyan::before { background: #06b6d4; }
+
+        .module-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: var(--space-lg);
+        }
+
+        .module-icon {
+          font-size: 48px;
+          line-height: 1;
+        }
+
+        .module-category {
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: var(--color-gray);
+          background: var(--color-gray-lighter);
+          padding: 4px 12px;
+          border-radius: 20px;
+        }
+
+        .module-name {
+          font-size: 24px;
+          font-weight: 600;
+          margin-bottom: var(--space-sm);
+          color: var(--color-ink);
+        }
+
+        .module-description {
+          color: var(--color-gray);
+          line-height: 1.6;
+          margin-bottom: var(--space-lg);
+        }
+
+        .module-features {
+          list-style: none;
+          padding: 0;
+          margin: 0 0 var(--space-lg) 0;
+          flex: 1;
+        }
+
+        .module-features li {
+          position: relative;
+          padding-left: var(--space-lg);
+          margin-bottom: var(--space-sm);
+          color: var(--color-ink-light);
+          font-size: 14px;
+        }
+
+        .module-features li::before {
+          content: '✓';
+          position: absolute;
+          left: 0;
+          color: var(--color-brand-green);
+          font-weight: 600;
+        }
+
+        .module-action {
+          margin-top: auto;
+          padding-top: var(--space-md);
+          border-top: 1px solid var(--color-gray-light);
+        }
+
+        .learn-more {
+          color: var(--color-brand-blue);
+          font-weight: 500;
+          font-size: 14px;
+          transition: all 0.2s ease;
+          text-decoration: none;
+        }
+
+        .module-card:hover .learn-more {
+          color: var(--color-brand-red);
+          text-decoration: none;
+        }
+
+        .integration-diagram {
+          background: var(--color-gray-lighter);
+          border-radius: 16px;
+          padding: var(--space-3xl);
+          margin-top: var(--space-2xl);
+        }
+
+        .integration-flow {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: var(--space-lg);
+          flex-wrap: wrap;
+        }
+
+        .flow-step {
+          text-align: center;
+          max-width: 200px;
+        }
+
+        .step-icon {
+          font-size: 48px;
+          margin-bottom: var(--space-md);
+        }
+
+        .flow-step h4 {
+          font-size: 20px;
+          margin-bottom: var(--space-sm);
+        }
+
+        .flow-step p {
+          font-size: 14px;
+          color: var(--color-gray);
+          margin: 0;
+        }
+
+        .flow-arrow {
+          font-size: 32px;
+          color: var(--color-brand-blue);
+          font-weight: 300;
+        }
+
+        .deployment-card {
+          background: var(--color-white);
+          border: 2px solid var(--color-gray-light);
+          border-radius: 16px;
+          padding: var(--space-2xl);
+          text-align: center;
+          transition: all 0.3s ease;
+        }
+
+        .deployment-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+          border-color: var(--color-brand-blue);
+        }
+
+        .deployment-icon {
+          font-size: 64px;
+          margin-bottom: var(--space-lg);
+        }
+
+        .deployment-card h3 {
+          font-size: 28px;
+          margin-bottom: var(--space-md);
+        }
+
+        .deployment-card p {
+          color: var(--color-gray);
+          margin-bottom: var(--space-xl);
+        }
+
+        .deployment-features {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          text-align: left;
+          display: inline-block;
+        }
+
+        .deployment-features li {
+          margin-bottom: var(--space-sm);
+          color: var(--color-ink-light);
+        }
+
+        @media (max-width: 768px) {
+          .integration-flow {
+            flex-direction: column;
+          }
+          
+          .flow-arrow {
+            transform: rotate(90deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }

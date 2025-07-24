@@ -1,19 +1,13 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { setupKeepAlive } from '@/lib/supabase-keepalive';
+import React from 'react';
 
+// MINIMAL PROVIDER - NO COMPLEX SYSTEMS
 export default function SupabaseProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    // Set up automatic keep-alive for Supabase
-    const cleanup = setupKeepAlive();
-
-    return cleanup;
-  }, []);
-
+  // Just pass through children - no complex monitoring/factory/health systems
   return <>{children}</>;
 }

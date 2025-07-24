@@ -1,0 +1,618 @@
+(node:38497) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[dotenv@17.2.0] injecting env (51) from .env.local (tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit)
+🔍 AIRTABLE PROJECT STRUCTURE ANALYSIS
+
+============================================================
+📡 Fetching all records from Storytellers...
+   Fetched 100 records (total: 100)
+   Fetched 100 records (total: 200)
+   Fetched 10 records (total: 210)
+✅ Total Storytellers records fetched: 210
+
+📈 ANALYZING PROJECT DATA STRUCTURE...
+
+📋 FIELD STRUCTURE ANALYSIS:
+   Available fields in Storytellers table:
+   1. Bio
+   2. Comments
+   3. Consent Form Photo
+   4. Consent Status
+   5. Created
+   6. Created 2
+   7. Created At
+   8. Description (from Themes) (from Media)
+   9. Done
+   10. Empathy Ledger
+   11. Empathy Ledger Reflection
+   12. File Path/URL (from Media)
+   13. File Profile Image
+   14. Galleries (from Media)
+   15. Link (from Galleries) (from Media)
+   16. Location
+   17. Location Rollup (from Media)
+   18. Magic Link URL
+   19. Media
+   20. Name
+   21. Organisation
+   22. Personal Quote
+   23. Phone Number
+   24. Preferences
+   25. Preferred Anonymity Level
+   26. Preferred Name
+   27. Project
+   28. Project (from Media)
+   29. Quotes (from Media)
+   30. Quotes Rollup (from Media) (from Stories)
+   31. RAW Video and photo URL
+   32. Role
+   33. Secure Contact Email
+   34. Shifts
+   35. Shifts (from Media)
+   36. Signature
+   37. State (from Shifts)
+   38. Stories
+   39. Stories (from Media)
+   40. Story Transcript (from Stories)
+   41. Story copy (from Stories)
+   42. Summary (from Media)
+   43. Tag
+   44. Theme (from Quotes) (from Media)
+   45. Themes (from Media)
+   46. Title (from Stories)
+   47. Transcript (from Media)
+   48. Unique Storyteller ID
+   49. User who added story
+   50. Video Embed Code (from Stories)
+   51. Video Story Link (from Stories)
+   52. Video draft link (from Media)
+   53. Video draft link (from Media) 2
+   54. Video draft link Rollup (from Media)
+   55. Website
+   56. Website themes
+   57. YJ
+
+🔍 SAMPLE STORYTELLER RECORDS (First 5):
+
+   Record 1:
+   ID: rec0EkEZIAqUOAhYG
+   Fields: {
+    "Name": "Greg Graham",
+    "File Profile Image": [
+        {
+            "id": "attpLbf3sRbTRiDuq",
+            "width": 1200,
+            "height": 800,
+            "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/JC3OysevI-ISvg-XuUv-cQ/rWoQv6r8fozqld_IdHxlEUM4L8z95SWiydwutj-HUg8vzSoAYwU0BbRPfDt0dRVe8JRo72UshPdN47Nd3f7hhq9bVLzfO10QeC5Wq4pgEFD38XCCzKHUnwYfRIXzNg5rmtGIRASaqJGYZIbIiYiG8mp90WIR7LQ2TcVWjLxC-mC-LauK9a6NIVyr_eThOrm4/nvTzgLPCK5hH9FW1WJu3295S5OFNHoH9K8I6v8L9qwc",
+            "filename": "Greg_Orange_Sky_Newcastle.jpg",
+            "size": 990349,
+            "type": "image/jpeg",
+            "thumbnails": {
+                "small": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/Eb4CXFA1-V9UeQ5O9UQ5qg/b9HrB4AtrfxgrBfaon1M5fnp8uxpkPVT28Dq-RMCLX4oYGkV26CMHrYvUHXTUIwSLlYHZaeO1jAKj9zM3vHkna8Dhrkz9m-9dyCc0XkyUofBBa2_MbnTudMIOUnJ74o0udgDTd2r3eiR_iR-Q1e5vg/N0y4jT6Izc_rof--z4WZxsU2Fd1nqx5o3lUhKyGSwSw",
+                    "width": 54,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/MSdhqQYfauI255ET498B8g/3dOCFkd7B7BmyOAXBT0Xj0HdvgyjWSNtU_rVIGsHNgCEHrOpExIw27dJuR_ctqebLqCOgSlfa8_shVARQJkt4gyaEz-6-4T64qnMOD7P7Lukk53ga02pCk1-RVAHr8gDe2QfxWTyM7jbSnAg1aJBBQ/MNHsHw1SbiQGMvEE_JXK8E71hei7kUq-yHI8aSYO_TE",
+                    "width": 768,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/V2XqvG7zcwkdbUH2EzXX-w/FutUBLU1E8limdVZzKiWU9OnHYw9-43T2ia8ddIppVTKI1GlWKAMgacP2zrKLWy9rv5XcFGvan66rmjiaSREp7eCTGqJbFHU2Tms8u0p0bDNBan-ElD3gcfy_Pokjt3nhcBdHVf8tVemOO6CiewNXQ/MmHwgr7vDUb8OwJYuFdnGdMfQEd42C7KVD_p2Nzw5mU",
+                    "width": 1200,
+                    "height": 800
+                }
+            }
+        }
+    ],
+    "Project": "Orange Sky",
+    "Media": [
+        "recVC6Ne4C5udx85c"
+    ],
+    "Themes (from Media)": [
+        "rec2RmrHdm13jsmbK",
+        "recDNk9JjCFPmzqpd",
+        "recJDQLZZMWgAPXsN",
+        "recBgBi9QT3pQFBzR",
+        "recvowEkpvVfUmnEi"
+    ],
+    "Summary (from Media)": [
+        "The transcript features a conversation with Greg Graham, a retiree volunteering with Orange Sky to help people experiencing homelessness by providing laundry services and having conversations. Greg discusses his experience volunteering, the impact it has had on his perception of homelessness, and the importance of personal interaction in understanding others' struggles. He also praises the support from Orange Sky organization and the strong brand recognition."
+    ],
+    "Quotes (from Media)": [
+        "rec0syptm2jTHVcHj",
+        "rec42yNW4DTHeAugW",
+        "rec6gFAPYcLjkzCFx",
+        "recCOp9hhV43MF5YD",
+        "recwgrWe2FDzFV6rq"
+    ],
+    "Project (from Media)": [
+        "Orange Sky"
+    ],
+    "Description (from Themes) (from Media)": [
+        "Discussion about growing up, living, and changes over time in North Queensland, including the development of infrastructure.",
+        "Post-retirement activities, mainly focusing on volunteer work with Orange Sky, a laundry service for the homeless.",
+        "Insights and perceptions about individuals affected by homelessness through direct interactions and conversations at Orange Sky.",
+        "Reflections on prior work experience in the mining and heavy earth moving equipment sector, including working for a caterpillar dealer in Newcastle.",
+        "The impact of volunteering on personal development, understanding, and attitudes towards societal issues, mainly homelessness."
+    ],
+    "Unique Storyteller ID": "ST-rec0EkEZIAqUOAhYG",
+    "Transcript (from Media)": [
+        "from Mackay but you know North Queensland they're talking about down south it's South of Rockhampton yeah and I'm talking about Sydney yeah yeah yeah my old man the day he finished his apprenticeship he got on his 125cc motorbike in 1955 and rode out of Mackay never to return oh really yeah Mackay to Rocky was all dirt still at that stage yeah there was no bitumen North of Rockhampton I was in Mackay last few weeks ago I don't mind it all right got a lot bigger yeah all right that'll do right it's your name and spell it that's cool too yeah when you look at me it's all cool okay yeah I'm Greg Graham g-r-e-g-g-r-a-h-a-m cool and tell us a little bit about yourself I guess what's a couple of couple of key key points that what people know about you yeah I've been retired now for three years and working with Orange Sky for about two and a half for those three years um predominantly here but I cover the odd shift shortage if we've got a sort of a group chat that if people are short and they jump on and we go and help out so I live locally not far from here and um yeah it's been a good thing for me in retirement it's been a good opportunity to get out and about and do something different to what I did for 40 odd years at work what'd you do for work I worked in the heavy earth moving and mining equipment sector so worked for the caterpillar dealer here in Newcastle for the last eight years before I finished up 21. I don't know if I have a breezy caterpillar deal or not I've got a couple of thousand there's probably a few of them in there yeah I might know him Marshall's his name I can't remember his name um Cole what's um what's what's come to Orange Sky like for you how does it feel that feels pretty good yeah we've got a regular group of people that we help with their laundry here and together with the the lunch etc that Catholic Care put on so it's yeah it's kind of a knit little group and then we have a few people who you know probably aren't that regular but the regular people are all super friendly and I'm happy to be part of the whole Orange Sky experience and like it's um laundry and stuff yeah so we wash and dry people's clothing for them that they either don't have access to it or there's something else that prevents them from from doing their own laundry whether it's their health or um the fact they don't have access to the facilities etc it can be any number of things so we don't pry too deeply into why they they use it we're just happy to give them a hand and take it from there what's the feeling of like the connection I guess and conversation and stuff is it pretty casual yeah generally it's pretty casual you know some people a bit more upset one week to the next but um yeah generally pretty casual and I think the fact that we've got so many regulars and that we've got a pretty small team here there's only six or seven people in the group and there's only six or seven of us work this shift and so a lot of us are here most weeks and we've got to know all these people you know really well what's um has it changed you in any way do you think in terms of perception or life or anything after volunteering oh look I think I won't say I lived my whole life under a rock but I think you don't when you're immersed in full-time work and you're not doing any volunteering of any kind it's pretty easy to just live in your own little bubble it's pretty easy to just live in your own little bubble and not have a very broad understanding of you know what life's like for other people that aren't that far from where you live and what what's your perception of this area I guess in Newcastle and is there is there different areas in Newcastle that are doing a bit more tough than others um yeah look I think this area generally does it tough it just whether the economy is good or not these people are you know they're up against it and um you know you just pick it up in the conversations with them and you know you just pick it up in the conversations with them and it's it's um you know it's a life's life's uh a bit challenging for a lot of these people a lot of the time there's no there's no easy days here and um so yeah that's been one of the good things it just helps you be a bit more grounded and I think the other thing is you realize that you know it's pretty easy when you're you know embroiled in your own little bubble to be more judgmental than you should be and yeah a bit more considerate of the nature of what people are up against um I really started just because I I wanted to do something that would help other people with their you know the time I had on my hands once I retired and um I'd seen a bit of media about Orange Sky and I thought it was a good idea and I just put my hand up to to volunteer for it so what's the conversation with friends and family changed in terms of what you do here and do they ask about this and homelessness yeah they do I think um yeah they most people here in Newcastle don't really understand what goes on Hamilton South or public housing areas and um so it's been good to be able to say look you know they're just people making their way as best they can and um you know it's not not whatever your preconceived notion of what goes on um you know it's typically um not not accurate what's um it's like a different question I I never am good at answering this but what's the type of things you think look like the person can do that's kind of helpful for people that are experiencing homelessness like outside of giving money or whatever are there actions that they can take is there a perception that they can change like what's your take on what people can do well I think if they you know if their rest of their life sort of allows it get involved in some face-to-face stuff because you know you can read about lots of things but you really need to get that personal experience and interaction with people to get a deeper and better understanding of of what's going on that's a good answer it's a little better answers I've got for that uh cool is there anything else like you wanted to say in relation to orange sky like um my very good mate Nicholas Marchese is listening so feedback critical yeah no we're I think we're very well supported by the broader Orange Sky organization and the people you know when we've had technical issues or anything like that um it's never been too much trouble for anyone we've had to get on the other end of the phone so you know it's the it's a robust Front Line Organization and it's got a robust back room that's helping those people that are delivering the services to their to our friends gotta wave out a brand team too yeah last four years yeah no it's a strong brand it's a lot of people you don't have to explain too much you know about what Orange Guy does once you tell them they go oh yeah that's the the laundry bands or you know okay that's that's it that's all it's an out, not an option one by one one by one by one is a good thing. whatever so I think yeah whoever's running the brand piece is doing a good job. Cool, maybe I can say that back to Nicholas and I can go get a bonus for my previous time building the brand. Yeah, cool that's it. Hit him up. Pay the money Nicholas."
+    ],
+    "Theme (from Quotes) (from Media)": [
+        "Comfort",
+        "Community Support",
+        "Human Connection",
+        "Long-term Health Outcomes",
+        "Sustainability"
+    ],
+    "Location Rollup (from Media)": [
+        "Newcastle"
+    ],
+    "Role": "Volunteer",
+    "Video draft link Rollup (from Media)": [
+        null
+    ],
+    "Created": "2025-02-02T05:04:47.000Z",
+    "Created 2": "2025-02-02T05:04:47.000Z"
+}
+
+   Record 2:
+   ID: rec14oJBH2Gr9stvL
+   Fields: {
+    "Name": "Emily Bell",
+    "Created At": "2025-06-12",
+    "File Profile Image": [
+        {
+            "id": "attkApWgRQnbQIwQW",
+            "width": 2000,
+            "height": 1333,
+            "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/gM_aiHYIPSTUGb8Wad3-Og/I2nhq7LbEV9IMNt3rEDq4VAdiV0rnDyq8YjmNCBEdeBbx8MT5fDPC2BKbEJBfxlt2Q80yCaHqdr83ZLnCE0naMwcYPyelx3nCVxzQT9xgzka0MVhWFLVwGCSBEQwetVZC6zebq7CkRWP8z-8y7bOI-v4aj-NSzfAkOYhLYVAWQk/ZwLWW8qrBsSp2pJYWAYIP5dBj4ybNOxXf4Ejh4j86Js",
+            "filename": "20250612-IMG_4288.jpg",
+            "size": 1080355,
+            "type": "image/jpeg",
+            "thumbnails": {
+                "small": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/Nd-Vmo21DLHFaQMchA_wAg/PUpj9QWhVls8D8ufjuoN17OKjF57CzM9qlmr9CSbMd4Nh-JuZcB8OZwic3YeXIi1anc4P8a4r9U4T8vPwsO6g19jl3rRJs7fmej08XpB7CyiVgS5yDPdtPd4XWRA4oX-1jL6pWyAqoTaUxIWLkCSlw/JX-5ubOcsL_IVrO_s_ptx70vNF6BYoe3UQqXlN0sgmU",
+                    "width": 54,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/_gw9nJpUPrZg4n1dhF-eOA/8ELTahwIoECY80yaQoRa9f7mnMgnJC5Tvg1Ko5OaQ7m51YwY16af0-59xNhg_0Picj25nzI2Quh3GfOiGcrRqFJZUwr97WNAMN4e6hQQD0OjS-L4nuRzZE5PV88VrGrxpdP3CD8ZS_UwuaZ2Yn8BZA/CAO-KgK2pnuBg2bu-FHIfsYoaIpapmtWQA6oyQIQ-tg",
+                    "width": 768,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/3lcuNEvOz5nSDgYILSK4VA/i9xG7CdDqcmeR1nfxHD1Uzbz1LIA_8CObwNEaChVad7UNsiwj2yMm13IV8AJJ_UQx9TUnQGPikcQlAO2rye4193JQVaLDIXLSqqKa0YbROGi5_wKszSWV70p3NRcyY---8HY_8Df9sSwGS-ZPcojNQ/2otoCo8CQ0AlvLLzcIRT95bBagyZqXlYtYRoW5lXESU",
+                    "width": 2000,
+                    "height": 1333
+                }
+            }
+        }
+    ],
+    "Location": "Bundaburg",
+    "Organisation": "Orange Sky",
+    "Project": "Orange Sky",
+    "Media": [
+        "recbYJ8vM01gI0p4u"
+    ],
+    "File Path/URL (from Media)": [
+        "https://share.descript.com/view/n6TlgXkU4sQ"
+    ],
+    "Themes (from Media)": [
+        "rec7rvJylvDyIyght",
+        "recRCRh9Wc7YrshDF",
+        "reccgndo9jsQLWhSR",
+        "recC4UegAkDoXQ7mI"
+    ],
+    "Summary (from Media)": [
+        "Emily Bell is a stay-at-home mom who volunteers with Orange Sky, a charity organization that provides support to homeless individuals. She started volunteering with Orange Sky in Rockhampton after hearing about it on the news. Emily enjoys the organized and easy-going nature of the volunteer work and finds fulfillment in helping others, particularly backpackers in her community."
+    ],
+    "Quotes (from Media)": [
+        "recfR97aBaxY2bfvI",
+        "recl3tSd171jeOBmq",
+        "rectFoxkipqhWPoiL",
+        "recav5qAZNAWtOgnO"
+    ],
+    "Project (from Media)": [
+        "Orange Sky"
+    ],
+    "Description (from Themes) (from Media)": [
+        "Emily Bell talks about her experience volunteering with Orange Sky, and how it has helped her transition back into the workforce. She mentions her role as a team leader and the organizational aspects she enjoys.",
+        "Emily shares a bit about herself including being a mother to a 3-year-old, being on income protection, and currently not working.",
+        "Emily shares her journey with Orange Sky, from first hearing about them when they were starting up, to joining them in Rockhampton and contributing to their service.",
+        "Emily talks about what keeps her coming back to volunteering with Orange Sky - the opportunity to support and get to know people, particularly the large number of backpackers who use the service in Bundy."
+    ],
+    "Unique Storyteller ID": "ST-rec14oJBH2Gr9stvL",
+    "Transcript (from Media)": [
+        "# Emily Bell\n\n[00:00:00] Also the, um, sunshine Coast Bruce Highway. Yeah. Yeah. Cool. You have to pick your right time. Yeah, I know. I'm just cut my hands 'cause that helps me pick my cameras. Um, absolutely. This looking great. Um, let's just go your full name. Yep. And spell it out for me just so I get that right. Yep. So I'm Emily Bell.\n\nE-M-I-L-Y-B-E-L-L. Cool. Like ding-dong is what I always say. And what's a little bit about yourself? First up about myself, um, I'm a mom of a 3-year-old. Cool. Yeah. Currently not working. Um, have been doing um, orange sky volunteering as a transitionary thing back to work 'cause I've been on income protection.\n\nUm, so yeah, took on the team leader role last year. Yeah, it's, [00:01:00] I do enjoy working with Orange Sky. It's very, there's a lot of organized parts. Cool to it. Yeah's, easy going. What, um, when did you first hear about Orange Sky? Um, well, I heard about it years ago. When? When they were first starting it. True. Yeah.\n\nSo I saw, I remember hearing about it on the news. Um, yeah, and so then I was in Rockhampton at the time and they were looking for volunteers, starting up their, their service and um, so that's when I like, yeah, jumped on board. Cool. Yeah. What keeps you coming back to Orange Stone? The tips, like what are the things that excite you that you coming back, getting to know people and being able to support?\n\nI think here in Bundy, we do have a large amount of backpackers who use the service. If we didn't have them, then we wouldn't necessarily get as many people at the moment. Um, we work alongside Angels who had, they had, um, a [00:02:00] support center, but because of violence there, they had to shut that down. So we don't get as many people who are vulnerable and homeless, so that makes it hard.\n\nYeah. Yeah. Right. Mm. Um, what's some of the things that have, are there things that you changed in yourself, um, from volunteering with Orange Sky or things that have changed, shifted in your thinking or any of that kind of stuff for yourself? Um, I think, I know government and politics and everything, that's just the whole other guilt ball game, but it impacts everything that everyone does.\n\nAnd you know, people are struggling at the moment, so it's good that organizations like Aaron Sky are out there. I think here in Bundy, I want to try and, I dunno how, but try and get more people to come to get, come to the service. Um, which is hard because of the support center not working. I've been trying to get, um, one of our volunteers to maybe take on, um, sort of the [00:03:00] community engagement officer role.\n\nYeah. We are right on the edge of a very busy car park. Everyone loves coming to the mini mart. It's always cute food. Oh, right. Yeah. Free food Mini mart. Yeah. So it's like the food bank. But, um, a little bit of, so they do, do, um, they do meal school meals for multiple amounts of kids, um, a day, and then they help with different Christmas and back to school campaigns as well.\n\nYeah. Cool. Um, what's the, um. Um, what do you think that the people that use the service, you said like backpackers come and stuff? Mm. What's the main like, outcome for them, do you think? Like, is it primarily washing or is there some people that primarily love just because it's a place to hang out? Like what's your feeling around that?\n\nYeah, so the backpackers, it's purely the washing, [00:04:00] um, because they get charged $5 a wash, $5 a dry, but it's also convenient. It's right across the road from where they are. But we do have a lot of friends who come more than morning shifts. They get more friends who like to come. They do need the laundry done, but they also like to stay for a chat.\n\nThere was one gentleman who would literally just come for a chat. No washing, but then some friends have made him feel a bit unwelcome, so I've found out now that's always a hard thing to balance, really, but Yeah. Yeah, a lot of people like to stay for a chat. Yeah. And we enjoy having a chat as well. Yeah.\n\nAnd how do you feel about the orange skies, like as being part of the organization and what's that kind of feeling? I feel like there's a lot of support there. Probably a lot that we don't use well enough, but um. Being a team leader, I try and I'm trying to make a regular thing of, you know, putting forward different, um, policies and support things that our in Sky might have [00:05:00] available so that everyone's aware, um, we can always call up support services.\n\nThey're great as well if we haven't have any problems. So yeah, they're always there and able to help out. Hmm. And what's the general sense of community in Bundaberg in terms of people doing it tough, do you think? Is there a. Understanding of it, is it not as bad as other places? What do you, what's your general vibe, I guess, of people doing it tough?\n\nI think there's a lot of people doing it tough. Um, I'm not sure whether the pod is in the right location any longer. It was initially, I, I agree, but not any longer necessarily. Mm-hmm. Um, I think there's a lot of people, a lot of like single moms and families are in hostels, motel rooms. Mm-hmm. And stuff.\n\nAnyone who was sort of like camped anywhere have pretty much been moved out of onto the edges of town, so it's really hard to know. Or they're moved along quite a lot, which is really [00:06:00] hard to see. But I see that on the news. A lot of places, a lot of people are moved on when they don't really have anything anyway.\n\nUm, I feel like there's a lot of government organizations who try to make a difference, but. Uh, it's still just taking the edges and it's all about ticking boxes rather than actually helping lives sometimes. Yeah, yeah, yeah, yeah. Um, and anything you think that houses can improve on? Whether they doing right, wrong?\n\nOh, orange sky. Yeah. Uh, I think it's a wonderful concept. It's brilliant, um, and it's great. To have multiple amounts of volunteers. Mm. Um, I think we just need to try and somehow encourage, um, friends who are doing it more tough. Back here for that support. Yeah. Um, but I think there's a lot of [00:07:00] other undercurrent things in Bundaberg.\n\nI've only been here just over a year, so there's probably a lot of stuff that, um, I'm not aware of. And I live out at Bera by the beach, so it's, you know, it's quite different from here in town. Mm. Yeah, I think that's where I stayed on the hotel. Yeah. It's quite nice out there. Mm-hmm. Yeah. I love that. It is, um, it's quiet.\n\nMm-hmm. And yeah, it's just, it's peaceful. It's beautiful. Mm. But you still feel like you're in the middle of a suburb. Yeah. Which you are, but it's not like, um, yeah. It's not too bustling or anything. Even Vanderberg is a great town to be, to be honest. Hmm. Yeah. But there's a lot of, um, socioeconomic issues and it's quite a low, low economic sort of town.\n\nMm. Unfortunately. Yeah. Yeah, yeah, yeah. Yeah. Cool. Anything else we didn't get to or es or topics? No, I think that's great. [00:08:00] Yeah. Alright, I'm gonna take a photo. Oh gosh. And then you can see.\n"
+    ],
+    "Theme (from Quotes) (from Media)": [
+        "Innovation",
+        "Harsh Living Conditions",
+        "Human Connection",
+        "Community Support"
+    ],
+    "Location Rollup (from Media)": [
+        "Bundaburg"
+    ],
+    "Role": "Volunteer",
+    "Video draft link Rollup (from Media)": [
+        "https://share.descript.com/view/n6TlgXkU4sQ"
+    ],
+    "Created": "2025-06-22T09:28:57.000Z",
+    "Video draft link (from Media)": [
+        "https://share.descript.com/view/n6TlgXkU4sQ"
+    ],
+    "RAW Video and photo URL": "https://www.dropbox.com/scl/fo/7lwf1olcxjexzbl1rfz33/ADvZqfVLCCXwDCQZN-40WJM?rlkey=l2km065xqmllm1lcnj52z8t42&st=ufr34zp6&dl=0",
+    "Video draft link (from Media) 2": [
+        "https://share.descript.com/view/n6TlgXkU4sQ"
+    ],
+    "Shifts (from Media)": [
+        "rec7Rp0dprgIjD1sI"
+    ],
+    "Shifts": [
+        "rec7Rp0dprgIjD1sI"
+    ],
+    "State (from Shifts)": [
+        "QLD"
+    ],
+    "Created 2": "2025-06-22T09:28:57.000Z"
+}
+
+   Record 3:
+   ID: rec1L7AGenWn9GID1
+   Fields: {
+    "Name": "Terina Ahone-Masafi",
+    "File Profile Image": [
+        {
+            "id": "attAzWSULBjhnfuLq",
+            "width": 2000,
+            "height": 1333,
+            "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/YbbxsJhcg7xtDYKY-N6psw/YAwu9c-9tzN99Khtwyp66__bL8KOHR4wYSjwVryqQkENWLNE4ItJttE9mLD1BjDjI5qunGPOhRCrggHBFewCcEOpWUfWQg_aLVG7Subz5NPLS5aN3FGhBlWV_Ch7Yxkx4GpZP_IAfVipZkiE4EavFU35dxDYq6BwowyYQ5IWzPA/A_TbcyspBRfLk_gDF955kPdn1J-8hamb7wOR_6AL5vc",
+            "filename": "IMG_7312.jpg",
+            "size": 1332835,
+            "type": "image/jpeg",
+            "thumbnails": {
+                "small": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/3EapGjKEcho2F5BAWikNTA/9wdrP_7AJrgKKRwSoWbZ674MW0jF_DcWu9V8plZrWlHdpXKFo_ZOZxnZhParOrSvYSBRl5209ooSAfsd0661cBV5LGeYt8WBJuG9PinqNDC7oouDGLNQnETSohrhNu085xOc6PDtm8a3TN4idVlYfw/AkqEKSsKVGwBRHimqcR-hZcdk5RbA_1t02GjRbGQ3j8",
+                    "width": 54,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/6SBJXQgOy1UfSfSGGv-x7A/iMHvyKH-aAUx9sbHHZU03rc3UHwpiYnM7uP8LeFipsplxKZI89Xw-u-XBoEAm0sDWHZ_iyO8IinbkNHQVfUEdPdVfvUZC6lGpIZkSitic5bzzUD93d05iSqNRz1ihtqwn2Y2adIjR_cFe-DNnPgNsw/DQr5aivJuPSjlmV5PgrmgziblyrhOpvwNbdLKw1A2Vs",
+                    "width": 768,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/SlPrtgtFH8fwR33oZmE1Rg/MHS7iSSTKzj0KXBe3RA4YWAboxwDapekwlvUQBL5dXksE2IC_9Vfu8AjyIdFKbQfLFHw3FrrVCMdHW-2EK7icDHjobU69V_8xQsUBQB1Aq6hB0m2JgTfVE28XJXQPVchDRqA9myOMkKr9RO9W_YamQ/fnIDbkaj0haTNm3-LKrkY2mBqUfZs_o129MkJeRlf24",
+                    "width": 2000,
+                    "height": 1333
+                }
+            }
+        }
+    ],
+    "Project": "Orange Sky",
+    "Media": [
+        "recBEC7KXdnEyxU7Y"
+    ],
+    "Themes (from Media)": [
+        "recyZe8sz3e02F1Xe",
+        "recdnAguSkb6t2aaA",
+        "recWxJqRlevhzXUSJ",
+        "recWcdloM7pj8iFFT",
+        "recjwcHTzTvuHvjfT"
+    ],
+    "Summary (from Media)": [
+        "Terina Ahone-Masafi, a 29-year-old in Australia for 11 years, enjoys art, music, and athletics. She appreciates Orange Sky's customer service and support despite being homeless. She came to Trambi for showers after couch-surfing. Describes friends as a strong connection. Thinks Orange Sky volunteers are welcoming, professional, and interesting to talk to."
+    ],
+    "Quotes (from Media)": [
+        "recbDBaNQs31bPfhj",
+        "rectK4xTQNEUFKQkF",
+        "recXAFDrDJec4IuZI"
+    ],
+    "Project (from Media)": [
+        "Orange Sky"
+    ],
+    "Description (from Themes) (from Media)": [
+        "This theme covers Terina's age, origins, and the time she has spent in Australia, providing insights into her personal history.",
+        "Terina's passion for art, music, and athletics is outlined in this theme.",
+        "This theme highlights Terina's reasons for engaging with Orange Sky, focusing on her homelessness status and appreciation for the organization's customer service.",
+        "Terina's transition from couch surfing to availing services at Trambi, including the reason for the move and the benefits offered, is captured in this theme.",
+        "This theme discusses Terina's beliefs about friendship, emphasizing the importance of connection, understanding, and mutual support."
+    ],
+    "Unique Storyteller ID": "ST-rec1L7AGenWn9GID1",
+    "Transcript (from Media)": [
+        "So my name is Terina Ahone-Masafi. So I am 29 years old. I've been in Australia for about 11 years. I came here when I was about 17 years old and I'm 29. What I love to do for my hobbies, I love doing art, I love doing music and I also am very athletic. Why are you coming here to do Orange Sky? So Orange Sky is in, okay so I am doing it basically because I'm homeless but I really love their customer service, I love how they treat people and I just really love how they're very welcoming and professional. Tell us a little bit about... what you... like why you come to Trambi in general, like why you need to do that? So I came to Trambi because I was couchsurfing with another guy and obviously I had to move out and then I got told about Trambi. I got told about Trambi a while ago but then I came here one day on the 25th of June and yeah, so I found out about Trambi, started to realise you can have showers here and that's how it all started, yeah. Cool. And just tell me your full name and spell it for me. So my full name is Terina, so T-E space R-I-N-A, Ahonima, A-H-O-N-I-M-A, S-A-F-I, S-A-A-F-I. Amazing, that's so cool. And like tell me this, we did this podcast about friends, what does friends mean to you, the word friends in French here? What does friends mean to me? Connection. Having a good connection, you know. You know, knowing, getting to know one another, each other's positives and negatives and being there for one another, yeah. Amazing. And any other words about Morin Sky and the ladies here? Very welcoming, professional and they're very interesting to talk to because they've got a lot to say."
+    ],
+    "Theme (from Quotes) (from Media)": [
+        "Community Support",
+        "Human Connection",
+        "Community Support"
+    ],
+    "Location Rollup (from Media)": [
+        "Perth"
+    ],
+    "Role": "Friend",
+    "Video draft link Rollup (from Media)": [
+        null
+    ],
+    "Created": "2025-02-02T05:04:47.000Z",
+    "Created 2": "2025-02-02T05:04:47.000Z"
+}
+
+   Record 4:
+   ID: rec1NgpxuCWWJ9cYJ
+   Fields: {
+    "Name": "Bernie Moran",
+    "Preferences": "Commercial use allowed",
+    "Created At": "2025-04-17",
+    "File Profile Image": [
+        {
+            "id": "atttFY6se2cratGYc",
+            "width": 2000,
+            "height": 1333,
+            "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/ECWMdluJcBWGBRur0Ictew/AxyyiOTTSHzxuz7VwJ5-L_pHqd-tyqeZfTKF_M27rC1GxDSNeFl6xxpkAzD1gX-hXB9QChdyE-KlU8-kc9isrogdDf4XV8iD-E0aIrETdMmKqtonMEcxFBiCauZE53wVuGmFWH-4Sr5zYSg5yV_A-LLh-hB0nEtoSUSl7HO18HM/tcWuctyVX1WvQayYoYpkhRMY2pGlzh4K57rcdowVF10",
+            "filename": "TOMnet LR-88.jpg",
+            "size": 1086438,
+            "type": "image/jpeg",
+            "thumbnails": {
+                "small": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/IY2bSZ1L5PqY3hidgdT4Ww/7pzChxK4zXxpNx1stez5gArn1BpG8GU-P-XchQ7i8Bqv6Eb8Uei67rvrjLkv_axYbQN_OM31nuAOjXrV6VUN4mI2sZZqAXw6yUquIsTQpee0GhgAal9iHmCQahqSNhAljDyFrWXi6nb3iBzZUkt8wg/RCM-1VbHNN5-QBonWQPYBYxOxhufBJyGOk9RX8WJMiI",
+                    "width": 54,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/cYEI6c4mr2wVWGNDS36bJA/tFqP2DqWAwIHmnETYcXC9_BXNx3q6IzTa8o5_wm0hR4Hc1httHyloCPmsqalFqfrRiVOW-fP-42vyPK5k0DgmLwvt6otCuJmSiebLLHwDeYzZgwkdxSYn5Et9PqjSkMcx-yTCUy-0USf8lIN4m_oow/9uh09zgiyu8WBo7NxenrzjI3ijztZxzMjtqAyCBP_Jc",
+                    "width": 768,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/ORqErZXvhoxwH0oEd_PLQA/9liIIHe24JJbpsgGg085owGk-kXPch4xFwWWc78zH-GsOj-zIW_4ls1uEjowy9LAGgM4bOgFjfXrmaOYtGyX_6Slzdy2cuZGbfeZ-cp73Wk5TeJ1g0mixK6wJjk-aCHjR3wTrhCrNXeEvBOimRY_fA/jCFumJNDjaYzJIEfV2LLWs7xgjHrEp9xIoa70m66RUk",
+                    "width": 2000,
+                    "height": 1333
+                }
+            }
+        }
+    ],
+    "Location": "Toowoomba",
+    "Organisation": "TOMNET",
+    "Project": "TOMNET",
+    "Media": [
+        "reca4OHS9INYa3UmH"
+    ],
+    "File Path/URL (from Media)": [
+        "https://share.descript.com/view/nGyDMDWpsoK"
+    ],
+    "Themes (from Media)": [
+        "recsNhu0w32gbiPPS",
+        "reclPKNmTYHCMG6Fx",
+        "rec54wNndtS5ZXKX0",
+        "rec0bDkbqGsY0QfnN"
+    ],
+    "Summary (from Media)": [
+        "Bernie Moran discusses his childhood experiences traveling with his parents and the photography equipment his dad used. He talks about his background, including growing up on a farm in New South Wales and moving to Toowoomba."
+    ],
+    "Quotes (from Media)": [
+        "recXmvWWC2FtwmZJX",
+        "reck2HWkEb2p4TySQ",
+        "recLcHHk8XMD973ws"
+    ],
+    "Project (from Media)": [
+        "TOMNET"
+    ],
+    "Description (from Themes) (from Media)": [
+        "This theme reflects the development and changes in technology, as exemplified by Bernie Moran’s experiences with photography tools from analog/distance meter to modern ones.",
+        "This presents an intimate look into Bernie's personal life, originating from his birth place, family experiences, such as his father's death and his mother's remarriage.",
+        "Bernie discusses how people from his birth town, including himself, have moved to Toowoomba, which indicates a theme of migration or geographic relocation.",
+        "This theme emanates from Bernie's tale of having to leave the family farm and seek employment in town due to a prevailing drought. This signifies adaptability to situations or life changes."
+    ],
+    "Unique Storyteller ID": "ST-rec1NgpxuCWWJ9cYJ",
+    "Transcript (from Media)": [
+        "Bernie Moran\n===\n\n[00:00:00] \n\nThat's the way, I dunno. Years ago when I was a kid we traveled a bit with mom and dad around Australia or down south and that sort of thing, and he'd get the light meter out and then he'd get the distance meter out. Then he'd just set all these bloody things. I lucky I don't have to deal with that days.\n\nYeah. Yeah. That's all. Thank God. I think we're looking good. All so you just look at me, have yarn. First thing we need is do your, say your full name Yep. And then spell the whole thing for me. It'll be awesome. Yep. Bernard, Michael Moran. Spell on Christian names or no? Just a surname.\n\nSurname. M-O-R-A-N. And yeah, I live in Toowoomba. Amazing. So tell us a little bit about yourself, Bernie. Yeah, I was born in Maureen New South Wales. There's a few people from New South Wales, or Mae in particular that gravitate to Toowoomba because it's a good city medic. Don't clap my hands.\n\nSorry. Did I clap my hands? Should I clap my hands? I need to do that. Oh. But always forget to do it, so right up. Yep. Okay. I'll do again. Sorry. Yeah. So yeah, born in Mae and I [00:01:00] spent, we had a family farm, but I lost my dad before I was born. So mum married a second time, and I had brothers and sisters, or stepbrothers and sisters from there.\n\nAnd we had a property. And during one of the droughts I was finished school and, I started to work well. I was working on the farm and then went to town to get a job because of the drought and being a stepchild. I just felt that the farm wasn't big enough to be divided among the four of us.\n\nSo I worked at as a car salesman that then got called up for two years. National service training. Which meant well the boss was to keep my job. And I said I don't expect you to keep a job. And it was only a four man business for two years. But anyway, that was a requirement and he did that.\n\nWhen I came back from the Army we had purchased a case header. And for the farm, and we needed a service. So I said to the salesman we, we need a service. And he said, I'll leave it till next week, [00:02:00] because J Case, the manufacturer was taking over the dealership. I. I took it there. I said have they got any, have they got any jobs going, retail jobs?\n\nAnd he said, I dunno. And anyway, came back a while later and said, you've got an appointment this afternoon for a position with them and selling. And being on a rural background and knowing the area I got that position. So I was very successful in selling farm machinery in the early seventies. 76, they, transferred me to Wagga as an area manager looking after New South Southern New South. And after I'd been down there three years, the manager that I had had retired and they said, we want you to come back to Mare. I said no not far Wagga, I'm only an hour to the snow and an hour to Griffith and good water skiing and plowing dam and those sort of places.\n\nBut anyway, they made it worth my while and I came back and managed that for eight years until Case bought International Harvester. And because we had a [00:03:00] company store in Maori and there was already an international dealership there, they saw an opportunity to get outta company owned branches. So they closed that up, moved me up here to Toowoomba and I hired and fired the dealers on the downs and that they wanted.\n\nAnd when I'd done that three months later, they said, what's what we needed to do? We don't need you anymore. And I was retrenched. I'd said, because selling machinery when I was doing it was just a brilliant time. And I said I wouldn't stay in that business. So I went into hardware and it was 30 years worth.\n\nThe local might 10 store up here ended up being one of the purchasing offices until I retired. And then when I retired, I spent probably three years at home doing the painting jobs that you put off while you're working. I had a three bay shed, which needed tidying up. Wife used to keep telling me to tidy the shed, but, it just went on and on. It's a hard job to do that. And I've just now sold that property because it was acreage and we've moved into [00:04:00] town. And we're on a smaller block and obviously don't have a shed, so I have to eliminate a lot of the stuff. And she'd say you should go and do it otherwise the boys, the son-in-law and son are gonna have to do it.\n\nAnd I said when they go in there, when I'm gone, they can throw it all out 'cause they don't own it. But I've got a connection to it. And I found that difficult to have to do. I've eliminated a lot of stuff before we moved. But I've got stuff out at my son's place that I need to go through and choose what I want.\n\nBut I did a lot of woodworking when I when I was working and had lots of tools for that. But I had a need for doing that because I built bedroom suites and cupboards and things for my daughter before she was married. And then when the kids came along built toys and so forth. But. That need's gone because my eldest grandchild is 24 and the youngest is 13, so I don't need to make them toys and that sort of thing.\n\nSo I don't have a need. I like to do [00:05:00] things if there's a need for it, but if there's no need I don't see a point. So I haven't done any woodwork for a long time, so I can afford now to reduce the tools in the shed and so forth. But wow. And that was after, after three, for about three years. I think I was retired when I was approached by a friend of mine and pushed by my wife to join Tom.\n\nThat, so I did. And I came into Tom that only a couple of months before COVID hit. So that changed the way that Tom had operated. We used to meet. Once a month down at a hall or a club just down the road. But we couldn't do that then because of the isolation and distancing.\n\nSo we went into recess, for three or four months until we worked out that we could have smaller sessions here. And the earlier sessions we were limited to probably five or six people at each session. But now because the covid sort of under control. We can have [00:06:00] up to 2025 meeting here.\n\nAnd so we meet, we have four sessions a week like the one you witnessed this morning. Also today we have lunch with mates. So we go to a club and have lunch. Just another way of getting outta the room here. And that's on this afternoon. And then go on and do what I gotta do for the kids coming down for Easter.\n\nThat I'm still working on tidying up the yard in this property that we've purchased. But so awesome. I I came into Tom that the president that was here, was president at the time, was a Moree fellow as an accountant. And he used to do my books for me when I was working and so forth.\n\nSo I knew him quite well and, i'm fairly casual about being president, but he was less formal than even I am. So he just said I'm gonna retire. We want you to go as president. And I said no. There's people that have been here for 15, 20 years and I've only been here a couple years, but I suppose you call [00:07:00] it railroading.\n\nBut anyway that's how I. I ended up in the chair here. But I'm enjoying it. I do it casually. I do a lot of volunteering in a lot of the different sections. Not, I can't spread myself thin enough to go to everything, but I'd like to get to nursing homes. My wife and I, as I said in the center there a while ago, that we can involve women.\n\nIn a volunteering role? To get, I found that my wife was inclined to stay home now too, so I went on, volunteered at a childminding center, which I could take her to. We volunteered at that for a while, but now that we've moved, we're right across the opposite side of town, so I'll either have to look.\n\nAt some other day, daycare center to go to or something like that. But that was one of the sessions I then do, I'm on the barbecue team. I've got a team that I work with each month we do the barbecue at hardware store. And I've got my team and I alternate with another fellow that does the other [00:08:00] month.\n\nSo every second month we've got that on. But we've just done Harmony day which was a, a community center a community function, put on down at the Grand Central Shopping Center, be a Tom that cater or did the cooking the food was supplied. So we were just supplied with that food. We served that up.\n\nThat's an international thing that they have each year, bringing all the I suppose refugees are included, but anyone that moves from another country, kind comes and celebrates Harmony day here. But yeah, there's a lot of that. I do go to a nursing home probably not as frequently as I would like, but my calendar can fill up fairly quickly in different functions I have to attend to.\n\nBut but I, I'm enjoying it. And, it was my wife that realized that after three years at home, admittedly looking after an acreage block took a lot of work. But there was still times that I felt a bit of a loose end. Came to Tom that, and now I don't have a loose end at all to worry about.\n\nShe has told me that probably ought to take my bed down, but, that's the way it [00:09:00] goes. But I'm enjoying it. And, the company's still growing. We're getting more people in all the time and yeah, that's great. We're certainly, we're increasing numbers more than we're losing them, and I think that's great.\n\nSo why do you as people are new people are coming, what are the changes you're seeing in them as they first come? And make sense of what this is initially, and then what's their progression like as they spend more time with you? As we said in there, walking through the door the first time is the hardest thing.\n\nParticularly if you don't already know someone in there. I was fortunate and I knew three people that were in there, so it was easier for me. But the barbecue we held on Saturday, though, I think there were five of us working that barbecue. And Greg and another fellow walked past and wanted to know what we did.\n\nWho we were and so forth. And a lot of people ask what Tom that is, and it's the Alder Men's Network is the full title of it. He, they both had he yarn to, to some of us that were up there [00:10:00] cooking. That was on Saturday. Greg turned up on Monday and signed up. And was here again today. So the other fellow has come and he's taken the paperwork to join.\n\nSo when you see them come in they're hesitant that they're not sure what they're coming into, but within a few weeks they, they're entirely different person in the, what they open up, they chat about all sorts of things, but we encourage them when they do come to talk about themselves. So that.\n\nWe know what their career was, what the history was, where they live and a bit about them from that point. But yeah, it brings them out of their shell enormously, I must say. And how, what do you think is the benefit of not just coming and interacting with other people in a similar situation, but then going into the community and offering time and offering support in the community as well to people that may be young people or migrant?\n\nOr refugees as you're saying. Yes. [00:11:00] With that getting people out, it is one thing to get them out of the home and get them into here, but getting them out into the community is just more doors are open. More opportunities to volunteer with people. And that, that brings them out as well.\n\nAnd sometimes we might carpool to go over to a nursing home. So you've got that where you're talking to these people on a lesser number. But that also encourages them to come out, I think. And and listen to what else is going on. But the volunteering is a big help and there's not many other organizations that, that I know of.\n\nThey do it the way Tom, they'd do there. There's a lot that meet in the room and stay in the room. But getting out is another thing I think that that opens it up further. What I always love this word, wisdom and intelligence, his two words. What do you think Tom Net is able to offer the community within a wisdom and intelligence and experience?\n\nI think we're doing that with the [00:12:00] intergenerational support that we're giving to one of the public schools up here at centenary Heights. We go there and the, there's some kids there in year 12 that, that can't read and write that have come in from overseas. So we're involving them.\n\nWe might only play a bit of ball game or darts or something with. With kids to, to educate them a little bit in, in the lifestyles of Australia and things like that. Plus the mentoring at the Flexi School, it helps develop those kids and the kids change enormously from when they arrive there in year 10 until they graduate in year 12.\n\nIt's amazing the difference it makes through, yeah, I think that's important that we get out and we do help the community with various barbecues and anyone that wants something, some hand with something, we can join in with that. We have a good relationship with. East Creek, which is a community center that to drop in place that we do barbecues for them.\n\nAnd they have a lot of foreign [00:13:00] people call there and they have a food pantry too that people contribute to and pick. They pick up, food that's almost out of date. And they can give that out to to the various people that are having a bit of financial trouble in supplying food. One thing I always think about is, a lot of people are speeding through life so they can retire. And a lot of people are spending their life working to make money to retire. And I think some things I was thinking about my father and my mother in those situations and Yep. What sort of like wisdom and experience would you be able to offer to people that are maybe in their thirties or forties or fifties who are like spending the majority of the time thinking about how they can.\n\nGet to retirement rather than living your own. Yes. Yeah. I I don't know. I guess I I worked hard and worked continuously. I started working. I was 16, still going to school, working in [00:14:00] the store after after school and then going on to the farm and then various jobs on the way through. So I've always.\n\nBeen in work. Thank God. What I've found now we've got to the retirement age and we've saved to get, to have money to to retire with. So I'm not on a pension. I, we're self-funded. We live off our superannuation fund, but then I've got friends that. I've done a world trip or an overseas trip every year, all their working lives.\n\nAnd they're sitting down now on a full pension. And that makes me wonder at times did I do it right or did I do it wrong? A few years ago, I might have said I'd done, I had done it wrong. But now the risk of there not being a pension and. Maybe not too distant future, saving for your future is more important now than possibly was.\n\nYeah. There's so much I think that people can spend time talking with people who have retired and like [00:15:00] understanding that process a lot better. Yeah I would, as I said I would've thought maybe I was better off when I was 30 to. Couple of overseas trips, but I've only been to New Zealand and Tasmania and Norfolk Island.\n\nBut that's as far as I've been outta the country. But I've toured the country and I enjoy the country and I think we've got great things to offer here. But you saving for your future is an important thing. Yep. What's what do you think the next sort of few years is in store for Tom Net? Or what do you hope might happen over the next?\n\nI'm hoping that it, that will continue to grow like it is growing as I said, we've recently opened up the Laia Valley and we've got three branches going down there at CAT and Laley and plain Land. But we need, we live on government funding. We've got two paid staff here, and we get government and some state government and some federal government funding.\n\nAnd because we don't have membership fees or anything, we have [00:16:00] to work on that. Wherever we can get the funding, we can go ahead, but if one of the either the federal or the state were to reduce our funding or cut us out altogether I dunno where we'd go because we've got a management committee.\n\nWe were talking just the other day about that. If we were to lose. To lose funds, we'd have to lose a staff member. And I just, they're that busy that we can't afford to operate without one of them, and it would be very detrimental to Tom net. If funding was reduced and what would be, if there was people that were interested or on the fence of supporting Tom.\n\nIs there a core message that you have that well come through that's come to the fore just recently and that maybe we can talk to some of the the people that are influential in town and situated to, to donate and so forth, whether we talk to those sort of people.\n\nTry and get something. But but we continued to work like Shannon particularly tirelessly on, on applying for [00:17:00] grants from government departments. But mental health is a big issue. Men over 65 are overrepresented in male suicides in the 25 years that Tom that's been in operation. We've got 295 members.\n\nWe haven't lost a member. To suicide. And I put that all down to the comradery and the friendship that we have by discussing various things and looking after men's health in general, plus mental health. Yeah that, that's important. Amazing. Was there anything that we didn't cover you think, that you wanted to make sure you said or any like things, topics or themes or, no the main thing and everybody, as I said, I'm president of the management committee and they were, they're a good team of people.\n\nWe've got a cross section in that and that we've got a barrister, a magistrate principles and that sort of stuff. It's a cross section in there as well as it is through Tom that and. Older men. Looking after older men is is probably the main thing that we need to get [00:18:00] through. But word of mouth is a big thing by talking to people.\n\nYeah. But I just hope it can continue to grow. Amazing. Well done. Thanks Bernie. You're so good. Okay. We'll just take a quick photo.\n"
+    ],
+    "Theme (from Quotes) (from Media)": [
+        "Community Support",
+        "Community Support",
+        "Long-term Health Outcomes"
+    ],
+    "Location Rollup (from Media)": [
+        "Toowoomba"
+    ],
+    "Role": "Member",
+    "Video draft link Rollup (from Media)": [
+        "https://share.descript.com/view/nGyDMDWpsoK"
+    ],
+    "Created": "2025-04-17T21:44:20.000Z",
+    "Video draft link (from Media)": [
+        "https://share.descript.com/view/nGyDMDWpsoK"
+    ],
+    "Video draft link (from Media) 2": [
+        "https://share.descript.com/view/nGyDMDWpsoK"
+    ],
+    "Galleries (from Media)": [
+        "recaR1hdZ6QFQTyqF"
+    ],
+    "Link (from Galleries) (from Media)": [
+        "https://photos.app.goo.gl/ixLsAXbmih6imXU56"
+    ],
+    "Created 2": "2025-04-17T21:44:20.000Z"
+}
+
+   Record 5:
+   ID: rec1bD2SAvw2h4OlU
+   Fields: {
+    "Name": "Steve Sutton",
+    "File Profile Image": [
+        {
+            "id": "attSYt6jm0TD1wHnm",
+            "width": 1200,
+            "height": 800,
+            "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/FbIb9ZtRXu8w7hW9QcB0PA/g-CgQEpFqyw4EAl-uHnpls2ISVjc1Ylbw4GvR9qlLynzJNZkCJCDk4gZPUuoF3ZXKZFqE7BCCGsvuTnxe6gqzFNNFNc9AZHTWb7jmaaJZxO7qi_KPFd0ZQTH_apmee-Plx9CnUMwR6AWtAvis8JrWQZBkxjMdq2QfQiDrkwjY_d8LtapbRt-Dkw4qMgte6G2/iIhMk4JD0GOIJpG6kUjy6PiDaH7GPTLfSltM00ZzZds",
+            "filename": "Steve_Orange_Sky_Newcastle.jpg",
+            "size": 618069,
+            "type": "image/jpeg",
+            "thumbnails": {
+                "small": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/GliVaI-ClRbyFLnpl_Yryg/yrqYjenx1QBiaKAe0UYYWUcODPiz2YegzSzXmpJKbLxy6aITO3AbJNupzdIUp1V4QNbchji1JMlU7eF5bJP9VnbtlVi7fEAd3BGADq2Uw9qFXB3EBlh8nNSrzaRjdTA8KYRxS2T2-7JuDK4wkReQRg/eYm3aSHB7LYwsZOkj4emG0joOa6LKHE9Mhkh9BZsWF8",
+                    "width": 54,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/9jTNPl6S9K1RGrS1S7QJnQ/c0fktUjecsbca7yiPWFds39B7SKFrCgJH64_E2W0-J9wHC2ADVhpRYugzgPr_DWIf10e6EBa3a2_uHYQuPHuCt53Jhnezu2UCpXibw79b5jGSei-c5ic95FdaH9qF13tlfNHipvBoeyEPmzg0fTfmw/OIUgB6x9uZICyInZ6QkIu_Z5e0DD1IWDD0aRKANoiLs",
+                    "width": 768,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/43/43/1753236000000/j0PFMU1wpEdRVpFI6neZYg/oblgB16SmWiBuJ-P7p8v6kP6uUrHzYwyO5E5j4zqVeloT9QLWw6wUu3weRq7hZp92e74mxAUZrcAKtbTA_KyhSuRxZr2LU0r3iTfryqK1lM1-aOlTyKKFAttbaJnA_JlHcSiRa95aqxCMFo5olu_sg/CQeVbLHmwH4IYi7mQR3IsChjj18QxCvFisHvNuZ8uf0",
+                    "width": 1200,
+                    "height": 800
+                }
+            }
+        }
+    ],
+    "Project": "Orange Sky",
+    "Media": [
+        "recBxKOhH7iJTmIGt"
+    ],
+    "Themes (from Media)": [
+        "recKMvpxzKSxNdSvC",
+        "recYCyUFGBWZAecMH",
+        "recWN3p7cawNGjY9i",
+        "recMmR0tD0eWWZeFP",
+        "recV7T7udhBP8pMEH"
+    ],
+    "Summary (from Media)": [
+        "Steve Sutton, a retired individual with a finance background, started volunteering at Orange Sky in October. He initially found it slow, but as more people sought laundry services and support, his experiences grew. Through volunteering, Steve gained awareness of homelessness and stressed the need for affordable housing. He highlighted the importance of Orange Sky's broader community impact beyond laundry services. Steve values the interactions with people experiencing homelessness and camaraderie among volunteers, finding fulfillment in giving back. Additionally, he commended Orange Sky's innovations"
+    ],
+    "Quotes (from Media)": [
+        "recbInDd31nn51HV4",
+        "rec5Za8NSAhveqBa4",
+        "recikvGGuBYmMrNr1",
+        "recVmBO245Ieb5FMd",
+        "recOguv6dfRK98BFV"
+    ],
+    "Project (from Media)": [
+        "Orange Sky"
+    ],
+    "Description (from Themes) (from Media)": [
+        "Steve narrates his experience of volunteering at Orange Sky, highlighting the camaraderie with other volunteers and the gratification from helping others as the reasons he continues.",
+        "Steve discusses his increased awareness and understanding of homelessness since beginning his volunteer work, expressing surprise at the number and diverse backgrounds of those affected.",
+        "The provision of basic services like laundry for homeless individuals, fostering connections and conversations, and how this nonprofit's work goes beyond the immediate, tangible outcomes is mentioned.",
+        "Steve emphasizes the need for more affordable housing as a solution to homelessness and discusses how rising property prices, especially on the central coast, are exacerbating the problem.",
+        "Steve praises the quality training resources of Orange Sky and encourages innovation and partnership with local service providers in the not-for-profit sector for effectively addressing social issues."
+    ],
+    "Unique Storyteller ID": "ST-rec1bD2SAvw2h4OlU",
+    "Transcript (from Media)": [
+        "Alright, just do your name and then spell it would be awesome too. Spell it? Yeah, can. Okay. So just your full name and spell it? Steve Sutton. So S-T-E-V-E and Sutton, S-U-T-T-O-N. Cool. Tell us a bit, you can check it if you want. No, no, it's fine. Tell us a bit about the Steve Sutton story. What's a little intro to who you are and who are you? Well, retired. So sort of worked in finance, business banking for about 36 years. And yeah, retired, I think it was about April 2022. My wife, she's a lawyer. My wife actually volunteers for the Shirley shuttle. So she does some running around volunteering and then said, well, what are you going to do? And I thought, well, I've been working for 36 years. I thought I'd take a little bit of a break for a while. So did that for about 12 months and then kept on saying, well, what are you going to do? And I think I looked at, saw a couple of Facebook ads for Orange Sky. I thought that looks pretty interesting. Wouldn't mind giving that a crack, see what it's like. I did. That was about October last year. What was your first impressions when you first started doing it? How did it feel? It was pretty light on, I think, the first couple of shifts. In fact, we didn't have any sort of washing at all. But anyway, I still thought I'd stick with it, see how it goes. Because they had said they'd had really busy days and then the neighbourhood centre here transferred. Just excuse me one sec. Hi, Steve Sutton. Out for two weeks, so we're trying to get it fixed. I forget to clap my hands because it's super helpful. Keep going. What was your first experience like in Orange Sky? It was a bit quiet to start with, but then the neighbourhood centre relocated here and it's been really good. So a lot of people have come to get, you know, support, food support, hampers. You know, talk to people about trying to get accommodation and then it just sort of picked up from there. So started getting a lot of people. What's your kind of personal take on the impact of Orange Sky for friends and stuff? Like, is there a certain element of it that you think is more better than the other or like a bigger part of it, like the washing, the connection, the conversation? Yeah, look, I think it's a really good service for the friends. You know, some of them just don't have or can't afford to get their laundry done. So, yeah, I just think it's a sort of vital service. You know, particularly the friends here, they seem to be all pretty chilled and easygoing and everyone is really, really appreciative. So, yeah, just nice people. Cool. What's your sort of, has your opinion or take or understanding of particular things changed since you've started? Or like what's the journey been like interacting with people experiencing homelessness in general? Has it changed or the same? Yeah, look, I would say I was probably unaware of how many people are homeless. And, you know, I've sort of done shifts here. I've done shifts at Wyong. I've done shifts at Woi Woi. So you get to see different sort of areas. And it's, you know, it's a lot of different things. Yeah. And it's, yeah, just interesting how many people are sort of living out of vans. And, you know, like you look at it and, you know, like I just sort of like in some cases wonder why. Like, you know, I look at the person they seem, you know, quite nice to chat to. You know, some of them have got interesting backgrounds. Some of them are quite talented. I think Steven over there is some sort of electrical contractor. And you sort of just wonder why are you living out of a van. So, you know, something like that. You know, sometimes you think but for the grace of God go I. So, yeah, look, it's a lot more widespread than I thought, I guess. Have you changed the way in which when you see someone experiencing homelessness, is there a different feeling than when you first volunteered? Or like do you notice different things in the community now like because you're closer to it? Or one thing I always think is interesting is like do you have different conversations with your friends and family? And stuff like that? Or like is that a constant change for you? Yeah, look, you know, a lot of people that, well, sort of friends and family that I talk to sort of say, you know, like what's Orange Sky? They've never sort of heard of Orange Sky before. So, you know, from that sort of perspective, it's good to, you know, just be explaining what it's all about. Hi. Do you want a coffee or a tea, love? No, I'm fine. Thank you. Do you want a toast of cheese, Sam? No, no, I'm good. Thanks very much. You sure you don't want anything? I'm totally fine. Thank you so much for asking that. Yeah. Yeah. Yeah. So, yeah, just basically just talking to, you know, friends what it is. Yeah. Like it's, there is a lot of conversation on homelessness, like especially in Brisbane where all the tents and stuff like that. Do you have a take on what, like, I suppose what's A, what's needed and then B, like what the impact is on the community? Like what's the, what's the role of Orange Sky is in general? Like, is it broader than just the Washington? Well, yeah. I mean, what's needed is obviously more affordable accommodation. I think that's, you know, how we're going to address that, I don't know, but there needs to be more money into, you know, affordable housing for people. And it's not getting any easier on the central coast. I think we are seen as, you know, like a lot of people move out of Sydney and sort of buy up here, but they're, you know, they're not getting any more money into, you know, the city. They're not getting any more money into the city. They're not getting any more money into the city. So, you know, I think that's a big part of it. Yeah. Yeah. Yeah. Yeah. So, you know, I think that's, you know, a big part of it. I think we are seeing as, you know, like a lot of people move out of Sydney and sort of buy up here, but they're, you know, buying up what would have been, you know, first home buyers or people that are on, you know, lower socioeconomic, you know, ability to buy a house. It's just pushing up central coast prices to making it more unaffordable. Totally. Totally. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Eek! Eek! Yeah. So, I don't know what you're thinking, but I'm kind of thinking that whatever you do, the general things that you're doing excitedly when you're around a lot of new stuff that sort of moves into that balance and I wouldn't exactly say is the intentional role but I'd say is the time when is the time setting the please come for me time. How did you decide whether to give it a go? Well, yes. the video, the introductory videos and everything that are in Sky is very good. They've got a great resource base to get in and learn how to do things. You know, like I've only been here since October but started doing the van leader sort of role and the massive information there is just phenomenal. So, you know, like I come from a corporate sort of background and you know the training videos available but Orange Sky's training videos are really good. That's good feedback. Yeah. What do you feel like you get out of it, volunteering and what keeps you coming back? It's probably, I think, well yeah, one my wife makes me, no she doesn't. But look, I think it's the interaction with the people is good. Like just the friends are really, really grateful and will come up to you quite often and say, look thanks, we really appreciate what you do. We really appreciate what you're doing for us and just the camaraderie too, I think, with the other volunteers is good value. So I'll keep doing it for that reason, I think. Yeah, look, I just get a bit of a kick out of doing it, I think. That's great. It's a bit of a difference from a corporate sort of background. It is. What's a leadership role entail for the shift, I guess, for the vehicle level? What do you have to do? For the van or in general, the vans? Well, you've got good support. I mean, I come from a van. I come from finance. I've got no mechanical background at all. And when they sort of tapped me on the shoulder and said, Steve, would you be interested in doing it? I go, yeah, you guys must be desperate. Good with spreadsheets, not with mechanical stuff. But no, look, the support's pretty good. You know, I think what they said for the role is they basically just want someone who's prepared to give it a go, take a crack and see what you can do. So in a few minutes, I'm about to try and get the van. I'm not sure. I'm going to try and see if I can sort out the diesel starvation problem on the dryer. So we'll see how that goes. Sounds intense. Huh? Sounds intense. I was always the worst on the tools with Orange Sky. I didn't know what was going on. Well, I brought the tools, so we'll see what happens. If I fix it, I'll be a hero. If I don't, I'll be, yeah, I knew we shouldn't have put that finance guy in charge of the van. Orange Sky started doing a few different things, like going out of remote control. Like going out to remote communities, like taking over some laundry mats, like doing shipping container type things as well. What place do you think innovation is in charities and like, yeah, like the opportunity to do more, I guess? Like how important is that in terms of the social sector, not the profit sector? Yeah, I like what they do here. I think working in partnership with the local government, I think it's a really important thing. Working with other service providers is the way to go. I, you know, like I just love the way here the neighbourhood centre sort of works together. Like you see them bringing out coffees and sandwiches for the guys so they can sort of sit around and have a bit of a social thing. And you know, the guys get used to seeing each other every Friday, so they turn up. A lot of them turn up early because they know we always turn up early so they can get in there nice and quick. But then, you know, like the laundry will get done, but they'll still be here until we, until we finish and go. But yeah, just the other services that they provide, like trying to find accommodation for the guys or the ladies, you know, the food hampers and different things and yeah, mental health if they need it. All right, that's about it. Anything else you wanted to touch on? I feel like you wanted to say, give some shit to Nick and Lucas. I don't know Nick and Lucas. I don't know Nick and Lucas personally, but it's a good thing that they've done. So yeah, I think it was, yeah, it's just brilliant. I can't believe how fast it's spread, the number of vans around. So yeah, good job boys. 10 years this year. Yeah. Wow. Pretty angry. I didn't think they'd last this long. Nick, that's on top of you Nick. All right, later. Thanks. Cheers. See you later. Bye. Bye. Bye. Bye."
+    ],
+    "Theme (from Quotes) (from Media)": [
+        "Community Support",
+        "Comfort",
+        "Innovation",
+        "Human Connection",
+        "Harsh Living Conditions"
+    ],
+    "Location Rollup (from Media)": [
+        "Central Coast"
+    ],
+    "Role": "Volunteer",
+    "Video draft link Rollup (from Media)": [
+        null
+    ],
+    "Created": "2025-02-02T05:04:47.000Z",
+    "Created 2": "2025-02-02T05:04:47.000Z"
+}
+🎯 PROJECT MIGRATION STRATEGY RECOMMENDATIONS
+
+============================================================
+
+📊 PROJECT DISTRIBUTION ANALYSIS:
+   Total unique projects: 36
+   Total storytellers: 210
+   Average storytellers per project: 5.83
+
+🏆 TOP 10 PROJECTS BY STORYTELLER COUNT:
+   1. "Orange Sky" - 249 storytellers
+   2. "Goods." - 49 storytellers
+   3. "Diagrama" - 44 storytellers
+   4. "PICC" - 34 storytellers
+   5. "TOMNET" - 25 storytellers
+   6. "MMEIC" - 24 storytellers
+   7. "Young Guns" - 15 storytellers
+   8. "MingaMinga Rangers" - 10 storytellers
+   9. "Oonchiumpa" - 10 storytellers
+   10. "Global Laundry Alliance" - 7 storytellers
+
+🏢 ORGANIZATION PATTERN ANALYSIS:
+   ALLIANCE: 7 occurrences
+
+🏗️ MIGRATION STRATEGY RECOMMENDATIONS:
+   ✅ SIMPLE MIGRATION: Direct project mapping
+      - Create one Organization per unique project name
+      - Each Organization gets one default Project
+      - Map storytellers directly to these projects
+
+📋 RECOMMENDED MIGRATION STEPS:
+   1. Review top projects for organization groupings
+   2. Create Organizations table with these entities
+   3. Create Projects table linked to Organizations
+   4. Map existing storytellers to appropriate Projects
+   5. Handle edge cases and unmatched projects
+
+📄 DETAILED PROJECT LIST FOR REVIEW:
+   (Sorted by storyteller count - showing all projects)
+
+   1. "Orange Sky" (249 storytellers)
+   2. "Goods." (49 storytellers)
+   3. "Diagrama" (44 storytellers)
+   4. "PICC" (34 storytellers)
+   5. "TOMNET" (25 storytellers)
+   6. "MMEIC" (24 storytellers)
+   7. "Young Guns" (15 storytellers)
+   8. "MingaMinga Rangers" (10 storytellers)
+   9. "Oonchiumpa" (10 storytellers)
+   10. "Global Laundry Alliance" (7 storytellers)
+   11. "Rangers" (7 storytellers)
+   12. "Wilya Junta" (4 storytellers)
+   13. "Beyond Shadows" (4 storytellers)
+   14. "Ithaca Laundry" (3 storytellers)
+   15. "James Cook University" (3 storytellers)
+   16. "JusticeHub" (3 storytellers)
+   17. "Bega" (2 storytellers)
+   18. "A Curious Tractor" (2 storytellers)
+   19. "Community Elder" (2 storytellers)
+   20. "Ferdy's Haven" (2 storytellers)
+   21. "A Drop in the Ocean" (2 storytellers)
+   22. "BG Fit" (2 storytellers)
+   23. "PCYC" (1 storytellers)
+   24. "Palm Island Elder" (1 storytellers)
+   25. "Men's Group" (1 storytellers)
+   26. "UQ" (1 storytellers)
+   27. "Salvation Army" (1 storytellers)
+   28. "Fishers Oysters" (1 storytellers)
+   29. "Oyster Ownership" (1 storytellers)
+   30. "Freelancer" (1 storytellers)
+   31. "Snow Foundation" (1 storytellers)
+   32. "TCYC" (1 storytellers)
+   33. "Centenary Heights State High School" (1 storytellers)
+   34. "Red Dust" (1 storytellers)
+   35. "The Washing Machine Project" (1 storytellers)
+   36. "Youth Service" (1 storytellers)
+
+🎯 SUMMARY AND NEXT STEPS:
+   ✅ Analyzed 210 storytellers
+   ✅ Found 36 unique projects
+   ✅ Identified organization patterns
+   ✅ Generated migration strategy recommendations
+
+📋 RECOMMENDED NEXT ACTIONS:
+   1. Review the project list above for grouping opportunities
+   2. Identify which projects belong to the same organization
+   3. Create Organizations and Projects schema in Supabase
+   4. Run migration script to create the new structure
+   5. Update storyteller records with new project associations
+
+🎉 Analysis completed successfully!

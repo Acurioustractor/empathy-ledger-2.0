@@ -1,14 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from './supabase-client';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Get shared Supabase client instance
+let supabase: any = null;
 
-// Only create client if environment variables are available
-export const supabase =
-  supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey)
-    : null;
+async function getSupabase() {
+  if (!supabase) {
+    supabase = await createClient();
+  }
+  return supabase;
+}
 
 // ===================================
 // EMPATHY LEDGER CMS DATA TYPES
@@ -17,27 +17,35 @@ export const supabase =
 export interface Story {
   id: string;
   title: string;
-  content: string;
+  story_transcript?: string;
+  story_copy?: string;
+  story_image_url?: string;
+  video_story_link?: string;
+  embed_code?: string;
+  linked_storytellers?: string[];
+  linked_media?: string[];
+  linked_quotes?: string[];
+  linked_themes?: string[];
+  status: string;
+  featured: boolean;
+  project_id?: string;
+  created_at: string;
+  updated_at: string;
+  
+  // Legacy fields for backward compatibility
+  content?: string;
   transcription?: string;
   audio_url?: string;
   video_url?: string;
-  category:
-    | 'healthcare'
-    | 'education'
-    | 'housing'
-    | 'youth'
-    | 'elder-care'
-    | 'policy';
-  privacy_level: 'public' | 'community' | 'private';
+  category?: string;
+  privacy_level?: string;
   community_id?: string;
+  organization_id?: string;
   contributor_age_range?: string;
   contributor_location?: string;
-  themes: string[];
+  themes?: string[];
   sentiment_score?: number;
   impact_metrics?: Record<string, any>;
-  created_at: string;
-  updated_at: string;
-  status: 'draft' | 'pending' | 'approved' | 'featured';
 }
 
 export interface CommunityInsight {
@@ -64,6 +72,8 @@ export interface ContentBlock {
   content_data: Record<string, any>;
   display_order: number;
   is_active: boolean;
+  project_id?: string;
+  organization_id?: string;
   created_at: string;
   updated_at: string;
 }
@@ -89,7 +99,9 @@ export interface SiteMetric {
 
 export async function getStoriesByCategory(
   category: string,
-  limit: number = 10
+  limit: number = 10,
+  projectId?: string,
+  organizationId?: string
 ): Promise<Story[]> {
   try {
     if (!supabase) {
@@ -99,12 +111,16 @@ export async function getStoriesByCategory(
         .slice(0, limit);
     }
 
-    const { data, error } = await supabase
+    let queryBuilder = supabase
       .from('stories')
       .select('*')
-      .eq('category', category)
-      .eq('status', 'approved')
-      .eq('privacy_level', 'public')
+      .eq('status', 'Published');
+    
+    if (projectId) {
+      queryBuilder = queryBuilder.eq('project_id', projectId);
+    }
+    
+    const { data, error } = await queryBuilder
       .order('created_at', { ascending: false })
       .limit(limit);
 
@@ -122,13 +138,23 @@ export async function getStoriesByCategory(
   }
 }
 
-export async function getFeaturedStories(limit: number = 3): Promise<Story[]> {
+export async function getFeaturedStories(
+  limit: number = 3,
+  projectId?: string,
+  organizationId?: string
+): Promise<Story[]> {
   try {
-    const { data, error } = await supabase
+    let queryBuilder = supabase
       .from('stories')
       .select('*')
-      .eq('status', 'featured')
-      .eq('privacy_level', 'public')
+      .eq('featured', true)
+      .eq('status', 'Published');
+    
+    if (projectId) {
+      queryBuilder = queryBuilder.eq('project_id', projectId);
+    }
+    
+    const { data, error } = await queryBuilder
       .order('created_at', { ascending: false })
       .limit(limit);
 
@@ -147,22 +173,47 @@ export async function getStoryAnalytics(): Promise<{
   sentiment_distribution: Record<string, number>;
 }> {
   try {
+    const supabase = await getSupabase();
+    if (!supabase) {
+      return {
+        total_stories: 43,
+        stories_by_category: {
+          healthcare: 12,
+          education: 8,
+          housing: 10,
+          youth: 6,
+          'elder-care': 4,
+          policy: 3,
+        },
+        monthly_growth: 12.5,
+        sentiment_distribution: {
+          positive: 45,
+          neutral: 35,
+          negative: 20,
+        },
+      };
+    }
     // Get total story count
     const { count: totalStories } = await supabase
       .from('stories')
       .select('*', { count: 'exact', head: true })
-      .eq('status', 'approved');
+      .eq('status', 'Published');
 
-    // Get stories by category
-    const { data: categoryData } = await supabase
+    // Get stories by linked themes (simplified)
+    const { data: storyData } = await supabase
       .from('stories')
-      .select('category')
-      .eq('status', 'approved');
+      .select('linked_themes')
+      .eq('status', 'Published');
 
     const storiesByCategory =
-      categoryData?.reduce(
+      storyData?.reduce(
         (acc, story) => {
-          acc[story.category] = (acc[story.category] || 0) + 1;
+          // Count stories by themes
+          if (story.linked_themes && Array.isArray(story.linked_themes)) {
+            story.linked_themes.forEach((theme: string) => {
+              acc[theme] = (acc[theme] || 0) + 1;
+            });
+          }
           return acc;
         },
         {} as Record<string, number>
@@ -175,7 +226,7 @@ export async function getStoryAnalytics(): Promise<{
     const { count: recentStories } = await supabase
       .from('stories')
       .select('*', { count: 'exact', head: true })
-      .eq('status', 'approved')
+      .eq('status', 'Published')
       .gte('created_at', oneMonthAgo.toISOString());
 
     return {
@@ -257,7 +308,9 @@ export async function getInsightsByLocation(
 // ===================================
 
 export async function getPageContent(
-  pageSlug: string
+  pageSlug: string,
+  projectId?: string,
+  organizationId?: string
 ): Promise<ContentBlock[]> {
   try {
     if (!supabase) {
@@ -265,11 +318,21 @@ export async function getPageContent(
       return [];
     }
 
-    const { data, error } = await supabase
+    let queryBuilder = supabase
       .from('content_blocks')
       .select('*')
       .eq('page_slug', pageSlug)
-      .eq('is_active', true)
+      .eq('is_active', true);
+    
+    if (projectId) {
+      queryBuilder = queryBuilder.eq('project_id', projectId);
+    }
+    
+    if (organizationId && !projectId) {
+      queryBuilder = queryBuilder.eq('organization_id', organizationId);
+    }
+    
+    const { data, error } = await queryBuilder
       .order('display_order', { ascending: true });
 
     if (error) throw error;
@@ -307,6 +370,7 @@ export async function updatePageContent(
 
 export async function getSiteMetrics(): Promise<SiteMetric[]> {
   try {
+    const supabase = await getSupabase();
     if (!supabase) {
       console.warn('Supabase client not available - using mock data');
       return mockSiteMetrics;
@@ -332,6 +396,7 @@ export async function updateMetric(
   value: string | number
 ): Promise<boolean> {
   try {
+    const supabase = await getSupabase();
     if (!supabase) {
       console.warn('Supabase client not available - cannot update metric');
       return false;
@@ -363,24 +428,37 @@ export async function searchStories(
     category?: string;
     location?: string;
     dateRange?: { start: string; end: string };
+    projectId?: string;
+    organizationId?: string;
   }
 ): Promise<Story[]> {
   try {
+    const supabase = await getSupabase();
+    if (!supabase) {
+      console.warn('Supabase client not available - returning empty results');
+      return [];
+    }
+    
     let queryBuilder = supabase
       .from('stories')
       .select('*')
-      .eq('status', 'approved')
-      .eq('privacy_level', 'public')
+      .eq('status', 'Published')
       .or(
-        `title.ilike.%${query}%,content.ilike.%${query}%,themes.cs.{${query}}`
+        `title.ilike.%${query}%,story_transcript.ilike.%${query}%,story_copy.ilike.%${query}%`
       );
 
-    if (filters?.category) {
-      queryBuilder = queryBuilder.eq('category', filters.category);
-    }
+    // Category filtering removed - using themes instead
 
     if (filters?.location) {
       queryBuilder = queryBuilder.eq('contributor_location', filters.location);
+    }
+    
+    if (filters?.projectId) {
+      queryBuilder = queryBuilder.eq('project_id', filters.projectId);
+    }
+    
+    if (filters?.organizationId && !filters?.projectId) {
+      queryBuilder = queryBuilder.eq('organization_id', filters.organizationId);
     }
 
     if (filters?.dateRange) {
@@ -402,6 +480,242 @@ export async function searchStories(
 }
 
 // ===================================
+// MULTI-TENANT PROJECT/ORGANIZATION FUNCTIONS
+// ===================================
+
+export interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  organization_id: string;
+  status: string;
+  project_type?: string;
+  metadata?: Record<string, any>;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Organization {
+  id: string;
+  name: string;
+  description?: string;
+  location?: string;
+  contact_info?: string;
+  active: boolean;
+  created_at: string;
+}
+
+export async function getProjects(organizationId?: string): Promise<Project[]> {
+  try {
+    const supabase = await getSupabase();
+    if (!supabase) {
+      console.warn('Supabase client not available - returning empty projects');
+      return [];
+    }
+
+    let queryBuilder = supabase
+      .from('projects')
+      .select('*')
+      .eq('active', true);
+
+    if (organizationId) {
+      queryBuilder = queryBuilder.eq('organization_id', organizationId);
+    }
+
+    const { data, error } = await queryBuilder
+      .order('name', { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    return [];
+  }
+}
+
+export async function getOrganizations(): Promise<Organization[]> {
+  try {
+    const supabase = await getSupabase();
+    if (!supabase) {
+      console.warn('Supabase client not available - returning empty organizations');
+      return [];
+    }
+
+    const { data, error } = await supabase
+      .from('communities')
+      .select('*')
+      .eq('active', true)
+      .order('name', { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching organizations:', error);
+    return [];
+  }
+}
+
+export async function getProjectAnalytics(projectId: string): Promise<{
+  story_count: number;
+  storyteller_count: number;
+  location_distribution: Record<string, number>;
+  category_distribution: Record<string, number>;
+}> {
+  try {
+    const supabase = await getSupabase();
+    if (!supabase) {
+      return {
+        story_count: 0,
+        storyteller_count: 0,
+        location_distribution: {},
+        category_distribution: {}
+      };
+    }
+
+    // Get story count for project
+    const { count: storyCount } = await supabase
+      .from('stories')
+      .select('*', { count: 'exact', head: true })
+      .eq('project_id', projectId)
+      .eq('status', 'Published');
+
+    // Get storyteller count for project
+    const { count: storytellerCount } = await supabase
+      .from('users')
+      .select('*', { count: 'exact', head: true })
+      .eq('project_id', projectId);
+
+    // Get location distribution
+    const { data: locationData } = await supabase
+      .from('users')
+      .select(`
+        primary_location_id,
+        locations!inner(name)
+      `)
+      .eq('project_id', projectId)
+      .not('primary_location_id', 'is', null);
+
+    const locationDistribution = locationData?.reduce((acc, user) => {
+      const locationName = (user as any).locations?.name;
+      if (locationName) {
+        acc[locationName] = (acc[locationName] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>) || {};
+
+    // Get theme distribution from stories
+    const { data: themeData } = await supabase
+      .from('stories')
+      .select('linked_themes')
+      .eq('project_id', projectId)
+      .eq('status', 'Published');
+
+    const categoryDistribution = themeData?.reduce((acc, story) => {
+      if (story.linked_themes && Array.isArray(story.linked_themes)) {
+        story.linked_themes.forEach((theme: string) => {
+          acc[theme] = (acc[theme] || 0) + 1;
+        });
+      }
+      return acc;
+    }, {} as Record<string, number>) || {};
+
+    return {
+      story_count: storyCount || 0,
+      storyteller_count: storytellerCount || 0,
+      location_distribution: locationDistribution,
+      category_distribution: categoryDistribution
+    };
+  } catch (error) {
+    console.error('Error getting project analytics:', error);
+    return {
+      story_count: 0,
+      storyteller_count: 0,
+      location_distribution: {},
+      category_distribution: {}
+    };
+  }
+}
+
+export async function getOrganizationAnalytics(organizationId: string): Promise<{
+  project_count: number;
+  total_storytellers: number;
+  total_stories: number;
+  projects: Array<{ name: string; storyteller_count: number; story_count: number }>;
+}> {
+  try {
+    const supabase = await getSupabase();
+    if (!supabase) {
+      return {
+        project_count: 0,
+        total_storytellers: 0,
+        total_stories: 0,
+        projects: []
+      };
+    }
+
+    // Get projects for organization
+    const { data: projects } = await supabase
+      .from('projects')
+      .select('id, name')
+      .eq('organization_id', organizationId)
+      .eq('active', true);
+
+    const projectIds = projects?.map(p => p.id) || [];
+
+    // Get total storytellers for organization
+    const { count: storytellerCount } = await supabase
+      .from('users')
+      .select('*', { count: 'exact', head: true })
+      .in('project_id', projectIds);
+
+    // Get total stories for organization
+    const { count: storyCount } = await supabase
+      .from('stories')
+      .select('*', { count: 'exact', head: true })
+      .in('project_id', projectIds)
+      .eq('status', 'Published');
+
+    // Get per-project stats
+    const projectStats = await Promise.all(
+      projects?.map(async (project) => {
+        const { count: projectStorytellerCount } = await supabase
+          .from('users')
+          .select('*', { count: 'exact', head: true })
+          .eq('project_id', project.id);
+
+        const { count: projectStoryCount } = await supabase
+          .from('stories')
+          .select('*', { count: 'exact', head: true })
+          .eq('project_id', project.id)
+          .eq('status', 'Published');
+
+        return {
+          name: project.name,
+          storyteller_count: projectStorytellerCount || 0,
+          story_count: projectStoryCount || 0
+        };
+      }) || []
+    );
+
+    return {
+      project_count: projects?.length || 0,
+      total_storytellers: storytellerCount || 0,
+      total_stories: storyCount || 0,
+      projects: projectStats
+    };
+  } catch (error) {
+    console.error('Error getting organization analytics:', error);
+    return {
+      project_count: 0,
+      total_storytellers: 0,
+      total_stories: 0,
+      projects: []
+    };
+  }
+}
+
+// ===================================
 // MOCK DATA FOR DEVELOPMENT
 // ===================================
 
@@ -409,30 +723,22 @@ export const mockStories: Story[] = [
   {
     id: 'story-1',
     title: 'Healthcare Access in Brisbane',
-    content:
-      'After sharing my experience with mental health services, the community center implemented 24/7 support lines...',
-    category: 'healthcare',
-    privacy_level: 'public',
-    themes: ['mental health', 'accessibility', 'community support'],
-    sentiment_score: 0.8,
-    impact_metrics: { people_helped: 347, policy_changes: 2 },
+    story_transcript: 'After sharing my experience with mental health services, the community center implemented 24/7 support lines...',
+    linked_themes: ['mental health', 'accessibility', 'community support'],
+    status: 'Published',
+    featured: true,
     created_at: '2024-01-15T10:00:00Z',
     updated_at: '2024-01-15T10:00:00Z',
-    status: 'featured',
   },
   {
     id: 'story-2',
     title: 'Education Pathways for Indigenous Youth',
-    content:
-      'Our voices led to culturally responsive teaching programs in three universities...',
-    category: 'education',
-    privacy_level: 'public',
-    themes: ['indigenous education', 'cultural safety', 'youth empowerment'],
-    sentiment_score: 0.9,
-    impact_metrics: { students_affected: 1200, completion_rate_increase: 67 },
+    story_transcript: 'Our voices led to culturally responsive teaching programs in three universities...',
+    linked_themes: ['indigenous education', 'cultural safety', 'youth empowerment'],
+    status: 'Published',
+    featured: false,
     created_at: '2024-01-10T14:00:00Z',
     updated_at: '2024-01-10T14:00:00Z',
-    status: 'approved',
   },
 ];
 

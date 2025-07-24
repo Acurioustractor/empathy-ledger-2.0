@@ -11,8 +11,9 @@ import { projectOperations } from '@/lib/project-operations';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -29,7 +30,7 @@ export async function GET(
 
     // Get project configuration with sovereignty context
     const { config, error } = await projectOperations.getProjectConfig(
-      params.projectId,
+      projectId,
       user.id
     );
 
@@ -50,7 +51,7 @@ export async function GET(
 
     // Calculate sovereignty compliance in real-time
     const { score: current_compliance_score } =
-      await projectOperations.updateSovereigntyCompliance(params.projectId);
+      await projectOperations.updateSovereigntyCompliance(projectId);
 
     return NextResponse.json({
       ...config,
@@ -67,10 +68,10 @@ export async function GET(
         data_sovereignty_maintained: true,
       },
       api_endpoints: {
-        stories: `/api/projects/${params.projectId}/stories`,
-        insights: `/api/projects/${params.projectId}/insights`,
-        members: `/api/projects/${params.projectId}/members`,
-        analytics: `/api/projects/${params.projectId}/analytics`,
+        stories: `/api/projects/${projectId}/stories`,
+        insights: `/api/projects/${projectId}/insights`,
+        members: `/api/projects/${projectId}/members`,
+        analytics: `/api/projects/${projectId}/analytics`,
       },
       sovereignty_principles: {
         community_ownership:
@@ -92,8 +93,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -137,7 +139,7 @@ export async function PUT(
 
     // Apply updates with sovereignty validation
     const { success, error } = await projectOperations.updateProjectConfig(
-      params.projectId,
+      projectId,
       user.id,
       updates
     );
@@ -154,7 +156,7 @@ export async function PUT(
 
     // Get updated project configuration
     const { config: updated_config } = await projectOperations.getProjectConfig(
-      params.projectId,
+      projectId,
       user.id
     );
 
@@ -179,8 +181,9 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -199,7 +202,7 @@ export async function DELETE(
     const { data: membership } = await supabase
       .from('project_members')
       .select('role')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -219,7 +222,7 @@ export async function DELETE(
     const { data: stories, count: story_count } = await supabase
       .from('stories')
       .select('id', { count: 'exact' })
-      .eq('project_id', params.projectId);
+      .eq('project_id', projectId);
 
     if (story_count && story_count > 0) {
       return NextResponse.json(
@@ -242,7 +245,7 @@ export async function DELETE(
         status: 'archived',
         updated_at: new Date().toISOString(),
       })
-      .eq('id', params.projectId);
+      .eq('id', projectId);
 
     if (update_error) {
       return NextResponse.json(

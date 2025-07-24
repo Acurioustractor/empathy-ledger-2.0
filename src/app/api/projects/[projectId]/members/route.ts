@@ -12,8 +12,9 @@ import { projectOperations } from '@/lib/project-operations';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -32,7 +33,7 @@ export async function GET(
     const { data: membership } = await supabase
       .from('project_members')
       .select('role, permissions')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -70,7 +71,7 @@ export async function GET(
         )
       `
       )
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('status', 'active')
       .order('joined_at', { ascending: false });
 
@@ -97,7 +98,7 @@ export async function GET(
           )
         `
         )
-        .eq('project_id', params.projectId)
+        .eq('project_id', projectId)
         .eq('status', 'active')
         .order('joined_at', { ascending: false });
     }
@@ -168,8 +169,9 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -216,7 +218,7 @@ export async function POST(
     const { data: inviter_membership } = await supabase
       .from('project_members')
       .select('role, permissions')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -239,7 +241,7 @@ export async function POST(
     const { data: existing_invitation } = await supabase
       .from('project_invitations')
       .select('id, status')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('email', invitation_data.email)
       .eq('status', 'pending')
       .single();
@@ -257,7 +259,7 @@ export async function POST(
     const { data: existing_member } = await supabase
       .from('project_members')
       .select('id')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq(
         'user_id',
         supabase
@@ -277,7 +279,7 @@ export async function POST(
 
     // Send invitation using project operations
     const { success, invited_count, error } =
-      await projectOperations.inviteToProject(params.projectId, user.id, [
+      await projectOperations.inviteToProject(projectId, user.id, [
         {
           email: invitation_data.email,
           role: invitation_data.role,
@@ -297,7 +299,7 @@ export async function POST(
     const { data: new_invitation } = await supabase
       .from('project_invitations')
       .select('*')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('email', invitation_data.email)
       .eq('status', 'pending')
       .single();
@@ -329,8 +331,9 @@ export async function POST(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -358,7 +361,7 @@ export async function PUT(
     const { data: updater_membership } = await supabase
       .from('project_members')
       .select('role')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -408,7 +411,7 @@ export async function PUT(
         updated_at: new Date().toISOString(),
       })
       .eq('id', member_id)
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .select(
         `
         *,

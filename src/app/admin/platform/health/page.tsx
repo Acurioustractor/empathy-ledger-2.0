@@ -1,5 +1,7 @@
 import { SupabaseHealthDashboard } from '@/components/platform/supabase-health-dashboard';
 
+export const dynamic = 'force-dynamic';
+
 export default function SupabaseHealthPage() {
   return (
     <div className="space-y-6">

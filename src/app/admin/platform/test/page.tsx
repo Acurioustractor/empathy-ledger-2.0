@@ -1,4 +1,6 @@
 // Simple test page to verify platform admin routes work
+export const dynamic = 'force-dynamic';
+
 export default function PlatformTestPage() {
   return (
     <div className="space-y-6">
