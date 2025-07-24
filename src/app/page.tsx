@@ -1,434 +1,300 @@
 import React from 'react';
 import Link from 'next/link';
-import {
-  LiveMetric,
-  LiveStoryCollection,
-} from '@/components/cms/DynamicContent';
-import MediaDisplay from '@/components/ui/MediaDisplay';
-import {
-  placeholderImages,
-  placeholderBlurDataURLs,
-} from '@/lib/supabase-media';
+import ConstellationWrapper from '@/components/constellation/ConstellationWrapper';
+import { createAdminClient } from '@/lib/supabase-server';
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Get REAL storytellers from your database - they're in the storytellers table
+  const supabase = await createAdminClient();
+  
+  // Step 1: Find transcripts with story analysis to get storyteller IDs
+  const { data: transcriptsWithAnalysis } = await supabase
+    .from('transcripts')
+    .select(`
+      id,
+      storyteller_id,
+      story_analysis(
+        id,
+        themes_identified,
+        key_quotes,
+        primary_emotions,
+        summary,
+        confidence_score
+      )
+    `);
+
+  // Filter to get storyteller IDs that have analysis with themes
+  const validChains = transcriptsWithAnalysis?.filter(t => 
+    t.story_analysis && 
+    t.story_analysis.length > 0 && 
+    t.story_analysis[0].themes_identified && 
+    t.story_analysis[0].themes_identified.length > 0
+  ) || [];
+
+  // Sort by confidence score and get top storytellers
+  const sortedChains = validChains
+    .sort((a, b) => (b.story_analysis?.[0]?.confidence_score || 0) - (a.story_analysis?.[0]?.confidence_score || 0))
+    .slice(0, 6);
+
+  const storytellerIds = sortedChains.map(t => t.storyteller_id);
+
+  // Step 2: Get storyteller details for those IDs
+  const { data: storytellers, error } = await supabase
+    .from('storytellers')
+    .select(`
+      id,
+      full_name,
+      bio,
+      profile_image_url,
+      organization:organizations(name),
+      location:locations(name)
+    `)
+    .in('id', storytellerIds)
+    .not('bio', 'is', null);
+
+  // Step 3: Merge the analysis data back with storytellers
+  const storytellersWithAnalysis = storytellers?.map(storyteller => {
+    const chain = sortedChains.find(c => c.storyteller_id === storyteller.id);
+    return {
+      ...storyteller,
+      transcripts: chain ? [{
+        id: chain.id,
+        story_analysis: chain.story_analysis
+      }] : []
+    };
+  }) || [];
+    
+  // Get themes for mapping IDs to names
+  const { data: themes } = await supabase
+    .from('themes')
+    .select('id, name')
+    .eq('status', 'active');
+
+  console.log('Storytellers with AI analysis loaded:', storytellersWithAnalysis?.length, error);
+  console.log('Themes loaded:', themes?.length);
+  
+  // Debug: Show what AI data we have
+  if (storytellersWithAnalysis && storytellersWithAnalysis.length > 0) {
+    console.log('Sample storyteller with AI data:', {
+      name: storytellersWithAnalysis[0].full_name,
+      hasAnalysis: !!storytellersWithAnalysis[0].transcripts?.[0]?.story_analysis?.[0],
+      themes: storytellersWithAnalysis[0].transcripts?.[0]?.story_analysis?.[0]?.themes_identified,
+      quotes: storytellersWithAnalysis[0].transcripts?.[0]?.story_analysis?.[0]?.key_quotes?.length,
+      confidence: storytellersWithAnalysis[0].transcripts?.[0]?.story_analysis?.[0]?.confidence_score
+    });
+  }
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero - Perfect Breathing Space */}
-      <section className="hero-spacing">
-        <div className="hero-container text-center">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-extralight text-gray-900 mb-8 tracking-tight leading-[0.9]">
-            Every story
-            <br />
-            has power.
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 font-light max-w-2xl mx-auto content-spacing leading-relaxed">
-            Transform personal experiences into community wisdom. Complete
-            privacy. Real impact.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center subsection-spacing">
-            <Link href="/submit" className="no-underline">
-              <button className="bg-gray-900 text-white px-10 py-4 rounded-full text-base font-light hover:bg-gray-800 smooth-transition hover:scale-[1.02] hover-lift">
-                Share Your Story
-              </button>
-            </Link>
-            <Link href="/how-it-works" className="no-underline">
-              <button className="text-gray-700 px-10 py-4 rounded-full text-base font-light hover:bg-gray-50 smooth-transition">
-                Learn More
-              </button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Elegant scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-          <div className="w-6 h-10 border border-gray-300 rounded-full flex justify-center pt-2">
-            <div className="w-1 h-3 bg-gray-400 rounded-full animate-bounce"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Indicators - Refined */}
-      <section className="py-8 border-y border-gray-100">
-        <div className="content-container">
-          <div className="flex flex-wrap justify-center items-center gap-12 text-sm text-gray-500 font-light">
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-              <span>End-to-end encrypted</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-              <span>Australian owned</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-              <span>
-                <LiveMetric metricType="story_count" fallbackValue={15247} />{' '}
-                stories protected
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Individual Power - Elegant Layout */}
-      <section className="section-spacing">
-        <div className="content-container">
-          <div className="grid lg:grid-cols-2 gap-24 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-gray-900 content-spacing leading-[1.1]">
-                Your story
-                <br />
-                stays yours.
-              </h2>
-              <p className="text-lg text-gray-600 subsection-spacing leading-relaxed font-light">
-                Share your experiences while maintaining complete control.
-                Choose who sees your story, change permissions anytime, and
-                benefit when your insights help others.
+    <div>
+      {/* Hero with Constellation Visual */}
+      <section className="hero-constellation">
+        <div className="container">
+          <div className="hero-content">
+            <div className="hero-text">
+              <div className="hero-badge">COMMUNITY OWNED PLATFORM</div>
+              <h1 className="hero-title">
+                Stories That Connect Communities
+              </h1>
+              <p className="hero-description">
+                A platform where storytellers maintain ownership of their narratives, 
+                communities control their cultural data, and every voice strengthens 
+                the collective wisdom.
               </p>
-              <div className="space-y-8">
-                <div className="flex items-start gap-6">
-                  <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0 mt-1">
-                    <div className="w-2 h-2 bg-gray-900 rounded-full"></div>
-                  </div>
-                  <div>
-                    <h3 className="font-normal text-gray-900 mb-3 text-lg">
-                      Complete privacy control
-                    </h3>
-                    <p className="text-gray-500 text-base font-light leading-relaxed">
-                      Your data never leaves Australia. Full encryption.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-6">
-                  <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0 mt-1">
-                    <div className="w-2 h-2 bg-gray-900 rounded-full"></div>
-                  </div>
-                  <div>
-                    <h3 className="font-normal text-gray-900 mb-3 text-lg">
-                      Connect with community
-                    </h3>
-                    <p className="text-gray-500 text-base font-light leading-relaxed">
-                      Find others with shared experiences, anonymously.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-6">
-                  <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0 mt-1">
-                    <div className="w-2 h-2 bg-gray-900 rounded-full"></div>
-                  </div>
-                  <div>
-                    <h3 className="font-normal text-gray-900 mb-3 text-lg">
-                      Fair compensation
-                    </h3>
-                    <p className="text-gray-500 text-base font-light leading-relaxed">
-                      Receive value when your story creates insights.
-                    </p>
-                  </div>
-                </div>
+              <div className="hero-actions">
+                <Link href="/submit" className="btn btn-primary">
+                  Share Your Story
+                </Link>
+                <Link href="/simple-stories" className="btn btn-secondary">
+                  Explore Stories
+                </Link>
               </div>
             </div>
-
-            <div className="relative">
-              <MediaDisplay
-                src={placeholderImages.community}
-                alt="Community gathering"
-                aspectRatio="portrait"
-                rounded="3xl"
-                blurDataURL={placeholderBlurDataURLs.community}
-                className="hover-lift"
-              />
-              <div className="absolute -bottom-8 -right-8 bg-white rounded-3xl shadow-xl p-8 max-w-sm hover-lift">
-                <p className="text-base text-gray-600 italic font-light mb-4">
-                  "My story helped reshape mental health services for 200+
-                  people in my community."
-                </p>
-                <p className="text-sm font-normal text-gray-900">
-                  Sarah, Brisbane
-                </p>
+            
+            {/* Constellation Visual */}
+            <div className="constellation-container">
+              <ConstellationWrapper />
+              <div className="constellation-label">
+                Every story connects to strengthen our collective understanding
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Live Metrics - Breathing Beautifully */}
-      <section className="section-spacing bg-gray-50">
-        <div className="content-container">
-          <div className="text-center subsection-spacing">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-gray-900 content-spacing leading-[1.1]">
-              When stories connect,
-              <br />
-              <span className="text-gray-500">communities transform.</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto font-light">
-              Privacy-preserving AI reveals patterns without exposing
-              individuals. Real insights. Real change.
-            </p>
-          </div>
-
-          {/* Live metrics with perfect spacing */}
-          <div className="grid md:grid-cols-3 gap-16 max-w-5xl mx-auto">
-            <div className="text-center hover-lift">
-              <div className="text-6xl font-extralight text-gray-900 mb-4">
-                <LiveMetric metricType="community_count" fallbackValue={89} />
-              </div>
-              <div className="text-base text-gray-500 font-light">
-                Communities empowered
-              </div>
-            </div>
-            <div className="text-center hover-lift">
-              <div className="text-6xl font-extralight text-gray-900 mb-4">
-                <LiveMetric metricType="policy_changes" fallbackValue={342} />
-              </div>
-              <div className="text-base text-gray-500 font-light">
-                Policy changes driven
-              </div>
-            </div>
-            <div className="text-center hover-lift">
-              <div className="text-6xl font-extralight text-gray-900 mb-4">
-                <LiveMetric
-                  metricType="value_created"
-                  fallbackValue={2300000}
-                  format="currency"
-                />
-              </div>
-              <div className="text-base text-gray-500 font-light">
-                Returned to storytellers
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Visual Impact - Media Integration */}
-      <section className="section-spacing">
-        <div className="content-container">
-          <div className="grid lg:grid-cols-2 gap-24 items-center">
-            <div className="order-2 lg:order-1">
-              <MediaDisplay
-                src={placeholderImages.impact}
-                alt="Community impact visualization"
-                aspectRatio="video"
-                rounded="3xl"
-                blurDataURL={placeholderBlurDataURLs.impact}
-                className="hover-lift"
-              />
-            </div>
-
-            <div className="order-1 lg:order-2">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-gray-900 content-spacing leading-[1.1]">
-                See the impact.
-              </h2>
-              <p className="text-lg text-gray-600 subsection-spacing leading-relaxed font-light">
-                From individual stories to community transformation. Watch how
-                shared experiences create lasting change in healthcare,
-                education, and social services.
-              </p>
-              <Link
-                href="/case-studies"
-                className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg smooth-transition group no-underline"
-              >
-                View case studies
-                <svg
-                  className="w-5 h-5 group-hover:translate-x-1 smooth-transition"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9 5l7 7-7 7"
-                  />
+      {/* Platform Values */}
+      <section className="section values-section">
+        <div className="container">
+          <div className="grid-3">
+            <div className="value-card">
+              <div className="icon icon-red">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                 </svg>
+              </div>
+              <h3>Community First</h3>
+              <p>Stories belong to storytellers, not tech companies.</p>
+            </div>
+            
+            <div className="value-card">
+              <div className="icon icon-blue">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+              </div>
+              <h3>Data Sovereignty</h3>
+              <p>Following Indigenous data sovereignty principles.</p>
+            </div>
+            
+            <div className="value-card">
+              <div className="icon icon-green">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                </svg>
+              </div>
+              <h3>Ethical Technology</h3>
+              <p>AI serves storytellers, not shareholders.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Storytellers Grid - Real Supabase Data */}
+      <section className="section storytellers-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Community Storytellers</h2>
+            <p>Voices that shape our collective narrative ({storytellers?.length || 0} storytellers)</p>
+            <div className="connection-note">
+              <svg className="connection-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <p>Each storyteller's narrative has been analyzed by AI to identify themes, emotions, and key insights that connect us across communities</p>
+            </div>
+          </div>
+          
+          <div className="storytellers-grid">
+            {storytellersWithAnalysis && storytellersWithAnalysis.length > 0 ? storytellersWithAnalysis.map((person) => (
+              <Link key={person.id} href={`/storytellers/${person.id}`} className="storyteller-card-link">
+                <div className="storyteller-card">
+                  <div className="storyteller-header">
+                    <div className="storyteller-avatar">
+                      {person.profile_image_url ? (
+                        <img 
+                          src={person.profile_image_url} 
+                          alt={person.full_name}
+                          className="avatar-image"
+                        />
+                      ) : (
+                        <div className="avatar-placeholder">
+                          {person.full_name?.charAt(0) || '?'}
+                        </div>
+                      )}
+                    </div>
+                    <div className="storyteller-info">
+                      <h3 className="storyteller-name">{person.full_name}</h3>
+                      <p className="storyteller-community">
+                        {person.organization?.name || person.location?.name || 'Community Member'}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="storyteller-quote">
+                    "{person.transcripts?.[0]?.story_analysis?.[0]?.key_quotes?.[0] || person.bio?.substring(0, 120) || 'Every story connects us to something larger than ourselves'}..."
+                  </div>
+                  
+                  <div className="storyteller-themes">
+                    {(person.transcripts?.[0]?.story_analysis?.[0]?.themes_identified?.slice(0, 4).map((themeId: number) => {
+                      const theme = themes?.find(t => t.id === themeId);
+                      return theme ? (
+                        <span key={themeId} className="theme-pill">{theme.name}</span>
+                      ) : null;
+                    }) || ['Resilience', 'Community', 'Voice'].map(theme => (
+                      <span key={theme} className="theme-pill">{theme}</span>
+                    )))}
+                  </div>
+                  
+                  <div className="storyteller-footer">
+                    <span className="view-more">View Profile →</span>
+                  </div>
+                </div>
               </Link>
-            </div>
+            )) : (
+              // Demo data if no Supabase data
+              Array.from({ length: 6 }).map((_, i) => (
+                <Link key={i} href={`/storytellers/${i}`} className="storyteller-card-link">
+                  <div className="storyteller-card">
+                    <div className="storyteller-header">
+                      <div className="storyteller-avatar">
+                        <img 
+                          src={`https://i.pravatar.cc/150?img=${[3, 5, 9, 12, 25, 32][i]}`}
+                          alt={['Anna Chen', 'Marcus Williams', 'Sarah Johnson', 'James Miller', 'Lisa Brown', 'Robert Davis'][i]}
+                          className="avatar-image"
+                        />
+                      </div>
+                      <div className="storyteller-info">
+                        <h3 className="storyteller-name">
+                          {['Anna Chen', 'Marcus Williams', 'Sarah Johnson', 'James Miller', 'Lisa Brown', 'Robert Davis'][i]}
+                        </h3>
+                        <p className="storyteller-community">
+                          {['Gadigal Country', 'Wiradjuri Nation', 'Bundjalung Country', 'Kaurna Land', 'Wurundjeri Country', 'Larrakia Nation'][i]}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="storyteller-quote">
+                      {[
+                        '"In sharing our stories, we find our strength"',
+                        '"Each voice adds to the tapestry of truth"', 
+                        '"Connection begins with understanding"',
+                        '"Our narratives shape tomorrow"',
+                        '"Culture lives through our words"',
+                        '"Together, we write history"'
+                      ][i]}
+                    </div>
+                    
+                    <div className="storyteller-themes">
+                      {[
+                        ['Resilience', 'Family', 'Heritage'],
+                        ['Community', 'Leadership', 'Change'], 
+                        ['Culture', 'Identity', 'Growth'],
+                        ['Justice', 'Voice', 'Hope'],
+                        ['Tradition', 'Innovation', 'Future'],
+                        ['Land', 'Belonging', 'Wisdom']
+                      ][i].map(theme => (
+                        <span key={theme} className="theme-pill">{theme}</span>
+                      ))}
+                    </div>
+                    
+                    <div className="storyteller-footer">
+                      <span className="view-more">View Profile →</span>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            )}
           </div>
-        </div>
-      </section>
-
-      {/* How It Works - Elegant Simplicity */}
-      <section className="section-spacing bg-gray-50">
-        <div className="content-container text-center">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-gray-900 subsection-spacing leading-[1.1]">
-            Simple. Secure. Powerful.
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-16 subsection-spacing">
-            <div className="hover-lift">
-              <div className="w-24 h-24 bg-gray-900 rounded-3xl flex items-center justify-center mx-auto content-spacing">
-                <span className="text-3xl text-white font-extralight">1</span>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">Share</h3>
-              <p className="text-gray-500 font-light leading-relaxed">
-                Tell your story in your own way. Written, audio, or video.
-              </p>
-            </div>
-
-            <div className="hover-lift">
-              <div className="w-24 h-24 bg-gray-900 rounded-3xl flex items-center justify-center mx-auto content-spacing">
-                <span className="text-3xl text-white font-extralight">2</span>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Connect
-              </h3>
-              <p className="text-gray-500 font-light leading-relaxed">
-                Find community. Build understanding. Drive change.
-              </p>
-            </div>
-
-            <div className="hover-lift">
-              <div className="w-24 h-24 bg-gray-900 rounded-3xl flex items-center justify-center mx-auto content-spacing">
-                <span className="text-3xl text-white font-extralight">3</span>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Transform
-              </h3>
-              <p className="text-gray-500 font-light leading-relaxed">
-                See real impact in your community. Get compensated.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <Link
-              href="/how-it-works"
-              className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg smooth-transition group no-underline"
-            >
-              Learn how it works
-              <svg
-                className="w-5 h-5 group-hover:translate-x-1 smooth-transition"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+          
+          <div className="section-footer">
+            <Link href="/storytellers" className="btn btn-secondary">
+              Meet All Storytellers
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Live Stories - CMS Integration Showcase */}
-      <section className="section-spacing">
-        <div className="content-container">
-          <div className="text-center subsection-spacing">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 content-spacing">
-              Stories in action
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              Real community insights updating live from our platform
-            </p>
-          </div>
-
-          <div className="bg-white border border-gray-100 rounded-3xl p-8 md:p-12 hover-lift">
-            <LiveStoryCollection
-              category="healthcare"
-              limit={2}
-              displayStyle="quotes"
-            />
-          </div>
-
-          <div className="text-center mt-12">
-            <Link
-              href="/cms"
-              className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg smooth-transition group no-underline"
-            >
-              View CMS Dashboard
-              <svg
-                className="w-5 h-5 group-hover:translate-x-1 smooth-transition"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+      {/* CTA Section */}
+      <section className="section cta-section">
+        <div className="container">
+          <div className="cta-content">
+            <h2>Your Story Matters</h2>
+            <p>Join a community where your voice is valued and your narrative remains yours</p>
+            <Link href="/submit" className="btn btn-primary btn-large">
+              Share Your Story
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Media Gallery - Visual Storytelling */}
-      <section className="section-spacing bg-gray-50">
-        <div className="content-container">
-          <div className="text-center subsection-spacing">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 content-spacing">
-              Community in action
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              See the faces and places where stories become change
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <MediaDisplay
-              src={placeholderImages.workshop}
-              alt="Community workshop"
-              aspectRatio="square"
-              rounded="3xl"
-              caption="Story-sharing workshops"
-              blurDataURL={placeholderBlurDataURLs.workshop}
-              className="hover-lift"
-            />
-            <MediaDisplay
-              src={placeholderImages.team}
-              alt="Team collaboration"
-              aspectRatio="square"
-              rounded="3xl"
-              caption="Cross-community collaboration"
-              blurDataURL={placeholderBlurDataURLs.team}
-              className="hover-lift"
-            />
-            <MediaDisplay
-              src={placeholderImages.portrait}
-              alt="Community leader"
-              aspectRatio="square"
-              rounded="3xl"
-              caption="Community leadership"
-              blurDataURL={placeholderBlurDataURLs.portrait}
-              className="hover-lift"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA - Perfect Closure */}
-      <section className="section-spacing">
-        <div className="content-container text-center">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-gray-900 content-spacing leading-[1.1]">
-            Ready to share
-            <br />
-            your story?
-          </h2>
-          <p className="text-xl text-gray-600 subsection-spacing max-w-2xl mx-auto font-light">
-            Join thousands of Australians creating positive change through
-            storytelling.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link href="/submit" className="no-underline">
-              <button className="bg-gray-900 text-white px-10 py-4 rounded-full text-base font-light hover:bg-gray-800 smooth-transition hover:scale-[1.02] hover-lift">
-                Start Now
-              </button>
-            </Link>
-            <Link href="/contact" className="no-underline">
-              <button className="text-gray-700 px-10 py-4 rounded-full text-base font-light hover:bg-gray-50 smooth-transition">
-                Get in Touch
-              </button>
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

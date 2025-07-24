@@ -164,15 +164,41 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
-    // Simulate encryption and submission process
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // Submit to Supabase via API
+      const response = await fetch('/api/stories/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          // Add metadata
+          submitted_at: new Date().toISOString(),
+          ip_address: null, // Privacy-first approach
+          user_agent: null, // No tracking
+        }),
+      });
 
-    if (onSubmit) {
-      onSubmit(formData);
+      if (!response.ok) {
+        throw new Error('Failed to submit story');
+      }
+
+      const result = await response.json();
+      
+      if (onSubmit) {
+        onSubmit(formData);
+      }
+
+      // Show success message
+      console.log('Story submitted successfully:', result);
+      
+    } catch (error) {
+      console.error('Story submission error:', error);
+      // Show error message to user
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
-    // Reset form or show success message
   };
 
   const renderStep1 = () => (
@@ -222,8 +248,8 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
               }
               className={`p-4 rounded-lg border-2 text-left transition-all ${
                 formData.format === format.key
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? 'border-[var(--primary)] bg-[var(--muted)]'
+                  : 'border-[var(--muted)] hover:border-[var(--primary)]/50'
               }`}
             >
               <div className="text-2xl mb-2">{format.icon}</div>
@@ -247,7 +273,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
           id="title"
           value={formData.title}
           onChange={e => updateFormData({ title: e.target.value })}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          className="w-full px-4 py-3 border border-[var(--primary)]/50 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           placeholder="My story about..."
         />
       </div>
@@ -269,12 +295,12 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
             value={formData.content}
             onChange={e => updateFormData({ content: e.target.value })}
             rows={8}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-4 py-3 border border-[var(--primary)]/50 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             placeholder="Share your experience in your own words..."
             required
           />
         ) : (
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+          <div className="border-2 border-dashed border-[var(--primary)]/50 rounded-lg p-8 text-center">
             <div className="text-4xl mb-4">
               {formData.format === 'audio' ? '🎤' : '🎥'}
             </div>
@@ -290,7 +316,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
               value={formData.content}
               onChange={e => updateFormData({ content: e.target.value })}
               rows={3}
-              className="w-full mt-4 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full mt-4 px-4 py-3 border border-[var(--primary)]/50 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               placeholder="Add a description of your story..."
             />
           </div>
@@ -309,7 +335,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
           id="theme"
           value={formData.theme}
           onChange={e => updateFormData({ theme: e.target.value })}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          className="w-full px-4 py-3 border border-[var(--primary)]/50 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         >
           <option value="">Select a theme...</option>
           {themes.map(theme => (
@@ -345,8 +371,8 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
               key={level.key}
               className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
                 formData.shareLevel === level.key
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? 'border-[var(--primary)] bg-[var(--muted)]'
+                  : 'border-[var(--muted)] hover:border-[var(--primary)]/50'
               }`}
               onClick={() => updateFormData({ shareLevel: level.key as any })}
             >
@@ -421,7 +447,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
             type="checkbox"
             checked={formData.anonymous}
             onChange={e => updateFormData({ anonymous: e.target.checked })}
-            className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+            className="w-4 h-4 text-primary-600 border-[var(--primary)]/50 rounded focus:ring-primary-500"
           />
           <span className="ml-2 text-sm text-gray-900">
             Keep my identity anonymous (recommended)
@@ -444,7 +470,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
           id="location"
           value={formData.location}
           onChange={e => updateFormData({ location: e.target.value })}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          className="w-full px-4 py-3 border border-[var(--primary)]/50 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         >
           <option value="">Prefer not to say</option>
           <option value="NSW">New South Wales</option>
@@ -490,7 +516,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
             updateFormData({ culturalConsiderations: e.target.value })
           }
           rows={3}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          className="w-full px-4 py-3 border border-[var(--primary)]/50 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           placeholder="Any cultural protocols, sensitivities, or special considerations we should be aware of..."
         />
       </div>
@@ -505,7 +531,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
               onChange={e =>
                 updateFormData({ consentToAnalysis: e.target.checked })
               }
-              className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 mt-1"
+              className="w-4 h-4 text-primary-600 border-[var(--primary)]/50 rounded focus:ring-primary-500 mt-1"
             />
             <span className="ml-3 text-sm text-gray-900">
               <strong>I consent to privacy-preserving analysis</strong> of my
@@ -524,7 +550,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
                 onChange={e =>
                   updateFormData({ consentToResearch: e.target.checked })
                 }
-                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 mt-1"
+                className="w-4 h-4 text-primary-600 border-[var(--primary)]/50 rounded focus:ring-primary-500 mt-1"
               />
               <span className="ml-3 text-sm text-gray-900">
                 <strong>I consent to ethical research use</strong> of my
@@ -544,7 +570,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
               onChange={e =>
                 updateFormData({ consentToSharing: e.target.checked })
               }
-              className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 mt-1"
+              className="w-4 h-4 text-primary-600 border-[var(--primary)]/50 rounded focus:ring-primary-500 mt-1"
               required
             />
             <span className="ml-3 text-sm text-gray-900">
@@ -626,7 +652,7 @@ const StorySubmissionForm: React.FC<StorySubmissionFormProps> = ({
         {currentStep === 3 && renderStep3()}
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between pt-8 mt-8 border-t border-gray-200">
+        <div className="flex justify-between pt-8 mt-8 border-t border-[var(--muted)]">
           <div>
             {currentStep > 1 && (
               <Button
