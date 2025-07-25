@@ -1,0 +1,299 @@
+.communitySection {
+  background: #f0f9ff;
+  padding: 3rem 0;
+  border-top: 1px solid #bae6fd;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.communityHeader {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.communityHeader h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin-bottom: 0.5rem;
+}
+
+.communityHeader p {
+  color: #0369a1;
+  font-size: 1rem;
+}
+
+.communityGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.connectionCard {
+  background: white;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease;
+}
+
+.connectionCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cardIcon {
+  font-size: 2rem;
+  background: #f0f9ff;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #bae6fd;
+}
+
+.cardHeader h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin: 0;
+}
+
+.locationName,
+.organizationName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.locationStats,
+.organizationStats,
+.themesStats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.locationStats span,
+.organizationStats span,
+.themesStats span {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.themesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.themeLink {
+  background: #ede9fe;
+  color: #6b46c1;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid #ddd6fe;
+  transition: all 0.2s ease;
+}
+
+.themeLink:hover {
+  background: #ddd6fe;
+  transform: translateY(-1px);
+}
+
+.cardActions {
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.actionLink {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.actionLink:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.similarStorytellers {
+  background: white;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.similarStorytellers h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.similarStorytellers p {
+  color: #0369a1;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.storytellersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.storytellerCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.storytellerCard:hover {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+  transform: translateY(-1px);
+}
+
+.storytellerAvatar {
+  flex-shrink: 0;
+}
+
+.avatarPlaceholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+}
+
+.storytellerInfo {
+  flex: 1;
+}
+
+.storytellerInfo h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.storytellerLocation {
+  color: #64748b;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.themesLabel {
+  color: #6b7280;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.themesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.themeTag {
+  background: #ede9fe;
+  color: #6b46c1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.communityStats {
+  background: white;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.communityStats h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin-bottom: 2rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.statCard {
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0c4a6e;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  color: #0369a1;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .communityGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .storytellersGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+}

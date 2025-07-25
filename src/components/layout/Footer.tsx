@@ -38,6 +38,7 @@ const Footer: React.FC = () => {
           <div className="footer-section">
             <h4>Resources</h4>
             <ul>
+              <li><Link href="/wiki">Documentation Wiki</Link></li>
               <li><Link href="/trust-security">Trust & Security</Link></li>
               <li><Link href="/privacy">Privacy Policy</Link></li>
               <li><Link href="/modules">Platform Modules</Link></li>

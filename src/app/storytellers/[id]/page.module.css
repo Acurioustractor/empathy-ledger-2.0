@@ -1,0 +1,888 @@
+.storytellerProfile {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #64748b 0%, #f8fafc 100px, #fafbfc 100%);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Hero Section - Elegant and Inspiring */
+.heroSection {
+  position: relative;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
+  color: white;
+  padding: 4rem 0 5rem 0;
+  overflow: hidden;
+}
+
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(ellipse at top right, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom left, rgba(139, 92, 246, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.heroSection::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.profileAvatar {
+  position: relative;
+}
+
+.profileAvatar::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+  border-radius: 50%;
+  blur: 20px;
+  z-index: -1;
+}
+
+.avatarImage {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.avatarImage:hover {
+  transform: scale(1.05);
+}
+
+.avatarPlaceholder {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.avatarPlaceholder:hover {
+  transform: scale(1.05);
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profileHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sovereigntyBadge {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  backdrop-filter: blur(10px);
+  width: fit-content;
+}
+
+.sovereigntyBadge::before {
+  content: '🛡️';
+  font-size: 0.9rem;
+}
+
+.profileName {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 0;
+  color: white;
+  line-height: 1.1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.profileSubtitle {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.profileDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 0.5rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1.25rem;
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.detailItem:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.detailIcon {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.heroQuote {
+  grid-column: 1 / -1;
+  margin-top: 2rem;
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.heroQuoteText {
+  font-size: 1.4rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.heroQuoteText::before,
+.heroQuoteText::after {
+  content: '"';
+  font-size: 2rem;
+  color: rgba(59, 130, 246, 0.6);
+  font-family: serif;
+}
+
+.heroQuoteAttribution {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* Sovereignty Section */
+.sovereigntySection {
+  background: #fffbeb;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #fef3c7;
+}
+
+.sovereigntyNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #fde68a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.sovereigntyIcon {
+  color: #d97706;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.sovereigntyIcon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.sovereigntyContent h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #92400e;
+}
+
+.sovereigntyContent p {
+  margin: 0;
+  color: #78350f;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+/* Story Section */
+.storySection {
+  padding: 3rem 0;
+  background: white;
+}
+
+.storyContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.storyHeader {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.storyHeader h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+}
+
+.storySummary {
+  font-size: 1.1rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.analysisMeta {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.analysisInsights {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  padding: 2rem;
+  border-radius: 16px;
+  margin: 2rem 0;
+  border: 1px solid #bae6fd;
+}
+
+.insightsHeader {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.insightsHeader h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin-bottom: 0.5rem;
+}
+
+.insightsHeader p {
+  color: #0369a1;
+  font-size: 0.9rem;
+}
+
+.insightsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.insightCard {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #e0f2fe;
+}
+
+.insightNumber {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0c4a6e;
+  margin-bottom: 0.25rem;
+}
+
+.insightLabel {
+  font-size: 0.8rem;
+  color: #0369a1;
+  font-weight: 500;
+}
+
+.storyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.storyThemes,
+.storyEmotions {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.storyThemes h3,
+.storyEmotions h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #334155;
+}
+
+.themesGrid,
+.emotionsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.themeTag {
+  background: #ede9fe;
+  color: #6b46c1;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #ddd6fe;
+}
+
+.emotionTag {
+  background: #ecfdf5;
+  color: #059669;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #a7f3d0;
+}
+
+.storyQuotes {
+  margin-top: 2rem;
+}
+
+.storyQuotes h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+  text-align: center;
+}
+
+.quotesGrid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.storyQuote {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 3px solid #3b82f6;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #374151;
+  font-style: italic;
+  position: relative;
+}
+
+.storyQuote::before {
+  content: '"';
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  font-size: 3rem;
+  color: #cbd5e1;
+  font-family: serif;
+}
+
+/* Bio Section */
+.bioSection {
+  background: #f8fafc;
+  padding: 2.5rem 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.bioContent {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bioContent h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+.bioContent p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.bioMeta {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.bioMetaItem {
+  text-align: center;
+}
+
+.bioMetaLabel {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.bioMetaValue {
+  font-size: 0.9rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Actions Section */
+.actionsSection {
+  background: white;
+  padding: 3rem 0;
+  text-align: center;
+  border-top: 1px solid #e2e8f0;
+}
+
+.actionsContent h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+
+.actionsContent p {
+  font-size: 1rem;
+  color: #64748b;
+  margin-bottom: 2rem;
+}
+
+.actionsButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.btnPrimary {
+  background: #3b82f6;
+  color: white;
+  border: 1px solid #3b82f6;
+}
+
+.btnPrimary:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.btnSecondary {
+  background: white;
+  color: #3b82f6;
+  border: 1px solid #d1d5db;
+}
+
+.btnSecondary:hover {
+  background: #f8fafc;
+  border-color: #3b82f6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Enhanced Bio Section */
+.storyOverviewSection {
+  background: white;
+  padding: 2rem 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.storyOverview {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.overviewHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.overviewHeader h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+}
+
+.aiSummary {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: #f0f9ff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #bae6fd;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.summaryIcon {
+  font-size: 1.5rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #bae6fd;
+  flex-shrink: 0;
+}
+
+.summaryContent h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin-bottom: 0.5rem;
+}
+
+.summaryContent p {
+  color: #0369a1;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.storyMeta {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.enhancedBioSection {
+  background: #f8fafc;
+  padding: 3rem 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.bioGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.bioMain h3 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.bioMain p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #374151;
+  margin-bottom: 2rem;
+}
+
+.bioStats {
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-start;
+}
+
+.bioStat {
+  text-align: center;
+}
+
+.bioStatNumber {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3b82f6;
+  margin-bottom: 0.25rem;
+}
+
+.bioStatLabel {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.bioSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.bioMetaCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.bioMetaCard h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.bioMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bioMetaItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.bioMetaIcon {
+  font-size: 1.1rem;
+  margin-top: 0.1rem;
+  flex-shrink: 0;
+}
+
+.bioMetaLabel {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.bioMetaValue {
+  font-size: 0.9rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.qualityMeter {
+  margin-bottom: 1rem;
+}
+
+.qualityBar {
+  background: #f1f5f9;
+  height: 8px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.qualityFill {
+  height: 100%;
+  background: linear-gradient(to right, #3b82f6, #10b981);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.qualityText {
+  font-size: 0.8rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.analysisCredit {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 3rem 0;
+  }
+  
+  .heroContent {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .avatarImage,
+  .avatarPlaceholder {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .avatarPlaceholder {
+    font-size: 3rem;
+  }
+  
+  .profileName {
+    font-size: 2.5rem;
+  }
+  
+  .profileSubtitle {
+    font-size: 1.1rem;
+  }
+  
+  .profileDetails {
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .detailItem {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .heroQuote {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .heroQuoteText {
+    font-size: 1.1rem;
+  }
+  
+  .sovereigntyNotice {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .storyGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .insightsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .bioGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .bioStats {
+    justify-content: center;
+    gap: 1.5rem;
+  }
+  
+  .bioMeta {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .actionsButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .aiSummary {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .storyMeta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+
+  .avatarImage,
+  .avatarPlaceholder {
+    width: 120px;
+    height: 120px;
+  }
+
+  .avatarPlaceholder {
+    font-size: 2.5rem;
+  }
+}

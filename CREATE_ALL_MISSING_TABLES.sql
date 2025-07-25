@@ -435,13 +435,19 @@ ALTER TABLE media_files ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "profiles_own_data" ON profiles
     FOR ALL USING (auth.uid() = id);
 
--- Organization members: See members of your organizations
-CREATE POLICY "org_members_access" ON organization_members
+-- Organization members: Users can see their own memberships
+CREATE POLICY "org_members_basic_access" ON organization_members
     FOR ALL USING (
-        user_id = auth.uid() OR
-        organization_id IN (
-            SELECT organization_id FROM organization_members 
-            WHERE user_id = auth.uid() AND status = 'active'
+        user_id = auth.uid()
+    );
+
+-- Organization members: Admins can see all memberships
+CREATE POLICY "org_members_admin_access" ON organization_members
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM profiles p
+            WHERE p.id = auth.uid() 
+            AND p.role IN ('admin', 'super_admin')
         )
     );
 

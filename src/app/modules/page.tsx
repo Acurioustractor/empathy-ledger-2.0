@@ -316,7 +316,7 @@ export default function ModulesPage() {
         </div>
       </section>
 
-      <style jsx>{`
+      <style jsx global>{`
         .modules-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -325,13 +325,158 @@ export default function ModulesPage() {
         }
 
         .module-card-link {
-          text-decoration: none;
+          text-decoration: none !important;
           display: block;
           height: 100%;
         }
 
+        .module-card-link:hover {
+          text-decoration: none !important;
+        }
+
+        .module-card-link:focus {
+          text-decoration: none !important;
+        }
+
+        .module-card-link:visited {
+          text-decoration: none !important;
+        }
+
+        .module-card-link:active {
+          text-decoration: none !important;
+        }
+
         .module-card-link * {
-          text-decoration: none;
+          text-decoration: none !important;
+        }
+
+        .module-card-link:hover *,
+        .module-card-link:focus *,
+        .module-card-link:visited *,
+        .module-card-link:active * {
+          text-decoration: none !important;
+        }
+
+        .module-card-link a,
+        .module-card-link a:hover,
+        .module-card-link a:focus,
+        .module-card-link a:visited,
+        .module-card-link a:active {
+          text-decoration: none !important;
+        }
+
+        .module-name,
+        .module-name:hover,
+        .module-name:focus,
+        .module-name:visited,
+        .module-name:active {
+          text-decoration: none !important;
+        }
+
+        .learn-more,
+        .learn-more:hover,
+        .learn-more:focus,
+        .learn-more:visited,
+        .learn-more:active {
+          text-decoration: none !important;
+        }
+
+        /* Nuclear option - remove underlines from everything in module cards */
+        .modules-grid a,
+        .modules-grid a *,
+        .modules-grid a:hover,
+        .modules-grid a:hover *,
+        .modules-grid a:focus,
+        .modules-grid a:focus *,
+        .modules-grid a:visited,
+        .modules-grid a:visited *,
+        .modules-grid a:active,
+        .modules-grid a:active * {
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          text-decoration-color: transparent !important;
+          text-decoration-style: none !important;
+          text-decoration-thickness: 0 !important;
+          border-bottom: none !important;
+        }
+
+        /* Even more aggressive - target every possible element */
+        .modules-grid *,
+        .modules-grid *:before,
+        .modules-grid *:after {
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          text-decoration-color: transparent !important;
+          text-decoration-style: none !important;
+          text-decoration-thickness: 0 !important;
+          border-bottom: none !important;
+          border-bottom-width: 0 !important;
+          border-bottom-style: none !important;
+          border-bottom-color: transparent !important;
+        }
+
+        /* Target specific Next.js link classes that might be applied */
+        .modules-grid [class*="link"],
+        .modules-grid [class*="Link"],
+        .modules-grid [class*="next"] {
+          text-decoration: none !important;
+          border-bottom: none !important;
+        }
+
+        /* Override any global link styles */
+        .modules-grid h3,
+        .modules-grid h3 *,
+        .modules-grid .module-name,
+        .modules-grid .module-name *,
+        .modules-grid .learn-more,
+        .modules-grid .learn-more * {
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          border-bottom: none !important;
+        }
+
+        /* Fix the specific li elements that have underlines */
+        .modules-grid li,
+        .modules-grid .module-features li,
+        .module-features li,
+        .deployment-features li {
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          text-decoration-color: transparent !important;
+          text-decoration-style: none !important;
+          text-decoration-thickness: 0 !important;
+          border-bottom: none !important;
+          border-bottom-width: 0 !important;
+          border-bottom-style: none !important;
+          border-bottom-color: transparent !important;
+        }
+
+        /* Target JSX scoped classes directly */
+        li[class*="jsx-"] {
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          text-decoration-color: transparent !important;
+          text-decoration-style: none !important;
+          text-decoration-thickness: 0 !important;
+          border-bottom: none !important;
+          border-bottom-width: 0 !important;
+          border-bottom-style: none !important;
+          border-bottom-color: transparent !important;
+        }
+
+        /* Also target any elements with jsx classes */
+        [class*="jsx-"] {
+          text-decoration: none !important;
+        }
+
+        /* Super specific targeting of the module features */
+        .module-features li[class*="jsx-"],
+        ul[class*="jsx-"] li[class*="jsx-"],
+        .modules-grid ul li,
+        .modules-grid .module-features li[class*="jsx-"] {
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          border-bottom: none !important;
         }
 
         .module-card {
@@ -571,6 +716,27 @@ export default function ModulesPage() {
           .flow-arrow {
             transform: rotate(90deg);
           }
+        }
+
+        /* NUCLEAR OPTION - FUCK ALL UNDERLINES */
+        * {
+          text-decoration: none !important;
+        }
+        
+        *:hover, *:focus, *:active, *:visited {
+          text-decoration: none !important;
+        }
+        
+        li, ul li, ol li {
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          border-bottom: none !important;
+        }
+        
+        a, a *, a:hover, a:hover *, a:focus, a:focus *, a:active, a:active *, a:visited, a:visited * {
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          border-bottom: none !important;
         }
       `}</style>
     </div>

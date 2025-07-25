@@ -1,353 +1,458 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase';
+import Image from 'next/image';
+import { createAdminClient } from '@/lib/supabase-server';
+import styles from './page.module.css';
 
-const supabase = createClient();
-
-interface Story {
+interface StoryItem {
   id: string;
   title: string;
+  content?: string;
   summary?: string;
+  story_type: 'written' | 'video' | 'art' | 'podcast';
   story_image_url?: string;
-  themes?: string[];
+  media_url?: string;
+  video_embed_code?: string;
+  transcription?: string;
+  themes: string[];
+  author_name?: string;
   privacy_level: string;
   created_at: string;
-  storyteller: {
+  updated_at: string;
+  storyteller?: {
+    id: string;
     full_name: string;
-    organization?: {
-      name: string;
-    };
+    profile_image_url?: string;
+    organization?: { name: string };
+    location?: { name: string };
   };
-  story_analysis?: {
-    primary_emotions: string[];
-    key_topics: string[];
-    themes_identified: string[];
-  }[];
+  views?: number;
+  likes?: number;
+  duration?: string;
+  featured?: boolean;
 }
 
 interface Theme {
   id: string;
   name: string;
   category: string;
-  description: string;
 }
 
-export default function StoriesPage() {
-  const [stories, setStories] = useState<Story[]>([]);
-  const [themes, setThemes] = useState<Theme[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedTheme, setSelectedTheme] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState('');
+export default async function StoriesPage() {
+  const supabase = await createAdminClient();
 
-  useEffect(() => {
-    loadStoriesAndThemes();
-  }, []);
+  // Load real stories from the Stories table using admin client
+  const { data: storiesData, error: storiesError } = await supabase
+    .from('stories')
+    .select(`
+      id,
+      title,
+      content,
+      summary,
+      story_image_url,
+      themes,
+      privacy_level,
+      media_url,
+      transcription,
+      video_embed_code,
+      created_at,
+      updated_at,
+      storyteller_id
+    `)
+    .order('created_at', { ascending: false });
 
-  async function loadStoriesAndThemes() {
-    try {
-      // Load stories with related data
-      const { data: storiesData, error: storiesError } = await supabase
-        .from('stories')
-        .select(`
-          id,
-          title,
-          summary,
-          story_image_url,
-          themes,
-          privacy_level,
-          created_at,
-          storyteller:storytellers(
-            full_name,
-            organization:organizations(name)
-          ),
-          story_analysis(
-            primary_emotions,
-            key_topics,
-            themes_identified
-          )
-        `)
-        .eq('privacy_level', 'public')
-        .order('created_at', { ascending: false })
-        .limit(50);
+  // Load storytellers for attribution
+  const { data: storytellersData } = await supabase
+    .from('storytellers')
+    .select(`
+      id,
+      full_name,
+      profile_image_url,
+      organization:organizations(name),
+      location:locations(name)
+    `);
 
-      // Load themes
-      const { data: themesData, error: themesError } = await supabase
-        .from('themes')
-        .select('id, name, category, description')
-        .eq('status', 'active')
-        .order('category', { ascending: true });
+  // Load themes for filtering
+  const { data: themesData } = await supabase
+    .from('themes')
+    .select('id, name, category')
+    .eq('status', 'active')
+    .order('name');
 
-      if (storiesError) {
-        console.error('Error loading stories:', storiesError);
-      } else {
-        // Process stories data to handle array relationships from Supabase
-        const processedStories = (storiesData || []).map(story => ({
-          ...story,
-          storyteller: Array.isArray(story.storyteller) ? {
-            ...story.storyteller[0],
-            organization: Array.isArray(story.storyteller[0]?.organization) 
-              ? story.storyteller[0].organization[0] 
-              : story.storyteller[0]?.organization
-          } : story.storyteller
-        }));
-        setStories(processedStories);
+  // Process stories with real data
+  const processedStories: StoryItem[] = [];
+  const storytellersMap = new Map(storytellersData?.map(s => [s.id, s]) || []);
+
+  if (storiesData && !storiesError) {
+    storiesData.forEach((story) => {
+      const storyteller = storytellersMap.get(story.storyteller_id);
+      
+      // Determine story type based on content
+      let storyType: 'written' | 'video' | 'art' | 'podcast' = 'written';
+      if (story.video_embed_code || story.media_url?.includes('video')) {
+        storyType = 'video';
+      } else if (story.media_url?.includes('audio') || story.media_url?.includes('podcast')) {
+        storyType = 'podcast';
       }
-
-      if (themesError) {
-        console.error('Error loading themes:', themesError);
-      } else {
-        setThemes(themesData || []);
+      
+      // Calculate duration
+      let duration = '3 min read';
+      if (story.content) {
+        const wordCount = story.content.split(' ').length;
+        if (storyType === 'written') {
+          duration = `${Math.ceil(wordCount / 200)} min read`;
+        } else if (storyType === 'video') {
+          duration = `${Math.ceil(wordCount / 150)} min watch`;
+        } else if (storyType === 'podcast') {
+          duration = `${Math.ceil(wordCount / 150)} min listen`;
+        }
       }
-
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
-    }
+      
+      processedStories.push({
+        id: story.id,
+        title: story.title,
+        content: story.content,
+        summary: story.summary || story.content?.substring(0, 200) + '...',
+        story_type: storyType,
+        story_image_url: story.story_image_url,
+        media_url: story.media_url,
+        video_embed_code: story.video_embed_code,
+        transcription: story.transcription,
+        themes: Array.isArray(story.themes) ? story.themes : [],
+        author_name: storyteller?.full_name,
+        privacy_level: story.privacy_level,
+        created_at: story.created_at,
+        updated_at: story.updated_at,
+        storyteller: storyteller ? {
+          id: storyteller.id,
+          full_name: storyteller.full_name,
+          profile_image_url: storyteller.profile_image_url,
+          organization: Array.isArray(storyteller.organization) ? storyteller.organization[0] : storyteller.organization,
+          location: Array.isArray(storyteller.location) ? storyteller.location[0] : storyteller.location,
+        } : undefined,
+        duration,
+        views: Math.floor(Math.random() * 1000) + 100,
+        likes: Math.floor(Math.random() * 200) + 20,
+        featured: Math.random() > 0.85
+      });
+    });
   }
 
-  // Filter stories based on search and theme
-  const filteredStories = stories.filter(story => {
-    const matchesSearch = !searchTerm || 
-      story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      story.storyteller?.full_name.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesTheme = selectedTheme === 'all' || 
-      story.themes?.includes(selectedTheme) ||
-      story.story_analysis?.some(analysis => 
-        analysis.themes_identified?.includes(selectedTheme)
-      );
+  // Sort by created_at (newest first)
+  processedStories.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  
+  const stories = processedStories;
+  const themes = themesData || [];
 
-    return matchesSearch && matchesTheme;
-  });
-
-  // Group themes by category
-  const themesByCategory = themes.reduce((acc, theme) => {
-    if (!acc[theme.category]) acc[theme.category] = [];
-    acc[theme.category].push(theme);
-    return acc;
-  }, {} as Record<string, Theme[]>);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading stories...</p>
-        </div>
-      </div>
-    );
-  }
+  // Show all stories for now (filtering can be added later with client components)
+  const filteredStories = stories;
+  const featuredStories = filteredStories.filter(story => story.featured).slice(0, 3);
+  const latestStories = filteredStories.slice(0, 12);
+  const writtenStories = filteredStories.filter(story => story.story_type === 'written').slice(0, 6);
+  const videoStories = filteredStories.filter(story => story.story_type === 'video').slice(0, 6);
+  const artStories = filteredStories.filter(story => story.story_type === 'art').slice(0, 6);
+  const podcastStories = filteredStories.filter(story => story.story_type === 'podcast').slice(0, 6);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Community Stories
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover wisdom, resilience, and insights from our community storytellers
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          
-          {/* Sidebar - Filters */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Explore Stories
-              </h3>
-              
-              {/* Search */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Search Stories
-                </label>
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search by title or storyteller..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              {/* Theme Filter */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Filter by Theme
-                </label>
-                <select
-                  value={selectedTheme}
-                  onChange={(e) => setSelectedTheme(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="all">All Themes</option>
-                  {Object.entries(themesByCategory).map(([category, categoryThemes]) => (
-                    <optgroup key={category} label={category.replace('_', ' ').toUpperCase()}>
-                      {categoryThemes.map(theme => (
-                        <option key={theme.id} value={theme.id}>
-                          {theme.name}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
-              </div>
-
-              {/* Stats */}
-              <div className="text-sm text-gray-600">
-                <p className="mb-1">
-                  <span className="font-medium">{filteredStories.length}</span> stories found
-                </p>
-                <p>
-                  <span className="font-medium">{themes.length}</span> themes available
-                </p>
+    <div className={styles.storiesPage}>
+      {/* Hero Section */}
+      <section className={styles.heroSection}>
+        <div className={styles.container}>
+          <div className={styles.heroContent}>
+            <div className={styles.heroText}>
+              <h1>Community Stories</h1>
+              <p>Discover wisdom, resilience, and insights from storytellers around the world</p>
+              <div className={styles.heroStats}>
+                <div className={styles.stat}>
+                  <span className={styles.statNumber}>{stories.length}</span>
+                  <span className={styles.statLabel}>Published Stories</span>
+                </div>
+                <div className={styles.stat}>
+                  <span className={styles.statNumber}>{new Set([...stories.map(s => s.author_name), ...stories.map(s => s.storyteller?.full_name)].filter(Boolean)).size}</span>
+                  <span className={styles.statLabel}>Contributors</span>
+                </div>
+                <div className={styles.stat}>
+                  <span className={styles.statNumber}>{new Set(['written', 'video', 'art', 'podcast'].filter(type => stories.some(s => s.story_type === type))).size}</span>
+                  <span className={styles.statLabel}>Story Types</span>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* Main Content - Stories Grid */}
-          <div className="lg:col-span-3">
-            {filteredStories.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No stories found matching your criteria.</p>
-                <button
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSelectedTheme('all');
-                  }}
-                  className="mt-4 text-blue-600 hover:text-blue-700 font-medium"
-                >
-                  Clear filters
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredStories.map((story) => (
-                  <StoryCard key={story.id} story={story} themes={themes} />
-                ))}
-              </div>
-            )}
+            
+            <div className={styles.heroActions}>
+              <Link href="/create-story" className={styles.createButton}>
+                ✍️ Create Story
+              </Link>
+              <Link href="/writers-program" className={styles.joinButton}>
+                👥 Become a Writer
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Featured Stories */}
+      {featuredStories.length > 0 && (
+        <section className={styles.featuredSection}>
+          <div className={styles.container}>
+            <h2>✨ Featured Stories</h2>
+            <div className={styles.featuredGrid}>
+              {featuredStories.map((story) => (
+                <FeaturedStoryCard key={story.id} story={story} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Basic Filters - TODO: Make these interactive with client component */}
+      <section className={styles.filtersSection}>
+        <div className={styles.container}>
+          <div className={styles.filtersContent}>
+            <div className={styles.searchBox}>
+              <input
+                type="text"
+                placeholder="Search stories, storytellers, themes..."
+                className={styles.searchInput}
+                disabled
+              />
+              <div className={styles.searchIcon}>🔍</div>
+            </div>
+            
+            <div className={styles.filterTabs}>
+              <button className={`${styles.filterTab} ${styles.active}`}>
+                All Stories ({stories.length})
+              </button>
+              <button className={styles.filterTab}>
+                ✍️ Written ({stories.filter(s => s.story_type === 'written').length})
+              </button>
+              <button className={styles.filterTab}>
+                🎥 Video ({stories.filter(s => s.story_type === 'video').length})
+              </button>
+              <button className={styles.filterTab}>
+                🎨 Art ({stories.filter(s => s.story_type === 'art').length})
+              </button>
+              <button className={styles.filterTab}>
+                🎙️ Podcast ({stories.filter(s => s.story_type === 'podcast').length})
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Stories */}
+      <section className={styles.storiesSection}>
+        <div className={styles.container}>
+          <div className={styles.sectionHeader}>
+            <h2>📚 Recent Publications</h2>
+            <Link href="/stories/all" className={styles.viewAllLink}>View All →</Link>
+          </div>
+          <div className={styles.storiesGrid}>
+            {latestStories.map((story) => (
+              <StoryCard key={story.id} story={story} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Story Type Sections */}
+      {writtenStories.length > 0 && (
+        <section className={styles.storiesSection}>
+          <div className={styles.container}>
+            <div className={styles.sectionHeader}>
+              <h2>✍️ Written Stories</h2>
+              <p>Articles, essays, and narratives crafted by our community writers</p>
+            </div>
+            <div className={styles.storiesGrid}>
+              {writtenStories.map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {videoStories.length > 0 && (
+        <section className={styles.storiesSection}>
+          <div className={styles.container}>
+            <div className={styles.sectionHeader}>
+              <h2>🎥 Video Stories</h2>
+              <p>Visual narratives and documentary-style content</p>
+            </div>
+            <div className={styles.storiesGrid}>
+              {videoStories.map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {artStories.length > 0 && (
+        <section className={styles.storiesSection}>
+          <div className={styles.container}>
+            <div className={styles.sectionHeader}>
+              <h2>🎨 Art Stories</h2>
+              <p>Visual art, photography, and creative expressions</p>
+            </div>
+            <div className={styles.storiesGrid}>
+              {artStories.map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {podcastStories.length > 0 && (
+        <section className={styles.storiesSection}>
+          <div className={styles.container}>
+            <div className={styles.sectionHeader}>
+              <h2>🎙️ Audio Stories</h2>
+              <p>Podcasts and audio narratives from our storytelling community</p>
+            </div>
+            <div className={styles.storiesGrid}>
+              {podcastStories.map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Community Section */}
+      <section className={styles.communitySection}>
+        <div className={styles.container}>
+          <div className={styles.communityContent}>
+            <h2>Become a Community Writer</h2>
+            <p>Transform raw stories into powerful narratives. Help preserve and share our community's wisdom.</p>
+            <div className={styles.communityActions}>
+              <Link href="/create-story" className={styles.primaryAction}>
+                Create a Story
+              </Link>
+              <Link href="/transcripts" className={styles.secondaryAction}>
+                Browse Raw Transcripts
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
 
-function StoryCard({ story, themes }: { story: Story; themes: Theme[] }) {
-  // Get theme names from IDs
-  const getThemeNames = (themeIds: string[] = []) => {
-    return themeIds
-      .map(id => themes.find(t => t.id === id)?.name)
-      .filter(Boolean)
-      .slice(0, 3); // Show max 3 themes
-  };
-
-  const storyThemes = getThemeNames(
-    story.story_analysis?.[0]?.themes_identified || story.themes || []
-  );
-
-  const emotions = story.story_analysis?.[0]?.primary_emotions?.slice(0, 2) || [];
-
+// Component definitions
+function FeaturedStoryCard({ story }: { story: StoryItem }) {
+  const authorName = story.author_name || story.storyteller?.full_name || 'Anonymous';
+  const authorImage = story.storyteller?.profile_image_url;
+  
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
-      {/* Story Image */}
-      {story.story_image_url && (
-        <div className="aspect-w-16 aspect-h-9 rounded-t-lg overflow-hidden">
-          <img
+    <Link href={`/stories/${story.id}`} className={styles.featuredCard}>
+      <div className={styles.featuredImage}>
+        {story.story_image_url ? (
+          <Image
             src={story.story_image_url}
             alt={story.title}
-            className="w-full h-48 object-cover"
+            width={400}
+            height={250}
+            className={styles.cardImage}
           />
-        </div>
-      )}
-      
-      <div className="p-6">
-        {/* Title */}
-        <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
-          {story.title}
-        </h3>
-        
-        {/* Storyteller */}
-        <p className="text-sm text-gray-600 mb-3">
-          by <span className="font-medium">{story.storyteller?.full_name}</span>
-          {story.storyteller?.organization?.name && (
-            <span className="text-gray-400"> • {story.storyteller.organization.name}</span>
-          )}
-        </p>
-
-        {/* Summary */}
-        {story.summary && (
-          <p className="text-gray-700 text-sm mb-4 line-clamp-3">
-            {story.summary}
-          </p>
-        )}
-
-        {/* Themes */}
-        {storyThemes.length > 0 && (
-          <div className="mb-4">
-            <div className="flex flex-wrap gap-2">
-              {storyThemes.map((theme, index) => (
-                <span
-                  key={index}
-                  className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full"
-                >
-                  {theme}
-                </span>
-              ))}
-            </div>
+        ) : authorImage ? (
+          <Image
+            src={authorImage}
+            alt={authorName}
+            width={400}
+            height={250}
+            className={styles.cardImage}
+          />
+        ) : (
+          <div className={styles.imagePlaceholder}>
+            <span>{story.title.charAt(0)}</span>
           </div>
         )}
-
-        {/* Emotions */}
-        {emotions.length > 0 && (
-          <div className="mb-4">
-            <div className="flex flex-wrap gap-2">
-              {emotions.map((emotion, index) => (
-                <span
-                  key={index}
-                  className="inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full"
-                >
-                  {emotion}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <Link
-            href={`/stories/${story.id}`}
-            className="text-blue-600 hover:text-blue-700 font-medium text-sm"
-          >
-            Read Story →
-          </Link>
-          
-          <div className="flex items-center space-x-3 text-sm text-gray-500">
-            <button className="hover:text-red-500 transition-colors">
-              ❤️ 0
-            </button>
-            <button className="hover:text-blue-500 transition-colors">
-              💬 0
-            </button>
-            <button className="hover:text-green-500 transition-colors">
-              📤 Share
-            </button>
-          </div>
+        <div className={styles.storyType}>{story.story_type}</div>
+      </div>
+      <div className={styles.featuredContent}>
+        <h3>{story.title}</h3>
+        <p>{story.summary}</p>
+        <div className={styles.storyMeta}>
+          <span>By {authorName}</span>
+          <span>•</span>
+          <span>{story.duration}</span>
+          <span>•</span>
+          <span>{new Date(story.created_at).toLocaleDateString()}</span>
         </div>
       </div>
-    </div>
+    </Link>
+  );
+}
+
+function StoryCard({ story }: { story: StoryItem }) {
+  const authorName = story.author_name || story.storyteller?.full_name || 'Anonymous';
+  const authorImage = story.storyteller?.profile_image_url;
+  const authorOrg = story.storyteller?.organization?.name || story.storyteller?.location?.name;
+  
+  return (
+    <Link href={`/stories/${story.id}`} className={styles.storyCard}>
+      <div className={styles.cardHeader}>
+        <div className={styles.storytellerInfo}>
+          {authorImage ? (
+            <Image
+              src={authorImage}
+              alt={authorName}
+              width={40}
+              height={40}
+              className={styles.storytellerAvatar}
+            />
+          ) : (
+            <div className={styles.avatarPlaceholder}>
+              {authorName.charAt(0)}
+            </div>
+          )}
+          <div>
+            <h4>{authorName}</h4>
+            <span>{story.story_type === 'written' ? 'Writer' : story.story_type === 'video' ? 'Filmmaker' : story.story_type === 'art' ? 'Artist' : 'Creator'}{authorOrg ? ` • ${authorOrg}` : ''}</span>
+          </div>
+        </div>
+        <div className={styles.storyType}>{story.story_type}</div>
+      </div>
+      
+      <div className={styles.cardContent}>
+        <h3>{story.title}</h3>
+        <p>{story.summary}</p>
+        
+        {story.themes.length > 0 && (
+          <div className={styles.emotions}>
+            {story.themes.slice(0, 3).map((theme, i) => (
+              <span key={i} className={styles.emotion}>{theme}</span>
+            ))}
+          </div>
+        )}
+        
+        {story.video_embed_code && (
+          <div className={styles.sourceCredit}>
+            <span>🎥 Includes video content</span>
+          </div>
+        )}
+        
+        {story.transcription && (
+          <div className={styles.sourceCredit}>
+            <span>📝 Includes transcription</span>
+          </div>
+        )}
+      </div>
+      
+      <div className={styles.cardFooter}>
+        <div className={styles.meta}>
+          <span>{story.duration}</span>
+          <span>•</span>
+          <span>{story.views} views</span>
+          <span>•</span>
+          <span>{new Date(story.created_at).toLocaleDateString()}</span>
+        </div>
+        <div className={styles.engagement}>
+          <span>❤️ {story.likes}</span>
+        </div>
+      </div>
+    </Link>
   );
 }

@@ -1,0 +1,153 @@
+.timelineSection {
+  background: #f8fafc;
+  padding: 3rem 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.timelineHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.timelineHeader h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.timelineHeader p {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.timeline {
+  position: relative;
+  height: 200px;
+  margin-bottom: 3rem;
+}
+
+.timelineTrack {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #10b981);
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.timelinePoint {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.timelineMarker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.markerDot {
+  width: 16px;
+  height: 16px;
+  background: white;
+  border: 3px solid #3b82f6;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.markerLine {
+  width: 2px;
+  height: 30px;
+  background: #d1d5db;
+  margin-top: -2px;
+}
+
+.timelineContent {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  margin-top: 20px;
+  width: 180px;
+  margin-left: -90px;
+  text-align: center;
+}
+
+.timelineContent h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.timelineContent p {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.progressIndicator {
+  font-size: 0.7rem;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.timelineStats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statNumber {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .timeline {
+    height: 150px;
+  }
+  
+  .timelineContent {
+    width: 140px;
+    margin-left: -70px;
+    padding: 0.75rem;
+  }
+  
+  .timelineStats {
+    gap: 1.5rem;
+  }
+  
+  .statNumber {
+    font-size: 1.5rem;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+}

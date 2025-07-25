@@ -1,651 +1,521 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, useParams } from 'next/navigation';
+import { createAdminClient } from '@/lib/supabase-server';
+import { notFound } from 'next/navigation';
+import styles from './page.module.css';
+import InteractiveTranscript from '@/components/storyteller/InteractiveTranscript';
+import EmotionalJourney from '@/components/storyteller/EmotionalJourney';
+import AIInsightsDashboard from '@/components/storyteller/AIInsightsDashboard';
+import PrivacyDashboard from '@/components/storyteller/PrivacyDashboard';
+import CommunityConnections from '@/components/storyteller/CommunityConnections';
+import StoryTimeline from '@/components/storyteller/StoryTimeline';
+import QuoteCarousel from '@/components/storyteller/QuoteCarousel';
+import TopicWordCloud from '@/components/storyteller/TopicWordCloud';
 
-interface StorytellerProfile {
-  id: string;
-  name: string;
-  profileImage?: string;
-  organization?: string;
-  location?: string;
-  role?: string;
-  privacyPreferences: {
-    public_display: boolean;
-    show_photo: boolean;
-    show_location: boolean;
-    show_organisation: boolean;
-    show_story_themes: boolean;
-    show_story_quotes: boolean;
-  };
-  story: {
-    title: string;
-    themes: string[];
-    quotes: string[];
-    summary: string;
-    publishedDate: string;
-  };
-  consentGiven: boolean;
-  consentDate: string;
+interface StorytellerPageProps {
+  params: Promise<{ id: string }>;
 }
 
-// This would typically come from your CMS service
-function getStorytellerProfile(id: string): StorytellerProfile {
-  // TODO: Implement with your StorytellerCmsService
-  // For now, return a mock profile that demonstrates privacy levels
+export default async function StorytellerPage({ params }: StorytellerPageProps) {
+  const { id } = await params;
+  const supabase = await createAdminClient();
+
+  // Fetch storyteller with their transcript and analysis
+  const { data: storyteller, error } = await supabase
+    .from('storytellers')
+    .select(`
+      id,
+      full_name,
+      bio,
+      profile_image_url,
+      created_at,
+      organization:organizations(name),
+      location:locations(name),
+      transcripts(
+        id,
+        transcript_content,
+        created_at,
+        story_analysis(
+          id,
+          themes_identified,
+          key_quotes,
+          primary_emotions,
+          summary,
+          confidence_score,
+          results,
+          created_at
+        )
+      )
+    `)
+    .eq('id', id)
+    .single();
+
+  if (error || !storyteller) {
+    notFound();
+  }
+
+  // Get themes for mapping IDs to names
+  const { data: themes } = await supabase
+    .from('themes')
+    .select('id, name')
+    .eq('status', 'active');
+
+  // Get the story analysis (handle both array and single object responses)
+  const transcriptData = Array.isArray(storyteller.transcripts) 
+    ? storyteller.transcripts[0] 
+    : storyteller.transcripts;
+  const analysis = transcriptData?.story_analysis?.[0];
+  const transcript = transcriptData;
   
-  return {
-    id,
-    name: "Alex Chen",
-    profileImage: "https://tednluwflfhxyucgwigh.supabase.co/storage/v1/object/public/images/storyteller-sample.jpg",
-    organization: "Community Health Network",
-    location: "Melbourne, Victoria",
-    role: "Mental Health Advocate",
-    privacyPreferences: {
-      public_display: true,
-      show_photo: true,
-      show_location: true,
-      show_organisation: true,
-      show_story_themes: true,
-      show_story_quotes: true
-    },
-    story: {
-      title: "Finding Light in Dark Moments",
-      themes: ["Mental Health", "Recovery", "Community Support", "Resilience"],
-      quotes: [
-        "The hardest part was realizing I didn't have to face it alone.",
-        "Recovery isn't linear, but every small step matters.",
-        "Sharing my story helped me reclaim my narrative."
-      ],
-      summary: "A journey through mental health challenges and the power of community support in recovery.",
-      publishedDate: "2024-03-15"
-    },
-    consentGiven: true,
-    consentDate: "2024-03-01"
+  // Map theme IDs to names (handle both string and number IDs)
+  const storyThemes = analysis?.themes_identified?.map((themeId: string | number) => {
+    const theme = themes?.find(t => t.id === themeId || t.id === String(themeId));
+    return theme?.name;
+  }).filter(Boolean) || [];
+  
+  // Fallback: if no themes found via ID mapping, use themes from results
+  const fallbackThemes = storyThemes.length === 0 && analysisResults.themes ? 
+    analysisResults.themes.map((t: string) => t.replace(/\s*\([^)]*\)\s*/, '')) : [];
+  
+  const finalThemes = storyThemes.length > 0 ? storyThemes : fallbackThemes;
+
+  // Get quotes and clean emotions
+  const storyQuotes = analysis?.key_quotes || [];
+  const rawEmotions = analysis?.primary_emotions || [];
+  const emotions = rawEmotions.map((emotion: string) => 
+    emotion.replace(/\s*\([^)]*\)\s*/, '').trim()
+  );
+
+  // Analysis insights
+  const analysisDate = analysis?.created_at ? new Date(analysis.created_at).toLocaleDateString() : null;
+  const memberSince = storyteller.created_at ? new Date(storyteller.created_at).toLocaleDateString() : null;
+
+  // Enhanced analysis data
+  const analysisResults = analysis?.results || {};
+  const aiInsights = analysisResults.insights || [];
+  const topicCategories = analysisResults.topic_categories || [];
+  const qualityScore = analysisResults.quality_score || 0;
+  const transcriptContent = transcript?.transcript_content || '';
+  
+  // Privacy and consent data (mock for now)
+  const privacySettings = {
+    profile_public: true,
+    story_public: true,
+    quotes_shareable: true,
+    consent_date: storyteller.created_at,
+    data_export_available: true
   };
-}
-
-export default function StorytellerProfilePage() {
-  const [storyteller, setStoryteller] = useState<StorytellerProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
-  const router = useRouter();
-  const params = useParams();
-  const id = params?.id as string;
-
-  useEffect(() => {
-    if (!id) return;
-    
-    try {
-      const profile = getStorytellerProfile(id);
-      
-      if (!profile || !profile.consentGiven || !profile.privacyPreferences.public_display) {
-        setNotFound(true);
-      } else {
-        setStoryteller(profile);
-      }
-    } catch (error) {
-      setNotFound(true);
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading storyteller profile...</p>
-        <style jsx>{`
-          .loading-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 50vh;
-            gap: 1rem;
-          }
-          .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f4f6;
-            border-top: 4px solid #3b82f6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-          }
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
-  if (notFound || !storyteller) {
-    return (
-      <div className="not-found-container">
-        <div className="not-found-content">
-          <h1>Profile Not Available</h1>
-          <p>This storyteller profile is either private, has been removed, or doesn't exist.</p>
-          <p>Storytellers maintain complete control over their privacy and can choose to make their profiles private at any time.</p>
-          <Link href="/storytellers" className="btn btn-primary">
-            Browse Other Storytellers
-          </Link>
-        </div>
-        <style jsx>{`
-          .not-found-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 70vh;
-            padding: 2rem;
-          }
-          .not-found-content {
-            text-align: center;
-            max-width: 600px;
-          }
-          .not-found-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #1e293b;
-          }
-          .not-found-content p {
-            margin-bottom: 1rem;
-            color: #64748b;
-            line-height: 1.6;
-          }
-          .btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: #3b82f6;
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 1rem;
-            transition: all 0.3s ease;
-          }
-          .btn:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
-          }
-        `}</style>
-      </div>
-    );
-  }
-
-  const { privacyPreferences: prefs } = storyteller;
 
   return (
-    <div className="storyteller-profile">
+    <div className={styles.storytellerProfile}>
       {/* Hero Section */}
-      <section className="profile-hero">
-        <div className="container">
-          <div className="hero-content">
-            <div className="profile-image-container">
-              {prefs.show_photo && storyteller.profileImage ? (
+      <section className={styles.heroSection}>
+        <div className={styles.container}>
+          <div className={styles.heroContent}>
+            <div className={styles.profileAvatar}>
+              {storyteller.profile_image_url ? (
                 <Image
-                  src={storyteller.profileImage}
-                  alt={`${storyteller.name} - Storyteller`}
+                  src={storyteller.profile_image_url}
+                  alt={storyteller.full_name}
                   width={200}
                   height={200}
-                  className="profile-image"
+                  className={styles.avatarImage}
                 />
               ) : (
-                <div className="profile-placeholder">
-                  <span className="placeholder-initial">
-                    {storyteller.name.charAt(0).toUpperCase()}
-                  </span>
+                <div className={styles.avatarPlaceholder}>
+                  {storyteller.full_name?.charAt(0) || '?'}
                 </div>
               )}
             </div>
             
-            <div className="profile-info">
-              <h1 className="profile-name">{storyteller.name}</h1>
-              
-              {storyteller.role && (
-                <p className="profile-role">{storyteller.role}</p>
-              )}
-              
-              <div className="profile-details">
-                {prefs.show_organisation && storyteller.organization && (
-                  <div className="detail-item">
-                    <span className="detail-icon">🏢</span>
-                    <span>{storyteller.organization}</span>
-                  </div>
-                )}
-                
-                {prefs.show_location && storyteller.location && (
-                  <div className="detail-item">
-                    <span className="detail-icon">📍</span>
-                    <span>{storyteller.location}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Privacy Notice */}
-      <section className="privacy-notice-section">
-        <div className="container">
-          <div className="privacy-notice">
-            <div className="privacy-icon">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
-            <div className="privacy-content">
-              <p>
-                <strong>{storyteller.name}</strong> has chosen to share their story with dignity and control. 
-                They maintain complete authority over what information appears here and can update their privacy preferences at any time.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Story Content */}
-      <section className="story-content-section">
-        <div className="container">
-          <div className="story-content">
-            <div className="story-header">
-              <h2>{storyteller.story.title}</h2>
-              <p className="story-summary">{storyteller.story.summary}</p>
-              <div className="story-meta">
-                <span>Shared on {new Date(storyteller.story.publishedDate).toLocaleDateString()}</span>
-              </div>
-            </div>
-
-            {/* Story Themes */}
-            {prefs.show_story_themes && storyteller.story.themes.length > 0 && (
-              <div className="story-themes">
-                <h3>Story Themes</h3>
-                <div className="themes-container">
-                  {storyteller.story.themes.map((theme, index) => (
-                    <span key={index} className="theme-tag">
-                      {theme}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Featured Quotes */}
-            {prefs.show_story_quotes && storyteller.story.quotes.length > 0 && (
-              <div className="story-quotes">
-                <h3>Key Insights</h3>
-                <div className="quotes-container">
-                  {storyteller.story.quotes.map((quote, index) => (
-                    <blockquote key={index} className="story-quote">
-                      "{quote}"
-                    </blockquote>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Consent Information */}
-            <div className="consent-info">
-              <div className="consent-icon">✓</div>
-              <div className="consent-content">
-                <p>
-                  <strong>Sharing with Consent:</strong> This story was shared on {new Date(storyteller.consentDate).toLocaleDateString()} 
-                  with full informed consent and complete control over privacy settings.
+            <div className={styles.profileInfo}>
+              <div className={styles.profileHeader}>
+                <div className={styles.sovereigntyBadge}>Data Sovereignty Respected</div>
+                <h1 className={styles.profileName}>{storyteller.full_name}</h1>
+                <p className={styles.profileSubtitle}>
+                  {storyteller.organization && `${(storyteller.organization as any).name} • `}
+                  {storyteller.location && `${(storyteller.location as any).name} • `}
+                  Community Storyteller
                 </p>
               </div>
+              
+              <div className={styles.profileDetails}>
+                {storyteller.organization && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailIcon}>🏢</span>
+                    <span>{(storyteller.organization as any).name}</span>
+                  </div>
+                )}
+                {storyteller.location && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailIcon}>🌏</span>
+                    <span>{(storyteller.location as any).name}</span>
+                  </div>
+                )}
+                {memberSince && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailIcon}>⭐</span>
+                    <span>Since {memberSince}</span>
+                  </div>
+                )}
+                {analysis && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailIcon}>🤖</span>
+                    <span>{Math.round((analysis.confidence_score || 0) * 100)}% Analysis Confidence</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Hero Quote */}
+            {storyQuotes.length > 0 && (
+              <div className={styles.heroQuote}>
+                <p className={styles.heroQuoteText}>
+                  {storyQuotes[0]}
+                </p>
+                <div className={styles.heroQuoteAttribution}>
+                  — {storyteller.full_name}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Data Sovereignty Notice */}
+      <section className={styles.sovereigntySection}>
+        <div className={styles.container}>
+          <div className={styles.sovereigntyNotice}>
+            <div className={styles.sovereigntyIcon}>
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div className={styles.sovereigntyContent}>
+              <h3>This storyteller maintains complete control over their narrative</h3>
+              <p>Following Indigenous data sovereignty principles, this profile displays only information the storyteller has explicitly chosen to share publicly.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Related Stories / Community */}
-      <section className="related-section">
-        <div className="container">
-          <div className="section-header">
-            <h2>More Community Voices</h2>
-            <p>Other storytellers who chose to share their experiences</p>
+      {/* Enhanced Story Overview */}
+      {analysis && (
+        <section className={styles.storyOverviewSection}>
+          <div className={styles.container}>
+            <div className={styles.storyOverview}>
+              <div className={styles.overviewHeader}>
+                <h2>Story Overview</h2>
+                {analysis.summary && (
+                  <div className={styles.aiSummary}>
+                    <div className={styles.summaryIcon}>🤖</div>
+                    <div className={styles.summaryContent}>
+                      <h3>AI-Generated Summary</h3>
+                      <p>{analysis.summary}</p>
+                    </div>
+                  </div>
+                )}
+                {transcript && (
+                  <div className={styles.storyMeta}>
+                    <span>Interview Date: {new Date(transcript.created_at).toLocaleDateString()}</span>
+                    <span>•</span>
+                    <span>Story Length: {Math.ceil(transcriptContent.split(' ').length / 200)} min read</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-          
-          <div className="related-actions">
-            <Link href="/storytellers" className="btn btn-primary">
-              Browse All Storytellers
-            </Link>
-            <Link href="/submit" className="btn btn-secondary">
-              Share Your Story
-            </Link>
+        </section>
+      )}
+
+      {/* AI Insights Dashboard */}
+      {analysis && (
+        <AIInsightsDashboard 
+          analysis={analysis}
+          confidence={analysis.confidence_score}
+          quality={qualityScore}
+          insights={aiInsights}
+          analysisDate={analysisDate}
+        />
+      )}
+
+      {/* Emotional Journey Visualization */}
+      {emotions.length > 0 && (
+        <EmotionalJourney 
+          emotions={emotions}
+          themes={finalThemes}
+          transcriptContent={transcriptContent}
+        />
+      )}
+
+      {/* Interactive Quote Carousel */}
+      {storyQuotes.length > 0 && (
+        <QuoteCarousel 
+          quotes={storyQuotes}
+          storytellerName={storyteller.full_name}
+          shareEnabled={privacySettings.quotes_shareable}
+        />
+      )}
+
+      {/* Topic Word Cloud */}
+      {topicCategories.length > 0 && (
+        <TopicWordCloud 
+          topics={topicCategories}
+          themes={finalThemes}
+        />
+      )}
+
+      {/* Story Timeline */}
+      {transcriptContent && (
+        <StoryTimeline 
+          transcriptContent={transcriptContent}
+          themes={finalThemes}
+          emotions={emotions}
+        />
+      )}
+
+      {/* Interactive Transcript Viewer */}
+      {transcript && (
+        <InteractiveTranscript 
+          transcript={transcriptContent}
+          themes={finalThemes}
+          quotes={storyQuotes}
+          emotions={emotions}
+          storytellerName={storyteller.full_name}
+        />
+      )}
+
+      {/* Legacy Story Content (keeping for compatibility) */}
+      {analysis && (
+        <section className={styles.storySection}>
+          <div className={styles.container}>
+            <div className={styles.storyContent}>
+              <div className={styles.storyHeader}>
+                <h2>Story Journey & AI Insights</h2>
+                {analysis.summary && (
+                  <p className={styles.storySummary}>{analysis.summary}</p>
+                )}
+                {analysis.confidence_score && (
+                  <div className={styles.analysisMeta}>
+                    AI Analysis Confidence: {Math.round(analysis.confidence_score * 100)}% 
+                    {analysisDate && ` • Analyzed on ${analysisDate}`}
+                  </div>
+                )}
+              </div>
+
+              {/* Analysis Insights Cards */}
+              <div className={styles.analysisInsights}>
+                <div className={styles.insightsHeader}>
+                  <h3>Story Analysis Overview</h3>
+                  <p>AI-powered analysis of narrative themes, emotions, and key insights</p>
+                </div>
+                <div className={styles.insightsGrid}>
+                  <div className={styles.insightCard}>
+                    <div className={styles.insightNumber}>{storyThemes.length}</div>
+                    <div className={styles.insightLabel}>Key Themes</div>
+                  </div>
+                  <div className={styles.insightCard}>
+                    <div className={styles.insightNumber}>{storyQuotes.length}</div>
+                    <div className={styles.insightLabel}>Notable Quotes</div>
+                  </div>
+                  <div className={styles.insightCard}>
+                    <div className={styles.insightNumber}>{emotions.length}</div>
+                    <div className={styles.insightLabel}>Emotions Identified</div>
+                  </div>
+                  <div className={styles.insightCard}>
+                    <div className={styles.insightNumber}>{Math.round((analysis.confidence_score || 0) * 100)}%</div>
+                    <div className={styles.insightLabel}>Analysis Confidence</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Themes and Emotions Grid */}
+              <div className={styles.storyGrid}>
+                {/* Themes */}
+                {finalThemes.length > 0 && (
+                  <div className={styles.storyThemes}>
+                    <h3>Key Themes</h3>
+                    <div className={styles.themesGrid}>
+                      {finalThemes.map((theme, index) => (
+                        <span key={index} className={styles.themeTag}>{theme}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Emotions */}
+                {emotions.length > 0 && (
+                  <div className={styles.storyEmotions}>
+                    <h3>Emotional Journey</h3>
+                    <div className={styles.emotionsGrid}>
+                      {emotions.slice(0, 6).map((emotion: string, index: number) => (
+                        <span key={index} className={styles.emotionTag}>{emotion}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Key Quotes */}
+              {storyQuotes.length > 0 && (
+                <div className={styles.storyQuotes}>
+                  <h3>Meaningful Moments</h3>
+                  <div className={styles.quotesGrid}>
+                    {storyQuotes.slice(0, 4).map((quote, index) => (
+                      <blockquote key={index} className={styles.storyQuote}>
+                        {quote}
+                      </blockquote>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Privacy Dashboard */}
+      <PrivacyDashboard 
+        storyteller={storyteller}
+        privacySettings={privacySettings}
+        consentDate={privacySettings.consent_date}
+      />
+
+      {/* Community Connections */}
+      <CommunityConnections 
+        storyteller={storyteller}
+        themes={finalThemes}
+        location={(storyteller.location as any)?.name}
+        organization={(storyteller.organization as any)?.name}
+      />
+
+      {/* Enhanced Bio Section */}
+      {storyteller.bio && (
+        <section className={styles.enhancedBioSection}>
+          <div className={styles.container}>
+            <div className={styles.bioGrid}>
+              <div className={styles.bioMain}>
+                <h3>About {storyteller.full_name?.split(' ')[0]}</h3>
+                <p>{storyteller.bio}</p>
+                
+                <div className={styles.bioStats}>
+                  <div className={styles.bioStat}>
+                    <div className={styles.bioStatNumber}>{finalThemes.length}</div>
+                    <div className={styles.bioStatLabel}>Themes Explored</div>
+                  </div>
+                  <div className={styles.bioStat}>
+                    <div className={styles.bioStatNumber}>{emotions.length}</div>
+                    <div className={styles.bioStatLabel}>Emotions Shared</div>
+                  </div>
+                  <div className={styles.bioStat}>
+                    <div className={styles.bioStatNumber}>{storyQuotes.length}</div>
+                    <div className={styles.bioStatLabel}>Memorable Quotes</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className={styles.bioSidebar}>
+                <div className={styles.bioMetaCard}>
+                  <h4>Profile Details</h4>
+                  <div className={styles.bioMeta}>
+                    {storyteller.location && (
+                      <div className={styles.bioMetaItem}>
+                        <div className={styles.bioMetaIcon}>🌍</div>
+                        <div>
+                          <div className={styles.bioMetaLabel}>Location</div>
+                          <div className={styles.bioMetaValue}>{(storyteller.location as any).name}</div>
+                        </div>
+                      </div>
+                    )}
+                    {storyteller.organization && (
+                      <div className={styles.bioMetaItem}>
+                        <div className={styles.bioMetaIcon}>🏢</div>
+                        <div>
+                          <div className={styles.bioMetaLabel}>Organization</div>
+                          <div className={styles.bioMetaValue}>{(storyteller.organization as any).name}</div>
+                        </div>
+                      </div>
+                    )}
+                    {transcript && (
+                      <div className={styles.bioMetaItem}>
+                        <div className={styles.bioMetaIcon}>📅</div>
+                        <div>
+                          <div className={styles.bioMetaLabel}>Story Shared</div>
+                          <div className={styles.bioMetaValue}>
+                            {new Date(transcript.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {memberSince && (
+                      <div className={styles.bioMetaItem}>
+                        <div className={styles.bioMetaIcon}>⭐</div>
+                        <div>
+                          <div className={styles.bioMetaLabel}>Member Since</div>
+                          <div className={styles.bioMetaValue}>{memberSince}</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {analysis && (
+                  <div className={styles.bioMetaCard}>
+                    <h4>Analysis Quality</h4>
+                    <div className={styles.qualityMeter}>
+                      <div className={styles.qualityBar}>
+                        <div 
+                          className={styles.qualityFill}
+                          style={{ width: `${Math.round((analysis.confidence_score || 0) * 100)}%` }}
+                        ></div>
+                      </div>
+                      <div className={styles.qualityText}>
+                        {Math.round((analysis.confidence_score || 0) * 100)}% Confidence
+                      </div>
+                    </div>
+                    {qualityScore > 0 && (
+                      <div className={styles.qualityMeter}>
+                        <div className={styles.qualityBar}>
+                          <div 
+                            className={styles.qualityFill}
+                            style={{ width: `${Math.round(qualityScore * 100)}%` }}
+                          ></div>
+                        </div>
+                        <div className={styles.qualityText}>
+                          {Math.round(qualityScore * 100)}% Quality Score
+                        </div>
+                      </div>
+                    )}
+                    <div className={styles.analysisCredit}>
+                      Analyzed by GPT-4 {analysisDate && `on ${analysisDate}`}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Actions */}
+      <section className={styles.actionsSection}>
+        <div className={styles.container}>
+          <div className={styles.actionsContent}>
+            <h2>Continue Exploring</h2>
+            <p>Discover more voices and stories from our community</p>
+            <div className={styles.actionsButtons}>
+              <Link href="/storytellers" className={`${styles.btn} ${styles.btnPrimary}`}>
+                Meet Other Storytellers
+              </Link>
+              <Link href="/stories" className={`${styles.btn} ${styles.btnSecondary}`}>
+                Browse All Stories
+              </Link>
+            </div>
           </div>
         </div>
       </section>
-
-      <style jsx>{`
-        .storyteller-profile {
-          min-height: 100vh;
-        }
-
-        .profile-hero {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 4rem 0;
-        }
-
-        .hero-content {
-          display: flex;
-          align-items: center;
-          gap: 3rem;
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .profile-image-container {
-          flex-shrink: 0;
-        }
-
-        .profile-image {
-          border-radius: 50%;
-          border: 4px solid rgba(255, 255, 255, 0.3);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .profile-placeholder {
-          width: 200px;
-          height: 200px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.2);
-          border: 4px solid rgba(255, 255, 255, 0.3);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .placeholder-initial {
-          font-size: 4rem;
-          font-weight: 700;
-          color: white;
-        }
-
-        .profile-info {
-          flex: 1;
-        }
-
-        .profile-name {
-          font-size: 3rem;
-          font-weight: 700;
-          margin-bottom: 0.5rem;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .profile-role {
-          font-size: 1.3rem;
-          margin-bottom: 1.5rem;
-          color: rgba(255, 255, 255, 0.9);
-          font-style: italic;
-        }
-
-        .profile-details {
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-
-        .detail-item {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 1.1rem;
-        }
-
-        .detail-icon {
-          font-size: 1.2rem;
-        }
-
-        .privacy-notice-section {
-          background: #fef3c7;
-          padding: 2rem 0;
-        }
-
-        .privacy-notice {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          max-width: 800px;
-          margin: 0 auto;
-          padding: 1.5rem;
-          background: white;
-          border-radius: 12px;
-          border-left: 4px solid #f59e0b;
-        }
-
-        .privacy-icon {
-          color: #d97706;
-          flex-shrink: 0;
-        }
-
-        .privacy-icon svg {
-          width: 2rem;
-          height: 2rem;
-        }
-
-        .privacy-content p {
-          margin: 0;
-          color: #78350f;
-          line-height: 1.5;
-        }
-
-        .story-content-section {
-          padding: 4rem 0;
-        }
-
-        .story-content {
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .story-header {
-          text-align: center;
-          margin-bottom: 3rem;
-          padding-bottom: 2rem;
-          border-bottom: 2px solid #f1f5f9;
-        }
-
-        .story-header h2 {
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin-bottom: 1rem;
-          color: #1e293b;
-        }
-
-        .story-summary {
-          font-size: 1.2rem;
-          color: #64748b;
-          margin-bottom: 1rem;
-          line-height: 1.6;
-        }
-
-        .story-meta {
-          color: #94a3b8;
-          font-size: 0.9rem;
-        }
-
-        .story-themes {
-          margin-bottom: 3rem;
-          padding: 2rem;
-          background: #f8fafc;
-          border-radius: 12px;
-        }
-
-        .story-themes h3 {
-          color: #334155;
-          margin-bottom: 1rem;
-          font-size: 1.3rem;
-        }
-
-        .themes-container {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.75rem;
-        }
-
-        .theme-tag {
-          background: #e0e7ff;
-          color: #3730a3;
-          padding: 0.5rem 1rem;
-          border-radius: 20px;
-          font-size: 0.9rem;
-          font-weight: 500;
-          border: 1px solid #c7d2fe;
-        }
-
-        .story-quotes {
-          margin-bottom: 3rem;
-        }
-
-        .story-quotes h3 {
-          color: #334155;
-          margin-bottom: 1.5rem;
-          font-size: 1.3rem;
-        }
-
-        .quotes-container {
-          space-y: 1.5rem;
-        }
-
-        .story-quote {
-          background: white;
-          padding: 2rem;
-          margin-bottom: 1.5rem;
-          border-radius: 12px;
-          border-left: 4px solid #10b981;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-          font-size: 1.1rem;
-          line-height: 1.6;
-          color: #374151;
-          font-style: italic;
-        }
-
-        .consent-info {
-          display: flex;
-          align-items: flex-start;
-          gap: 1rem;
-          padding: 1.5rem;
-          background: #f0fdf4;
-          border-radius: 12px;
-          border: 1px solid #bbf7d0;
-          margin-top: 3rem;
-        }
-
-        .consent-icon {
-          background: #10b981;
-          color: white;
-          width: 2rem;
-          height: 2rem;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          flex-shrink: 0;
-          margin-top: 0.25rem;
-        }
-
-        .consent-content p {
-          margin: 0;
-          color: #166534;
-          line-height: 1.5;
-        }
-
-        .related-section {
-          background: #f8fafc;
-          padding: 4rem 0;
-          text-align: center;
-        }
-
-        .section-header {
-          margin-bottom: 2rem;
-        }
-
-        .section-header h2 {
-          font-size: 2rem;
-          color: #1e293b;
-          margin-bottom: 0.5rem;
-        }
-
-        .section-header p {
-          color: #64748b;
-          font-size: 1.1rem;
-        }
-
-        .related-actions {
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-        }
-
-        .btn {
-          padding: 1rem 2rem;
-          border-radius: 8px;
-          font-weight: 600;
-          text-decoration: none;
-          display: inline-block;
-          transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-          background: #3b82f6;
-          color: white;
-          border: 2px solid #3b82f6;
-        }
-
-        .btn-primary:hover {
-          background: #2563eb;
-          border-color: #2563eb;
-          transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-          background: white;
-          color: #3b82f6;
-          border: 2px solid #3b82f6;
-        }
-
-        .btn-secondary:hover {
-          background: #3b82f6;
-          color: white;
-          transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-          .hero-content {
-            flex-direction: column;
-            text-align: center;
-            gap: 2rem;
-          }
-          
-          .profile-name {
-            font-size: 2rem;
-          }
-          
-          .privacy-notice {
-            flex-direction: column;
-            text-align: center;
-          }
-          
-          .story-content {
-            padding: 0 1rem;
-          }
-          
-          .related-actions {
-            flex-direction: column;
-            align-items: center;
-          }
-        }
-      `}</style>
     </div>
   );
 }
