@@ -1,0 +1,134 @@
+.storytellerAdmin {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.adminHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.adminHeader h1 {
+  color: #2d3748;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.adminGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.adminCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border: 1px solid #e1e5e9;
+}
+
+.adminCard h2 {
+  margin-bottom: 1rem;
+  color: #2d3748;
+  font-size: 1.1rem;
+}
+
+.profilePreview {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.profilePreview img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.storyItem {
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.storyActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.storyActions button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.settingItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.quickActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.actionBtn {
+  padding: 0.75rem;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  background: #f7fafc;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.engagementStats {
+  display: flex;
+  justify-content: space-between;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statNumber {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4299e1;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.btnPrimary {
+  background: #4299e1;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnSecondary {
+  background: #e1e5e9;
+  color: #2d3748;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
