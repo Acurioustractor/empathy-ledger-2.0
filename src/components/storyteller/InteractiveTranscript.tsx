@@ -105,8 +105,7 @@ export default function InteractiveTranscript({
       const matchesFilter = selectedFilter === 'all' || 
         (selectedFilter === 'themes' && segment.type === 'theme') ||
         (selectedFilter === 'quotes' && segment.type === 'quote') ||
-        (selectedFilter === 'emotions' && segment.type === 'emotion') ||
-        (selectedFilter !== 'all' && !segment.highlighted);
+        (selectedFilter === 'emotions' && segment.type === 'emotion');
       
       return matchesSearch && matchesFilter;
     });

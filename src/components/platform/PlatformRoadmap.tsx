@@ -442,7 +442,7 @@ export default function PlatformRoadmap({ userRole, organizationId }: PlatformRo
             <div className="flex items-center space-x-2 pt-4 border-t border-gray-200">
               <Button
                 size="sm"
-                variant={item.user_vote === 'upvote' ? 'default' : 'outline'}
+                variant={item.user_vote === 'upvote' ? 'primary' : 'outline'}
                 onClick={() => handleVote(item.id, 'upvote')}
                 className={item.user_vote === 'upvote' ? 'bg-green-600 hover:bg-green-700' : ''}
               >
@@ -450,7 +450,7 @@ export default function PlatformRoadmap({ userRole, organizationId }: PlatformRo
               </Button>
               <Button
                 size="sm"
-                variant={item.user_vote === 'priority_high' ? 'default' : 'outline'}
+                variant={item.user_vote === 'priority_high' ? 'danger' : 'outline'}
                 onClick={() => handleVote(item.id, 'priority_high')}
                 className={item.user_vote === 'priority_high' ? 'bg-red-600 hover:bg-red-700' : ''}
               >
@@ -458,7 +458,7 @@ export default function PlatformRoadmap({ userRole, organizationId }: PlatformRo
               </Button>
               <Button
                 size="sm"
-                variant={item.user_vote === 'priority_medium' ? 'default' : 'outline'}
+                variant={item.user_vote === 'priority_medium' ? 'secondary' : 'outline'}
                 onClick={() => handleVote(item.id, 'priority_medium')}
                 className={item.user_vote === 'priority_medium' ? 'bg-yellow-600 hover:bg-yellow-700' : ''}
               >

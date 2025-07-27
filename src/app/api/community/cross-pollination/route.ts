@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
 
     // Process connections to determine the "other" storyteller for each connection
     const processedConnections = connections.map(connection => {
-      const isStorytellerA = connection.storyteller_a.id === storytellerId;
+      const isStorytellerA = (connection.storyteller_a as any)?.id === storytellerId;
       const otherStoryteller = isStorytellerA ? connection.storyteller_b : connection.storyteller_a;
       
       return {

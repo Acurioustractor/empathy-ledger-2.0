@@ -8,10 +8,11 @@ import { redirect } from 'next/navigation';
 import styles from './admin.module.css';
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function StorytellerAdminPage({ params }: Props) {
+  const resolvedParams = await params;
   const supabase = await createAdminClient();
   
   // Get storyteller data
@@ -22,7 +23,7 @@ export default async function StorytellerAdminPage({ params }: Props) {
       stories(id, title, content, privacy_level, created_at),
       transcript_analysis(themes_identified, key_quotes, confidence_score)
     `)
-    .eq('id', params.id)
+    .eq('id', resolvedParams.id)
     .single();
 
   if (!storyteller) {

@@ -6,18 +6,27 @@ import MultimediaStory from '@/components/story/MultimediaStory';
 import { Button } from '@/components/ui/Button';
 
 interface StoryPageProps {
-  params: {
+  params: Promise<{
     storyId: string;
-  };
+  }>;
 }
 
 export default function StoryPage({ params }: StoryPageProps) {
+  const [storyId, setStoryId] = useState<string>('');
+  
+  useEffect(() => {
+    params.then(resolvedParams => {
+      setStoryId(resolvedParams.storyId);
+    });
+  }, [params]);
   const [accessLevel, setAccessLevel] = useState<'public' | 'paywall' | 'organizational'>('public');
   const [viewMode, setViewMode] = useState<'reader' | 'multimedia'>('reader');
   const [story, setStory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!storyId) return;
+    
     // Check for existing subscription
     const subscription = localStorage.getItem('subscription_ben-knight-demo');
     if (subscription) {
@@ -25,11 +34,11 @@ export default function StoryPage({ params }: StoryPageProps) {
     }
     
     fetchStoryPreview();
-  }, [params.storyId]);
+  }, [storyId]);
 
   const fetchStoryPreview = async () => {
     try {
-      const response = await fetch(`/api/stories/${params.storyId}?access_level=public`);
+      const response = await fetch(`/api/stories/${storyId}?access_level=public`);
       const storyData = await response.json();
       setStory(storyData);
     } catch (error) {
@@ -157,14 +166,14 @@ export default function StoryPage({ params }: StoryPageProps) {
       <div className="pb-12">
         {viewMode === 'reader' ? (
           <StoryReader 
-            storyId={params.storyId}
+            storyId={storyId}
             accessLevel={accessLevel}
             onEngagement={handleEngagement}
           />
         ) : (
           <MultimediaStory 
             story={{
-              id: params.storyId,
+              id: storyId,
               title: story.title,
               video_url: '/story-videos/ben-primary-story.mp4',
               audio_url: '/story-audio/ben-primary-narration.mp3',

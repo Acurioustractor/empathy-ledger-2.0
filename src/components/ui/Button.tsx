@@ -11,6 +11,7 @@ interface ButtonProps {
     | 'cta'
     | 'ghost'
     | 'danger'
+    | 'outline'
     | 'outline-white';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   fullWidth?: boolean;
@@ -51,6 +52,8 @@ const Button: React.FC<ButtonProps> = ({
       'text-[var(--foreground)] hover:text-[var(--primary)] hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--primary)]/50 focus:ring-offset-2',
     danger:
       'bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-400 focus:ring-offset-2',
+    outline:
+      'border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--primary)]/50 focus:ring-offset-2',
     'outline-white':
       'border border-white text-white hover:bg-white hover:text-[var(--foreground)] focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent',
   };

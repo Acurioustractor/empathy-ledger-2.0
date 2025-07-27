@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import styles from './onboarding.module.css';
 
 interface OnboardingFormData {
@@ -323,7 +324,7 @@ export default function OnboardingPage() {
       </div>
 
       <div className={styles.footer}>
-        <p>Already have an account? <a href="/storytellers">Browse storytellers</a></p>
+        <p>Already have an account? <Link href="/storytellers">Browse storytellers</Link></p>
       </div>
     </div>
   );

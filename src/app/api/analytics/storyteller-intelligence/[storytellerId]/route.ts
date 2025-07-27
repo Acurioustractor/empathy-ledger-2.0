@@ -3,16 +3,17 @@ import { createAdminClient } from '@/lib/supabase-server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { storytellerId: string } }
+  { params }: { params: Promise<{ storytellerId: string }> }
 ) {
   try {
+    const resolvedParams = await params;
     const supabase = await createAdminClient();
     
     // Fetch existing storyteller intelligence
     const { data: intelligence, error } = await supabase
       .from('storyteller_ai_intelligence')
       .select('*')
-      .eq('storyteller_id', params.storytellerId)
+      .eq('storyteller_id', resolvedParams.storytellerId)
       .single();
 
     if (error && error.code !== 'PGRST116') {
@@ -22,7 +23,7 @@ export async function GET(
 
     // If no intelligence exists, generate it
     if (!intelligence) {
-      return await generateStorytellerIntelligence(params.storytellerId);
+      return await generateStorytellerIntelligence(resolvedParams.storytellerId);
     }
 
     return NextResponse.json(intelligence);
@@ -286,15 +287,16 @@ async function generateStorytellerIntelligence(storytellerId: string) {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { storytellerId: string } }
+  { params }: { params: Promise<{ storytellerId: string }> }
 ) {
   try {
+    const resolvedParams = await params;
     const body = await request.json();
     const { refresh = false } = body;
 
     if (refresh) {
       // Regenerate intelligence
-      return await generateStorytellerIntelligence(params.storytellerId);
+      return await generateStorytellerIntelligence(resolvedParams.storytellerId);
     }
 
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });

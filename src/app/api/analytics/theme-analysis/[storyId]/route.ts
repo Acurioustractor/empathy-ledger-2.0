@@ -3,9 +3,10 @@ import { createAdminClient } from '@/lib/supabase-server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { storyId: string } }
+  { params }: { params: Promise<{ storyId: string }> }
 ) {
   try {
+    const resolvedParams = await params;
     const supabase = await createAdminClient();
     
     // Fetch existing theme analysis
@@ -28,7 +29,7 @@ export async function GET(
         analysis_date,
         last_cultural_review
       `)
-      .eq('story_id', params.storyId)
+      .eq('story_id', resolvedParams.storyId)
       .single();
 
     if (error && error.code !== 'PGRST116') {
@@ -49,9 +50,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { storyId: string } }
+  { params }: { params: Promise<{ storyId: string }> }
 ) {
   try {
+    const resolvedParams = await params;
     const body = await request.json();
     const { storytellerId, includeAboriginalReview } = body;
 
@@ -61,7 +63,7 @@ export async function POST(
     const { data: story, error: storyError } = await supabase
       .from('stories')
       .select('id, title, full_content, content_preview, themes, storyteller_id')
-      .eq('id', params.storyId)
+      .eq('id', resolvedParams.storyId)
       .single();
 
     if (storyError || !story) {
@@ -70,7 +72,7 @@ export async function POST(
 
     // Mock AI analysis - in production this would call actual AI services
     const mockAnalysis = {
-      story_id: params.storyId,
+      story_id: resolvedParams.storyId,
       storyteller_id: storytellerId,
       professional_themes: [
         {
@@ -216,7 +218,7 @@ export async function POST(
     // Generate professional insights based on the analysis
     const mockInsights = [
       {
-        story_id: params.storyId,
+        story_id: resolvedParams.storyId,
         storyteller_id: storytellerId,
         theme_analysis_id: analysisData.id,
         insight_type: 'methodology' as const,
@@ -235,7 +237,7 @@ export async function POST(
         cultural_validation_status: 'approved' as const
       },
       {
-        story_id: params.storyId,
+        story_id: resolvedParams.storyId,
         storyteller_id: storytellerId,
         theme_analysis_id: analysisData.id,
         insight_type: 'approach' as const,

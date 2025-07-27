@@ -233,7 +233,7 @@ export default function PlatformScalingDemo() {
             <Button
               key={key}
               onClick={() => setSelectedEnvironment(key as any)}
-              variant={selectedEnvironment === key ? 'default' : 'outline'}
+              variant={selectedEnvironment === key ? 'primary' : 'outline'}
               size="sm"
             >
               {env.name}

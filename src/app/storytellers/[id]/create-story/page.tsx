@@ -162,7 +162,7 @@ export default function CreateStoryPage({ params }: { params: Promise<{ id: stri
   const isStepValid = (stepNum: number): boolean => {
     switch (stepNum) {
       case 1:
-        return storyData.title.trim() !== '' && storyData.story_type !== '';
+        return storyData.title.trim() !== '' && storyData.story_type.length > 0;
       case 2:
         return storyData.content.length >= 200;
       case 3:

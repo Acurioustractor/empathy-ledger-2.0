@@ -164,12 +164,13 @@ const BEN_KNIGHT_STORIES = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { storyId: string } }
+  { params }: { params: Promise<{ storyId: string }> }
 ) {
   try {
+    const resolvedParams = await params;
     const { searchParams } = new URL(request.url);
     const accessLevel = searchParams.get('access_level') || 'public';
-    const storyId = params.storyId;
+    const storyId = resolvedParams.storyId;
 
     // For demo, we have Ben's primary story
     const story = BEN_KNIGHT_STORIES[storyId as keyof typeof BEN_KNIGHT_STORIES];

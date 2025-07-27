@@ -68,6 +68,9 @@ export default async function StorytellerPage({ params }: StorytellerPageProps) 
   const analysis = transcriptData?.story_analysis?.[0];
   const transcript = transcriptData;
   
+  // Get analysis results first
+  const analysisResults = analysis?.results || {};
+  
   // Map theme IDs to names (handle both string and number IDs)
   const storyThemes = analysis?.themes_identified?.map((themeId: string | number) => {
     const theme = themes?.find(t => t.id === themeId || t.id === String(themeId));
@@ -92,7 +95,6 @@ export default async function StorytellerPage({ params }: StorytellerPageProps) 
   const memberSince = storyteller.created_at ? new Date(storyteller.created_at).toLocaleDateString() : null;
 
   // Enhanced analysis data
-  const analysisResults = analysis?.results || {};
   const aiInsights = analysisResults.insights || [];
   const topicCategories = analysisResults.topic_categories || [];
   const qualityScore = analysisResults.quality_score || 0;

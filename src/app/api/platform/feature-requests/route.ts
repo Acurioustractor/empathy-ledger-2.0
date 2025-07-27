@@ -273,7 +273,7 @@ export async function PUT(request: NextRequest) {
           updated_at: new Date().toISOString()
         });
 
-      console.log(`Feature ${updatedRequest.feature_key} ${enabled ? 'enabled' : 'disabled'} for ${updatedRequest.organization.organization_name}`);
+      console.log(`Feature ${updatedRequest.feature_key} ${enabled ? 'enabled' : 'disabled'} for ${(updatedRequest.organization as any)?.organization_name}`);
     }
 
     return NextResponse.json({

@@ -3,6 +3,8 @@
 // =====================================================================
 // Client-side utilities for interacting with the beautification system
 
+import React from 'react';
+
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -150,6 +152,7 @@ export async function getStoriesByProcessingStatus(
       beautified_title,
       beautified_content,
       executive_summary,
+      themes,
       ai_processing_status,
       ai_processed_at,
       ai_confidence_score,
@@ -179,9 +182,12 @@ export async function searchBeautifiedStories(
     .select(`
       id,
       title,
+      content,
       beautified_title,
       beautified_content,
       executive_summary,
+      themes,
+      ai_processing_status,
       key_quotes,
       emotional_tone,
       auto_generated_themes,
