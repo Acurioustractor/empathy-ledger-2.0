@@ -23,5 +23,19 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "scripts/**/*",
+    "check-*.ts",
+    "debug-*.ts",
+    "migrate-*.ts",
+    "test-*.ts",
+    "complete-*.ts",
+    "execute-*.ts",
+    "final-*.ts",
+    "fix-*.ts",
+    "force-*.ts",
+    "nuclear-*.ts",
+    "lib/secure-env.ts"
+  ]
 }
