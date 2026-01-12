@@ -12,13 +12,13 @@ import { ProjectInsightsSummary } from '@/components/project-insights-summary';
 import { ProjectCommunityStats } from '@/components/project-community-stats';
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     projectId: string;
-  };
+  }>;
 }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
-  const { projectId } = params;
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { projectId } = await params;
 
   return (
     <BrandedLayout projectId={projectId}>

@@ -3,7 +3,7 @@
  * Prevents free tier project from auto-pausing
  */
 
-import { supabase } from './supabase-auth';
+import { createClient } from './supabase-client';
 
 /**
  * Simple health check to keep Supabase active
@@ -13,10 +13,15 @@ export async function healthCheck(): Promise<{
   timestamp: string;
 }> {
   try {
-    // Simple query to keep database active
+    const supabase = await createClient();
+    if (!supabase) {
+      return { success: false, timestamp: new Date().toISOString() };
+    }
+    
+    // Simple query to keep database active - just select id field
     const { data, error } = await supabase
       .from('profiles')
-      .select('count(*)')
+      .select('id')
       .limit(1);
 
     if (error) {

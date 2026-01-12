@@ -1,272 +1,253 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import CaseStudyShowcase from '@/components/case-studies/CaseStudyShowcase';
-import MediaDisplay from '@/components/ui/MediaDisplay';
-import {
-  placeholderImages,
-  placeholderBlurDataURLs,
-} from '@/lib/supabase-media';
+
+// Case study data - in production this would come from Supabase
+const caseStudies = [
+  {
+    id: 'a-curious-tractor',
+    title: 'A Curious Tractor',
+    organisation: 'A Curious Tractor',
+    location: 'Australia',
+    category: 'Platform Showcase',
+    profileImage: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400&h=400&fit=crop&q=80',
+    excerpt: 'Our flagship showcase demonstrating how Empathy Ledger transforms community storytelling into evidence for meaningful change.',
+    impact: {
+      stories: '156',
+      communities: '12',
+      policyChanges: '8',
+      livesImpacted: '5,000+'
+    },
+    tags: ['Platform Development', 'Community Storytelling', 'Best Practices'],
+    featured: true,
+    isShowcase: true
+  },
+  {
+    id: 'indigenous-health-network',
+    title: 'Indigenous Health Network',
+    organisation: 'First Nations Health Authority',
+    location: 'British Columbia, Canada',
+    category: 'Healthcare',
+    profileImage: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop',
+    excerpt: 'How 500+ Indigenous communities transformed healthcare delivery through shared stories of healing and wellness.',
+    impact: {
+      stories: '2,847',
+      communities: '523',
+      policyChanges: '12',
+      livesImpacted: '45,000+'
+    },
+    tags: ['Healthcare', 'Indigenous', 'Policy Change'],
+    featured: true
+  },
+  {
+    id: 'youth-mental-health',
+    title: 'Youth Voices Matter',
+    organisation: 'Headspace Australia',
+    location: 'Melbourne, Australia',
+    category: 'Mental Health',
+    profileImage: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop',
+    excerpt: 'Young people sharing mental health journeys led to complete redesign of support services across 150 centres.',
+    impact: {
+      stories: '8,234',
+      communities: '150',
+      policyChanges: '3',
+      livesImpacted: '120,000+'
+    },
+    tags: ['Mental Health', 'Youth', 'Service Design'],
+    featured: true
+  },
+  {
+    id: 'refugee-integration',
+    title: 'New Beginnings Project',
+    organisation: 'UNHCR Partnership',
+    location: 'Germany & France',
+    category: 'Social Integration',
+    profileImage: 'https://images.unsplash.com/photo-1609234656388-0ff363383899?w=400&h=400&fit=crop',
+    excerpt: 'Refugee stories bridging cultural divides and creating pathways to meaningful employment and community connection.',
+    impact: {
+      stories: '3,456',
+      communities: '89',
+      policyChanges: '7',
+      livesImpacted: '67,000+'
+    },
+    tags: ['Refugees', 'Integration', 'Employment'],
+    featured: false
+  },
+  {
+    id: 'disability-advocacy',
+    title: 'Access For All',
+    organisation: 'Disability Rights Coalition',
+    location: 'United States',
+    category: 'Accessibility',
+    profileImage: 'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=400&h=400&fit=crop',
+    excerpt: 'Personal stories of barriers faced by disabled community members revolutionized urban planning in 20 cities.',
+    impact: {
+      stories: '5,678',
+      communities: '20',
+      policyChanges: '45',
+      livesImpacted: '2.3M+'
+    },
+    tags: ['Disability', 'Urban Planning', 'Advocacy'],
+    featured: true
+  },
+  {
+    id: 'elder-care-revolution',
+    title: 'Wisdom Keepers',
+    organisation: 'Age Care Quality Commission',
+    location: 'New Zealand',
+    category: 'Elder Care',
+    profileImage: 'https://images.unsplash.com/photo-1454391304352-2bf4678b1a7a?w=400&h=400&fit=crop',
+    excerpt: 'Elders reclaiming their narrative transformed aged care standards and created intergenerational connections.',
+    impact: {
+      stories: '1,234',
+      communities: '45',
+      policyChanges: '8',
+      livesImpacted: '89,000+'
+    },
+    tags: ['Elder Care', 'Quality Standards', 'Community'],
+    featured: false
+  },
+  {
+    id: 'education-equity',
+    title: 'Every Child\'s Story',
+    organisation: 'UNESCO Education Initiative',
+    location: 'Kenya & Uganda',
+    category: 'Education',
+    profileImage: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=400&h=400&fit=crop',
+    excerpt: 'Student and teacher stories revealed hidden barriers to education, leading to nationwide curriculum reforms.',
+    impact: {
+      stories: '12,345',
+      communities: '234',
+      policyChanges: '15',
+      livesImpacted: '3.5M+'
+    },
+    tags: ['Education', 'Equity', 'Curriculum Reform'],
+    featured: true
+  }
+];
+
+const categories = ['All', 'Healthcare', 'Mental Health', 'Social Integration', 'Accessibility', 'Elder Care', 'Education'];
 
 export default function CaseStudiesPage() {
+  const [selectedCategory, setSelectedCategory] = React.useState('All');
+  
+  const filteredStudies = selectedCategory === 'All' 
+    ? caseStudies 
+    : caseStudies.filter(study => study.category === selectedCategory);
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section - Clean and Minimal */}
-      <section className="min-h-[70vh] flex items-center justify-center px-8 md:px-12">
-        <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extralight text-gray-900 mb-8 leading-[1.1]">
-            Real stories.
-            <br />
-            Real impact.
-          </h1>
-          <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto leading-relaxed">
-            Discover how communities across Australia are using storytelling to
-            drive meaningful change while protecting individual privacy.
-          </p>
+    <div>
+      {/* Hero Section */}
+      <section className="hero-constellation">
+        <div className="container">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="hero-badge">SUCCESS STORIES</div>
+            <h1 className="hero-title">
+              Real Impact Through Shared Stories
+            </h1>
+            <p className="hero-description" style={{textAlign: 'center'}}>
+              Discover how communities worldwide are using Empathy Ledger to transform 
+              stories into meaningful change, better services, and stronger policies.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Impact Overview - Subtle Metrics */}
-      <section className="py-32 md:py-40 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              Transforming Communities
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              From healthcare to education, privacy-preserving storytelling
-              creates measurable change across Australia.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-16 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="text-5xl font-extralight text-gray-900 mb-3">
-                1,847
-              </div>
-              <div className="text-base text-gray-500 font-light">
-                Stories shared
-              </div>
+      {/* Stats Overview */}
+      <section className="section values-section">
+        <div className="container">
+          <div className="stats-grid">
+            <div className="stat-card">
+              <h3>35,678</h3>
+              <p>Stories Collected</p>
             </div>
-            <div className="text-center">
-              <div className="text-5xl font-extralight text-gray-900 mb-3">
-                67
-              </div>
-              <div className="text-base text-gray-500 font-light">
-                Policy changes
-              </div>
+            <div className="stat-card">
+              <h3>1,265</h3>
+              <p>Communities Served</p>
             </div>
-            <div className="text-center">
-              <div className="text-5xl font-extralight text-gray-900 mb-3">
-                100%
-              </div>
-              <div className="text-base text-gray-500 font-light">
-                Privacy protected
-              </div>
+            <div className="stat-card">
+              <h3>90</h3>
+              <p>Policy Changes</p>
             </div>
-            <div className="text-center">
-              <div className="text-5xl font-extralight text-gray-900 mb-3">
-                $2.3M
-              </div>
-              <div className="text-base text-gray-500 font-light">
-                Value created
-              </div>
+            <div className="stat-card">
+              <h3>6.2M+</h3>
+              <p>Lives Impacted</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Case Studies - Visual Impact */}
-      <section className="py-32 md:py-40">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              Featured Stories
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              In-depth looks at transformative projects powered by community
-              insights.
-            </p>
+      {/* Case Studies Grid */}
+      <section className="section storytellers-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Transformative Case Studies</h2>
+            <p>See how organisations are creating change through storytelling</p>
           </div>
 
-          <div className="space-y-32">
-            {/* Healthcare Case Study */}
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <MediaDisplay
-                  src={placeholderImages.impact}
-                  alt="Healthcare transformation"
-                  aspectRatio="video"
-                  rounded="3xl"
-                  priority
-                  blurDataURL={placeholderBlurDataURLs.impact}
-                />
-              </div>
-              <div>
-                <div className="text-sm text-gray-500 font-light mb-4 uppercase tracking-wide">
-                  Healthcare
-                </div>
-                <h3 className="text-3xl font-normal text-gray-900 mb-6">
-                  Brisbane Mental Health Initiative
-                </h3>
-                <p className="text-gray-600 font-light leading-relaxed mb-8">
-                  347 anonymous stories from mental health service users
-                  revealed critical gaps in after-hours support. The insights
-                  led to a complete redesign of crisis services, reducing
-                  emergency presentations by 42% and improving satisfaction
-                  scores by 89%.
-                </p>
-                <Link
-                  href="/case-studies/brisbane-mental-health"
-                  className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg transition-colors group no-underline"
-                >
-                  Read full case study
-                  <svg
-                    className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
-              </div>
-            </div>
-
-            {/* Education Case Study */}
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div className="order-2 lg:order-1">
-                <div className="text-sm text-gray-500 font-light mb-4 uppercase tracking-wide">
-                  Education
-                </div>
-                <h3 className="text-3xl font-normal text-gray-900 mb-6">
-                  Indigenous Education Pathways
-                </h3>
-                <p className="text-gray-600 font-light leading-relaxed mb-8">
-                  Stories from 89 Indigenous students and families transformed
-                  how three universities approach cultural safety and support.
-                  The project led to a 67% increase in completion rates and
-                  established new standards for culturally responsive education.
-                </p>
-                <Link
-                  href="/case-studies/indigenous-education"
-                  className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg transition-colors group no-underline"
-                >
-                  Read full case study
-                  <svg
-                    className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
-              </div>
-              <div className="order-1 lg:order-2">
-                <MediaDisplay
-                  src={placeholderImages.workshop}
-                  alt="Education transformation"
-                  aspectRatio="video"
-                  rounded="3xl"
-                  blurDataURL={placeholderBlurDataURLs.workshop}
-                />
-              </div>
-            </div>
-
-            {/* Community Development Case Study */}
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <MediaDisplay
-                  src={placeholderImages.community}
-                  alt="Community transformation"
-                  aspectRatio="video"
-                  rounded="3xl"
-                  blurDataURL={placeholderBlurDataURLs.community}
-                />
-              </div>
-              <div>
-                <div className="text-sm text-gray-500 font-light mb-4 uppercase tracking-wide">
-                  Community Development
-                </div>
-                <h3 className="text-3xl font-normal text-gray-900 mb-6">
-                  Western Sydney Housing Project
-                </h3>
-                <p className="text-gray-600 font-light leading-relaxed mb-8">
-                  1,200 stories from residents living in social housing revealed
-                  systemic maintenance issues and safety concerns. The
-                  aggregated insights prompted immediate policy changes and a
-                  $12M investment in community-led improvements.
-                </p>
-                <Link
-                  href="/case-studies/western-sydney-housing"
-                  className="inline-flex items-center gap-3 text-gray-900 hover:text-gray-600 font-light text-lg transition-colors group no-underline"
-                >
-                  Read full case study
-                  <svg
-                    className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* All Case Studies - Clean Grid */}
-      <section className="py-32 md:py-40 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              All Case Studies
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              Explore projects across healthcare, education, community
-              development, policy reform, and research.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { category: 'Healthcare', count: '12', color: 'bg-gray-100' },
-              { category: 'Education', count: '8', color: 'bg-gray-100' },
-              { category: 'Housing', count: '6', color: 'bg-gray-100' },
-              { category: 'Youth Services', count: '9', color: 'bg-gray-100' },
-              { category: 'Elder Care', count: '5', color: 'bg-gray-100' },
-              { category: 'Policy Reform', count: '14', color: 'bg-gray-100' },
-            ].map((item, index) => (
-              <Link
-                key={index}
-                href={`/case-studies?category=${item.category.toLowerCase().replace(' ', '-')}`}
-                className="no-underline group"
+          {/* Category Filter */}
+          <div className="category-filter">
+            {categories.map(category => (
+              <button
+                key={category}
+                className={`filter-btn ${selectedCategory === category ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(category)}
               >
-                <div className="bg-white rounded-3xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  <div className="w-16 h-16 bg-gray-100 rounded-2xl mb-6"></div>
-                  <h3 className="text-xl font-normal text-gray-900 mb-2">
-                    {item.category}
-                  </h3>
-                  <p className="text-gray-500 font-light">
-                    {item.count} case studies
-                  </p>
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {/* Case Study Cards */}
+          <div className="case-studies-grid">
+            {filteredStudies.map(study => (
+              <Link key={study.id} href={`/case-studies/${study.id}`} className="case-study-card-link" style={{textDecoration: 'none'}}>
+                <div className="case-study-card">
+                  {study.featured && <div className="featured-badge">Featured</div>}
+                  
+                  <div className="card-header">
+                    <img 
+                      src={study.profileImage} 
+                      alt={study.organisation}
+                      className="profile-image"
+                    />
+                    <div className="header-info">
+                      <h3>{study.title}</h3>
+                      <p className="organisation">{study.organisation}</p>
+                      <p className="location">{study.location}</p>
+                    </div>
+                  </div>
+
+                  <p className="excerpt">{study.excerpt}</p>
+
+                  <div className="impact-grid">
+                    <div className="impact-stat">
+                      <span className="impact-number">{study.impact.stories}</span>
+                      <span className="impact-label">Stories</span>
+                    </div>
+                    <div className="impact-stat">
+                      <span className="impact-number">{study.impact.communities}</span>
+                      <span className="impact-label">Communities</span>
+                    </div>
+                    <div className="impact-stat">
+                      <span className="impact-number">{study.impact.policyChanges}</span>
+                      <span className="impact-label">Policy Changes</span>
+                    </div>
+                    <div className="impact-stat">
+                      <span className="impact-number">{study.impact.livesImpacted}</span>
+                      <span className="impact-label">Lives Impacted</span>
+                    </div>
+                  </div>
+
+                  <div className="card-footer">
+                    <div className="tags">
+                      {study.tags.map(tag => (
+                        <span key={tag} className="tag">{tag}</span>
+                      ))}
+                    </div>
+                    <span className="read-more">Read Case Study →</span>
+                  </div>
                 </div>
               </Link>
             ))}
@@ -274,310 +255,332 @@ export default function CaseStudiesPage() {
         </div>
       </section>
 
-      {/* Methodology - Clean and Simple */}
-      <section className="py-32 md:py-40">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              Our Impact Methodology
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              How we measure real-world outcomes while protecting privacy
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <svg
-                  className="w-10 h-10 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Baseline
-              </h3>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Clear metrics established before implementation using
-                community-defined success indicators.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <svg
-                  className="w-10 h-10 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">Track</h3>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Continuous monitoring through privacy-preserving analytics and
-                community feedback.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <svg
-                  className="w-10 h-10 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Validate
-              </h3>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Independent audits ensure genuine, sustainable impact through
-                long-term studies.
-              </p>
+      {/* CTA Section */}
+      <section className="section cta-section">
+        <div className="container">
+          <div className="cta-content">
+            <h2>Ready to Create Your Success Story?</h2>
+            <p>Join organisations worldwide transforming communities through storytelling</p>
+            <div className="flex justify-center gap-4">
+              <Link href="/contact" className="btn btn-primary btn-large">
+                Start Your Journey
+              </Link>
+              <Link href="/modules" className="btn btn-secondary btn-large">
+                Explore Platform
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Privacy & Ethics - Clean Layout */}
-      <section className="py-32 md:py-40 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              Privacy & Ethics
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              Every case study follows strict ethical guidelines and privacy
-              protections
-            </p>
-          </div>
+      <style jsx>{`
+        /* Remove all underlines globally */
+        * {
+          text-decoration: none !important;
+        }
 
-          <div className="grid md:grid-cols-2 gap-16 max-w-5xl mx-auto">
-            <div>
-              <h3 className="text-2xl font-normal text-gray-900 mb-8">
-                Privacy Protected
-              </h3>
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Individual stories remain encrypted and anonymous
-                  </p>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Participants control their data throughout
-                  </p>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Only aggregated insights shared publicly
-                  </p>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Communities approve all publications
-                  </p>
-                </div>
-              </div>
-            </div>
+        a, a:hover, a:focus, a:active, a:visited {
+          text-decoration: none !important;
+        }
 
-            <div>
-              <h3 className="text-2xl font-normal text-gray-900 mb-8">
-                Ethical Standards
-              </h3>
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Community benefit requirements for all projects
-                  </p>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Fair compensation for story contributors
-                  </p>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Cultural protocols for Indigenous communities
-                  </p>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Independent ethics review for research
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+        .case-study-card * {
+          text-decoration: none !important;
+        }
 
-      {/* Visual Impact Gallery */}
-      <section className="py-32 md:py-40">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              Stories in Action
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              Documenting the journey from individual stories to community
-              transformation
-            </p>
-          </div>
+        .case-study-card h3,
+        .case-study-card p,
+        .case-study-card span,
+        .case-study-card div,
+        .case-study-card a {
+          text-decoration: none !important;
+        }
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <MediaDisplay
-              src={placeholderImages.community}
-              alt="Community workshop"
-              aspectRatio="square"
-              rounded="3xl"
-              caption="Story-sharing workshop"
-              blurDataURL={placeholderBlurDataURLs.community}
-            />
-            <MediaDisplay
-              src={placeholderImages.impact}
-              alt="Policy presentation"
-              aspectRatio="square"
-              rounded="3xl"
-              caption="Insights presented to council"
-              blurDataURL={placeholderBlurDataURLs.impact}
-            />
-            <MediaDisplay
-              src={placeholderImages.workshop}
-              alt="Youth engagement"
-              aspectRatio="square"
-              rounded="3xl"
-              caption="Youth storytelling session"
-              blurDataURL={placeholderBlurDataURLs.workshop}
-            />
-            <MediaDisplay
-              src={placeholderImages.team}
-              alt="Community celebration"
-              aspectRatio="square"
-              rounded="3xl"
-              caption="Celebrating outcomes"
-              blurDataURL={placeholderBlurDataURLs.team}
-            />
-            <MediaDisplay
-              src={placeholderImages.story}
-              alt="Data visualization"
-              aspectRatio="square"
-              rounded="3xl"
-              caption="Community insights dashboard"
-              blurDataURL={placeholderBlurDataURLs.story}
-            />
-            <MediaDisplay
-              src={placeholderImages.portrait}
-              alt="Storyteller"
-              aspectRatio="square"
-              rounded="3xl"
-              caption="Protected storyteller identity"
-              blurDataURL={placeholderBlurDataURLs.portrait}
-            />
-          </div>
-        </div>
-      </section>
+        .case-studies-grid * {
+          text-decoration: none !important;
+        }
 
-      {/* Video Case Studies */}
-      <section className="py-32 md:py-40 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-8 md:px-12">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 mb-8">
-              Watch the Impact
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              Video documentaries showing how communities create lasting change
-            </p>
-          </div>
+        /* Force hero text centering */
+        .hero-constellation .text-center {
+          text-align: center !important;
+        }
 
-          <div className="aspect-video bg-gray-100 rounded-3xl flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg
-                  className="w-12 h-12 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <p className="text-gray-500 font-light">
-                Video showcase coming soon
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+        .hero-constellation .max-w-4xl {
+          text-align: center !important;
+        }
 
-      {/* Call to Action */}
-      <section className="py-32 md:py-40">
-        <div className="max-w-4xl mx-auto px-8 md:px-12 text-center">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-gray-900 mb-10 leading-[1.1]">
-            Ready to create your
-            <br />
-            own success story?
-          </h2>
-          <p className="text-xl text-gray-600 mb-16 max-w-2xl mx-auto font-light">
-            Join organizations using storytelling to drive meaningful change.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link href="/contact" className="no-underline">
-              <button className="bg-gray-900 text-white px-10 py-4 rounded-full text-base font-light hover:bg-gray-800 transition-all duration-200 hover:scale-[1.02]">
-                Start Your Project
-              </button>
-            </Link>
-            <Link href="/modules" className="no-underline">
-              <button className="text-gray-700 px-10 py-4 rounded-full text-base font-light hover:bg-gray-50 transition-all duration-200">
-                Explore Modules
-              </button>
-            </Link>
-          </div>
-        </div>
-      </section>
+        .hero-title {
+          text-align: center !important;
+        }
+
+        .hero-description {
+          text-align: center !important;
+        }
+
+        .hero-badge {
+          text-align: center !important;
+        }
+
+        .hero-constellation p {
+          text-align: center !important;
+        }
+
+        .hero-constellation {
+          text-align: center !important;
+        }
+
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: var(--space-xl);
+          margin-bottom: var(--space-3xl);
+        }
+
+        .stat-card {
+          text-align: center;
+          padding: var(--space-xl);
+          background: var(--color-white);
+          border-radius: 12px;
+          border: 1px solid var(--color-gray-light);
+        }
+
+        .stat-card h3 {
+          font-size: 48px;
+          color: var(--color-brand-blue);
+          margin-bottom: var(--space-sm);
+          font-weight: 700;
+        }
+
+        .stat-card p {
+          color: var(--color-gray);
+          margin: 0;
+        }
+
+        .category-filter {
+          display: flex;
+          gap: var(--space-sm);
+          margin-bottom: var(--space-2xl);
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .filter-btn {
+          padding: var(--space-sm) var(--space-lg);
+          background: var(--color-white);
+          border: 2px solid var(--color-gray-light);
+          border-radius: 24px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+          border-color: var(--color-brand-blue);
+          color: var(--color-brand-blue);
+        }
+
+        .filter-btn.active {
+          background: var(--color-brand-blue);
+          color: var(--color-white);
+          border-color: var(--color-brand-blue);
+        }
+
+        .case-studies-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+          gap: var(--space-xl);
+        }
+
+        .case-study-card-link {
+          text-decoration: none !important;
+          display: block;
+        }
+        
+        .case-study-card-link:hover,
+        .case-study-card-link:focus,
+        .case-study-card-link:active,
+        .case-study-card-link:visited {
+          text-decoration: none !important;
+        }
+        
+        .case-study-card-link *,
+        .case-study-card-link *:hover,
+        .case-study-card-link *:focus,
+        .case-study-card-link *:active,
+        .case-study-card-link *:visited {
+          text-decoration: none !important;
+        }
+
+        /* Extra strong underline removal for card content */
+        .case-study-card * {
+          text-decoration: none !important;
+        }
+
+        .case-study-card h3,
+        .case-study-card p,
+        .case-study-card span,
+        .case-study-card div {
+          text-decoration: none !important;
+        }
+
+        .case-study-card {
+          background: var(--color-white);
+          border-radius: 16px;
+          overflow: hidden;
+          border: 2px solid var(--color-gray-light);
+          transition: all 0.3s ease;
+          position: relative;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .case-study-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+          border-color: var(--color-brand-blue);
+        }
+
+        .featured-badge {
+          position: absolute;
+          top: var(--space-md);
+          right: var(--space-md);
+          background: var(--color-brand-red);
+          color: var(--color-white);
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .card-header {
+          display: flex;
+          gap: var(--space-lg);
+          padding: var(--space-xl);
+          padding-bottom: 0;
+        }
+
+        .profile-image {
+          width: 80px;
+          height: 80px;
+          border-radius: 12px;
+          object-fit: cover;
+          flex-shrink: 0;
+        }
+
+        .header-info h3 {
+          font-size: 24px;
+          margin-bottom: var(--space-xs);
+          color: var(--color-ink);
+        }
+
+        .organisation {
+          font-weight: 500;
+          color: var(--color-brand-blue);
+          margin-bottom: 4px;
+        }
+
+        .location {
+          font-size: 14px;
+          color: var(--color-gray);
+          margin: 0;
+        }
+
+        .excerpt {
+          padding: var(--space-lg) var(--space-xl);
+          color: var(--color-ink-light);
+          line-height: 1.6;
+          flex: 1;
+        }
+
+        .impact-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          border-top: 1px solid var(--color-gray-light);
+          border-bottom: 1px solid var(--color-gray-light);
+        }
+
+        .impact-stat {
+          padding: var(--space-md);
+          text-align: center;
+          border-right: 1px solid var(--color-gray-light);
+        }
+
+        .impact-stat:last-child {
+          border-right: none;
+        }
+
+        .impact-number {
+          display: block;
+          font-size: 20px;
+          font-weight: 700;
+          color: var(--color-ink);
+          margin-bottom: 4px;
+        }
+
+        .impact-label {
+          display: block;
+          font-size: 12px;
+          color: var(--color-gray);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .card-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: var(--space-lg) var(--space-xl);
+        }
+
+        .tags {
+          display: flex;
+          gap: var(--space-xs);
+          flex-wrap: wrap;
+        }
+
+        .tag {
+          font-size: 12px;
+          background: var(--color-gray-lighter);
+          color: var(--color-gray);
+          padding: 4px 10px;
+          border-radius: 12px;
+        }
+
+        .read-more {
+          color: var(--color-brand-blue);
+          font-weight: 500;
+          font-size: 14px;
+          white-space: nowrap;
+        }
+
+        .case-study-card:hover .read-more {
+          color: var(--color-brand-red);
+        }
+
+        @media (max-width: 768px) {
+          .case-studies-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .impact-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .impact-stat:nth-child(2) {
+            border-right: none;
+          }
+
+          .impact-stat:nth-child(3) {
+            border-top: 1px solid var(--color-gray-light);
+          }
+
+          .impact-stat:nth-child(4) {
+            border-top: 1px solid var(--color-gray-light);
+          }
+        }
+      `}</style>
     </div>
   );
 }

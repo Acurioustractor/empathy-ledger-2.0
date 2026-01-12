@@ -7,12 +7,12 @@
 
 import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { Database } from './database-types';
+// import { Database } from ./database-types;
 
 export async function createServerClient() {
   const cookieStore = await cookies();
 
-  return createSupabaseServerClient<Database>(
+  return createSupabaseServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -49,13 +49,13 @@ export async function createServerClient() {
  * Only use when community consent and cultural protocols have been verified
  */
 export async function createAdminClient() {
-  if (!process.env.SUPABASE_SERVICE_KEY) {
-    throw new Error('Missing SUPABASE_SERVICE_KEY for admin operations');
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY for admin operations');
   }
 
-  return createSupabaseServerClient<Database>(
+  return createSupabaseServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
     {
       cookies: {
         getAll() {

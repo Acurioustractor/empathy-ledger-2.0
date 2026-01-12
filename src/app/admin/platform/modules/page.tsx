@@ -2,6 +2,8 @@ import { createServerClient } from '@/lib/supabase-client';
 import { ModuleRegistry } from '@/components/platform/module-registry';
 import { ModuleUsageStats } from '@/components/platform/module-usage-stats';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ModulesPage() {
   // Initialize with empty data for build-time
   let modules: any[] = [];
@@ -11,23 +13,30 @@ export default async function ModulesPage() {
     const supabase = await createServerClient();
 
     // Get all platform modules
-    const { data: moduleData } = await supabase
-      .from('platform_modules')
-      .select(
+    let moduleData: any[] = [];
+    try {
+      const { data } = await supabase
+        .from('platform_modules')
+        .select(
+          `
+          *,
+          project_modules(
+            project_id,
+            enabled,
+            first_activated,
+            last_used,
+            usage_count
+          )
         `
-        *,
-        project_modules(
-          project_id,
-          enabled,
-          first_activated,
-          last_used,
-          usage_count
         )
-      `
-      )
-      .order('category', { ascending: true })
-      .order('name', { ascending: true })
-      .catch(() => ({ data: [] }));
+        .order('category', { ascending: true })
+        .order('name', { ascending: true });
+      
+      moduleData = data || [];
+    } catch (error) {
+      console.log('Error fetching modules:', error);
+      moduleData = [];
+    }
 
     modules = moduleData || [];
 

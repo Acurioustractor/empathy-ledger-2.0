@@ -1,311 +1,171 @@
 import React from 'react';
 import Link from 'next/link';
-import MediaDisplay from '@/components/ui/MediaDisplay';
-import {
-  placeholderImages,
-  placeholderBlurDataURLs,
-} from '@/lib/supabase-media';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section - Clean and Minimal */}
-      <section className="hero-spacing">
-        <div className="hero-container text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extralight text-gray-900 content-spacing leading-[1.1]">
-            Stories are power.
-          </h1>
-          <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto leading-relaxed">
-            Empathy Ledger is a technology platform for community knowledge
-            sovereignty. We believe that stories are not raw materials to be
-            processed, but living entities that belong to their tellers.
-          </p>
-        </div>
-      </section>
-
-      {/* Mission Section with Image */}
-      <section className="section-spacing">
-        <div className="content-container">
-          <div className="grid lg:grid-cols-2 gap-24 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 content-spacing leading-[1.1]">
-                Our Mission
-              </h2>
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xl font-normal text-gray-900 mb-3">
-                    Empower Storytellers
-                  </h3>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    We give storytellers complete control over their narratives.
-                    Every person who shares their wisdom receives insights about
-                    their impact and benefits directly when their stories create
-                    value.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-normal text-gray-900 mb-3">
-                    Transform Communities
-                  </h3>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    By connecting individual stories into collective
-                    intelligence, we help communities understand their
-                    challenges, celebrate their strengths, and make informed
-                    decisions for their future.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <MediaDisplay
-                src={placeholderImages.community}
-                alt="Community gathering"
-                aspectRatio="video"
-                rounded="3xl"
-                priority
-                blurDataURL={placeholderBlurDataURLs.community}
-                className="hover-lift"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values Grid - Clean and Spacious */}
-      <section className="section-spacing bg-gray-50">
-        <div className="content-container">
-          <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 subsection-spacing text-center">
-            Our Values
-          </h2>
-          <div className="grid md:grid-cols-3 gap-16">
-            <div className="text-center hover-lift">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <svg
-                  className="w-10 h-10 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Data Sovereignty
-              </h3>
-              <p className="text-gray-600 font-light leading-relaxed">
-                You own your story. Always. We're just the trusted custodians
-                who help you share it on your terms.
-              </p>
-            </div>
-            <div className="text-center hover-lift">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <svg
-                  className="w-10 h-10 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Community First
-              </h3>
-              <p className="text-gray-600 font-light leading-relaxed">
-                We respect cultural protocols and community governance.
-                Technology serves people, not the other way around.
-              </p>
-            </div>
-            <div className="text-center hover-lift">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                <svg
-                  className="w-10 h-10 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-normal text-gray-900 mb-4">
-                Transparency
-              </h3>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Every decision, every algorithm, every partnership is open for
-                community scrutiny and governance.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Story Section - Visual Impact */}
-      <section className="section-spacing">
-        <div className="content-container">
-          <div className="text-center subsection-spacing">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 content-spacing">
-              Our Story
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              Born from the recognition that communities hold profound wisdom in
-              their collective experiences.
+    <div>
+      {/* Hero Section */}
+      <section className="hero-constellation">
+        <div className="container">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="hero-badge">OUR STORY</div>
+            <h1 className="hero-title">
+              Stories belong to their tellers
+            </h1>
+            <p className="hero-description">
+              Empathy Ledger is a community-first storytelling platform where technology serves human dignity, 
+              storytellers maintain ownership of their narratives, and communities control their cultural data.
             </p>
           </div>
+        </div>
+      </section>
 
-          <div className="grid md:grid-cols-2 gap-16 subsection-spacing">
-            <MediaDisplay
-              src={placeholderImages.workshop}
-              alt="Early community workshop"
-              aspectRatio="video"
-              rounded="3xl"
-              blurDataURL={placeholderBlurDataURLs.workshop}
-              className="hover-lift"
-            />
-            <div className="flex items-center">
-              <div>
-                <h3 className="text-2xl font-normal text-gray-900 mb-4">
-                  The Beginning
-                </h3>
-                <p className="text-gray-600 font-light leading-relaxed mb-6">
-                  Empathy Ledger began in 2021 when community leaders,
-                  technologists, and storytellers came together with a shared
-                  vision: what if communities could harness the power of their
-                  collective stories while maintaining individual privacy and
-                  dignity?
-                </p>
-                <p className="text-gray-600 font-light leading-relaxed">
-                  We spent two years listening to communities, understanding
-                  their needs, and building technology that serves rather than
-                  extracts.
-                </p>
+      {/* Mission Section */}
+      <section className="section values-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Our Mission</h2>
+            <p>Building technology that serves communities, not shareholders</p>
+          </div>
+
+          <div className="grid-3">
+            <div className="value-card">
+              <div className="icon icon-red">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
               </div>
+              <h3>Community Ownership</h3>
+              <p>Stories belong to storytellers, not platforms. Communities decide how their narratives are shared and used.</p>
+            </div>
+            
+            <div className="value-card">
+              <div className="icon icon-blue">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+              </div>
+              <h3>Data Sovereignty</h3>
+              <p>Following Indigenous data sovereignty principles. Cultural knowledge stays with its communities.</p>
+            </div>
+            
+            <div className="value-card">
+              <div className="icon icon-green">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                </svg>
+              </div>
+              <h3>Ethical Technology</h3>
+              <p>AI serves storytellers, not shareholders. Innovation happens with communities, not to them.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Story Section */}
+      <section className="section storytellers-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Why We Built This</h2>
+            <p>Technology doesn't have to extract from communities—it can serve them</p>
+          </div>
+
+          <div className="connection-note" style={{maxWidth: '800px'}}>
+            <div style={{width: '100%'}}>
+              <p style={{margin: 0, lineHeight: 1.6}}>
+                We believe another way is possible. Stories don't have to be commodified—they 
+                can remain with their tellers while still building collective wisdom. We're not 
+                venture-backed, we're not racing for an exit, and we're not building to sell user data. 
+                This is our contribution to a world where technology honors human dignity.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Commitments Section */}
+      <section className="section values-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Our Commitments</h2>
+            <p>Promises we make to every storyteller and community</p>
+          </div>
+
+          <div className="grid-3">
+            <div className="value-card">
+              <div className="icon icon-blue">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3>Story Ownership</h3>
+              <p>Your story belongs to you, always. You control how it's shared, analysed, and used. You can remove it at any time.</p>
+            </div>
+            
+            <div className="value-card">
+              <div className="icon icon-red">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h3>Community Governance</h3>
+              <p>Communities control their data governance. Cultural protocols are respected. Every decision is transparent.</p>
+            </div>
+            
+            <div className="value-card">
+              <div className="icon icon-green">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+              <h3>Fair Value</h3>
+              <p>Value created from stories flows back to storytelling communities, not platform shareholders.</p>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-16">
-            <div className="flex items-center order-2 md:order-1">
-              <div>
-                <h3 className="text-2xl font-normal text-gray-900 mb-4">
-                  Today
-                </h3>
-                <p className="text-gray-600 font-light leading-relaxed mb-6">
-                  We work with communities across Australia to create positive
-                  change through storytelling. From healthcare to education,
-                  from social services to policy reform, stories are driving
-                  real transformation.
-                </p>
-                <p className="text-gray-600 font-light leading-relaxed">
-                  Every story shared, every insight generated, every positive
-                  outcome achieved strengthens our belief that communities have
-                  the answers—they just need the right tools to reveal them.
-                </p>
-              </div>
+          <div className="connection-note" style={{maxWidth: '800px', marginTop: 'var(--space-3xl)'}}>
+            <svg className="connection-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+            <p>We follow Indigenous data sovereignty principles and the CARE framework (Collective benefit, Authority to control, Responsibility, Ethics)</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Built by A Curious Tractor</h2>
+            <p>A collective committed to technology that serves human dignity</p>
+          </div>
+
+          <div className="connection-note" style={{maxWidth: '800px'}}>
+            <div style={{width: '100%'}}>
+              <p style={{margin: 0, lineHeight: 1.6}}>
+                We're a diverse team of technologists, community advocates, and storytellers united by a shared mission. 
+                We believe in building with communities, not for them. Our work is guided by Indigenous data sovereignty 
+                principles and a commitment to ensuring technology amplifies voices without extracting value.
+              </p>
             </div>
-            <MediaDisplay
-              src={placeholderImages.impact}
-              alt="Community impact"
-              aspectRatio="video"
-              rounded="3xl"
-              className="order-1 md:order-2 hover-lift"
-              blurDataURL={placeholderBlurDataURLs.impact}
-            />
           </div>
         </div>
       </section>
 
-      {/* Team Section - Elegant Grid */}
-      <section className="section-spacing bg-gray-50">
-        <div className="content-container">
-          <div className="text-center subsection-spacing">
-            <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 content-spacing">
-              Our Team
-            </h2>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-              A diverse collective of technologists, community advocates, and
-              storytellers united by a shared mission.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-12">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="text-center hover-lift">
-                <div className="mb-6">
-                  <MediaDisplay
-                    src={placeholderImages.portrait}
-                    alt={`Team member ${i}`}
-                    aspectRatio="square"
-                    rounded="2xl"
-                    blurDataURL={placeholderBlurDataURLs.portrait}
-                    className="hover-lift"
-                  />
-                </div>
-                <h3 className="text-lg font-normal text-gray-900 mb-1">
-                  Team Member
-                </h3>
-                <p className="text-sm text-gray-600 font-light">Role Title</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Partners Section */}
-      <section className="section-spacing">
-        <div className="content-container text-center">
-          <h2 className="text-4xl md:text-5xl font-extralight text-gray-900 content-spacing">
-            Our Partners
-          </h2>
-          <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto subsection-spacing">
-            Working with organizations that share our commitment to community
-            empowerment and data sovereignty.
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-              <div key={i} className="flex items-center justify-center">
-                <div className="w-full h-20 bg-gray-100 rounded-xl"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="section-spacing bg-gray-900 text-white">
-        <div className="content-container text-center">
-          <h2 className="text-4xl md:text-5xl font-extralight content-spacing">
-            Join Our Mission
-          </h2>
-          <p className="text-xl text-gray-300 font-light subsection-spacing max-w-2xl mx-auto">
-            Whether you're a storyteller, community organization, or technology
-            partner, there's a place for you in our movement.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link href="/submit" className="no-underline">
-              <button className="bg-white text-gray-900 px-10 py-4 rounded-full text-base font-light hover:bg-gray-100 smooth-transition hover:scale-[1.02] hover-lift">
+      {/* CTA Section */}
+      <section className="section cta-section">
+        <div className="container">
+          <div className="cta-content">
+            <h2>Join Our Mission</h2>
+            <p>Whether you're a storyteller, community organisation, or technology partner, there's a place for you</p>
+            <div className="flex justify-center gap-4">
+              <Link href="/submit" className="btn btn-primary btn-large">
                 Share Your Story
-              </button>
-            </Link>
-            <Link href="/contact" className="no-underline">
-              <button className="border border-white text-white px-10 py-4 rounded-full text-base font-light hover:bg-white hover:text-gray-900 smooth-transition">
+              </Link>
+              <Link href="/contact" className="btn btn-secondary btn-large">
                 Partner With Us
-              </button>
-            </Link>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

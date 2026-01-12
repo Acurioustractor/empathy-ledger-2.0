@@ -10,8 +10,9 @@ import { createServerClient } from '@/lib/supabase-server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -30,7 +31,7 @@ export async function GET(
     const { data: membership } = await supabase
       .from('project_members')
       .select('role, permissions')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -74,21 +75,21 @@ export async function GET(
       .select(
         'name, organization_name, sovereignty_compliance_score, created_at'
       )
-      .eq('id', params.projectId)
+      .eq('id', projectId)
       .single();
 
     // Get story metrics
     const { data: story_metrics } = await supabase
       .from('stories')
       .select('id, status, privacy_level, submitted_at, consent_settings')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .gte('submitted_at', period_start.toISOString());
 
     // Get storyteller metrics
     const { data: storyteller_metrics } = await supabase
       .from('stories')
       .select('storyteller_id, submitted_at')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .gte('submitted_at', period_start.toISOString());
 
     // Get community insights metrics
@@ -97,7 +98,7 @@ export async function GET(
       .select(
         'id, insight_type, confidence_level, generated_at, supporting_stories'
       )
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .gte('generated_at', period_start.toISOString());
 
     // Calculate analytics
@@ -171,7 +172,7 @@ export async function GET(
 
       insights_analytics: {
         total_insights: insights_metrics?.length || 0,
-        insight_types: this.groupByInsightType(insights_metrics || []),
+        insight_types: groupByInsightType(insights_metrics || []),
         average_confidence:
           insights_metrics && insights_metrics.length > 0
             ? (
@@ -181,7 +182,7 @@ export async function GET(
                 ) / insights_metrics.length
               ).toFixed(2)
             : 0,
-        stories_contributing_to_insights: this.countUniqueSupportingStories(
+        stories_contributing_to_insights: countUniqueSupportingStories(
           insights_metrics || []
         ),
       },
@@ -211,9 +212,9 @@ export async function GET(
 
     // Add trend analysis if requested
     if (include_trends && ['month', 'quarter', 'year'].includes(time_period)) {
-      const trend_analytics = await this.calculateTrends(
+      const trend_analytics = await calculateTrends(
         supabase,
-        params.projectId,
+        projectId,
         time_period
       );
       (analytics as any).trends = trend_analytics;
@@ -242,7 +243,7 @@ export async function GET(
             : 'good',
         growth_trajectory: 'positive', // TODO: Calculate based on trends
       },
-      recommendations: this.generateCommunityRecommendations(analytics),
+      recommendations: generateCommunityRecommendations(analytics),
     });
   } catch (error: any) {
     return NextResponse.json(

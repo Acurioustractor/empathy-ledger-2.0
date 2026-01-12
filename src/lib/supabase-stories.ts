@@ -1,11 +1,15 @@
-// @ts-nocheck - Variable names need alignment with schema
 /**
  * EMPATHY LEDGER STORY MANAGEMENT SYSTEM
  * Advanced Supabase integration for multi-modal storytelling
  */
 
-import { supabase } from './supabase-auth';
+import { createClient } from './supabase-client';
 import { v4 as uuidv4 } from 'uuid';
+
+// Helper to get initialized Supabase client
+async function getSupabaseClient() {
+  return await createClient();
+}
 
 // =====================================================================
 // STORY TYPES & INTERFACES
@@ -21,7 +25,7 @@ export interface Story {
   image_urls?: string[];
   transcription?: string;
   transcription_confidence?: number;
-  category: StoryCategory;
+  story_type: string | null;
   themes: string[];
   tags: string[];
   privacy_level: PrivacyLevel;
@@ -55,19 +59,23 @@ export interface Story {
   featured_until?: string;
   created_at: string;
   updated_at: string;
+  // Additional properties for migration compatibility
+  profiles?: {
+    display_name: string;
+    avatar_url?: string | null;
+    bio?: string;
+  };
+  communities?: {
+    name: string;
+    slug: string;
+    description: string;
+  };
 }
 
-export type StoryCategory =
-  | 'healthcare'
-  | 'education'
-  | 'housing'
-  | 'youth'
-  | 'elder_care'
-  | 'policy'
-  | 'community'
-  | 'environment'
-  | 'employment'
-  | 'social_services';
+// Story types are now free-form strings in the database
+// Common values include: 'healthcare', 'education', 'housing', 'youth', 
+// 'elder_care', 'policy', 'community', 'environment', 'employment', 'social_services'
+export type StoryType = string;
 
 export type PrivacyLevel = 'public' | 'community' | 'organization' | 'private';
 export type StoryStatus =
@@ -80,7 +88,7 @@ export type StoryStatus =
 export interface StorySubmission {
   title: string;
   content: string;
-  category: StoryCategory;
+  story_type: string;
   themes?: string[];
   tags?: string[];
   privacy_level: PrivacyLevel;
@@ -96,7 +104,7 @@ export interface StorySubmission {
 }
 
 export interface StoryFilter {
-  category?: StoryCategory;
+  story_type?: string;
   privacy_level?: PrivacyLevel;
   status?: StoryStatus;
   community_id?: string;
@@ -123,6 +131,11 @@ export async function submitStory(
   submission: StorySubmission
 ): Promise<{ story: Story | null; error: any }> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return { story: null, error: { message: 'Database connection failed' } };
+    }
+
     // Validate submission
     const validationError = validateStorySubmission(submission);
     if (validationError) {
@@ -161,7 +174,7 @@ export async function submitStory(
       id: storyId,
       title: submission.title,
       content: submission.content,
-      category: submission.category,
+      story_type: submission.story_type,
       themes: submission.themes || [],
       tags: submission.tags || [],
       privacy_level: submission.privacy_level,
@@ -176,7 +189,7 @@ export async function submitStory(
       video_url: mediaUrls.video_url,
       image_urls: mediaUrls.image_urls,
       transcription,
-      transcription_confidence,
+      transcription_confidence: transcriptionConfidence,
       sentiment_score: aiAnalysis?.sentiment_score,
       emotion_scores: aiAnalysis?.emotion_scores,
       topic_scores: aiAnalysis?.topic_scores,
@@ -226,6 +239,11 @@ export async function updateStory(
   updates: Partial<StorySubmission>
 ): Promise<{ story: Story | null; error: any }> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return { story: null, error: { message: 'Database connection failed' } };
+    }
+
     // Check if user owns the story
     const { data: existingStory, error: fetchError } = await supabase
       .from('stories')
@@ -293,6 +311,11 @@ export async function deleteStory(
   userId: string
 ): Promise<{ success: boolean; error: any }> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return { success: false, error: { message: 'Database connection failed' } };
+    }
+
     // Check ownership
     const { data: story, error: fetchError } = await supabase
       .from('stories')
@@ -347,6 +370,11 @@ export async function getStories(
   userId?: string
 ): Promise<{ stories: Story[]; total_count: number; error: any }> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return { stories: [], total_count: 0, error: { message: 'Database connection failed' } };
+    }
+
     let query = supabase.from('stories').select(
       `
         *,
@@ -378,9 +406,9 @@ export async function getStories(
     // Apply status filter (default to approved stories)
     query = query.eq('status', filter.status || 'approved');
 
-    // Apply category filter
-    if (filter.category) {
-      query = query.eq('category', filter.category);
+    // Apply story type filter
+    if (filter.story_type) {
+      query = query.eq('story_type', filter.story_type);
     }
 
     // Apply community filter
@@ -460,6 +488,11 @@ export async function getStoryById(
   userId?: string
 ): Promise<{ story: Story | null; error: any }> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return { story: null, error: { message: 'Database connection failed' } };
+    }
+
     let query = supabase
       .from('stories')
       .select(
@@ -521,6 +554,11 @@ export async function getUserStories(
   offset: number = 0
 ): Promise<{ stories: Story[]; total_count: number; error: any }> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return { stories: [], total_count: 0, error: { message: 'Database connection failed' } };
+    }
+
     let query = supabase
       .from('stories')
       .select('*', { count: 'exact' })
@@ -563,6 +601,11 @@ export async function addStoryReaction(
   reactionType: string
 ): Promise<{ success: boolean; error: any }> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return { success: false, error: { message: 'Database connection failed' } };
+    }
+
     const { error } = await supabase.from('story_reactions').insert({
       story_id: storyId,
       user_id: userId,
@@ -591,6 +634,11 @@ export async function removeStoryReaction(
   reactionType: string
 ): Promise<{ success: boolean; error: any }> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return { success: false, error: { message: 'Database connection failed' } };
+    }
+
     const { error } = await supabase
       .from('story_reactions')
       .delete()
@@ -622,6 +670,11 @@ export async function addStoryComment(
   parentCommentId?: string
 ): Promise<{ comment: any; error: any }> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return { comment: null, error: { message: 'Database connection failed' } };
+    }
+
     const { data, error } = await supabase
       .from('story_comments')
       .insert({
@@ -667,6 +720,10 @@ async function uploadStoryMedia(
   image_urls?: string[];
 }> {
   const results: any = {};
+  const supabase = await getSupabaseClient();
+  if (!supabase) {
+    return results;
+  }
 
   try {
     // Upload audio file
@@ -808,8 +865,8 @@ function validateStorySubmission(submission: StorySubmission): string | null {
     return 'Story content must be at least 10 characters long';
   }
 
-  if (!submission.category) {
-    return 'Please select a category for your story';
+  if (!submission.story_type) {
+    return 'Please select a story type for your story';
   }
 
   if (!submission.privacy_level) {
@@ -824,6 +881,11 @@ function validateStorySubmission(submission: StorySubmission): string | null {
  */
 async function getUserCommunityIds(userId: string): Promise<string> {
   try {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      return '';
+    }
+
     const { data, error } = await supabase
       .from('community_members')
       .select('community_id')

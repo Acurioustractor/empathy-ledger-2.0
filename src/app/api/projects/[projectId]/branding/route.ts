@@ -11,8 +11,9 @@ import { brandingManager } from '@/lib/branding';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -31,7 +32,7 @@ export async function GET(
     const { data: membership } = await supabase
       .from('project_members')
       .select('role, permissions')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -50,7 +51,7 @@ export async function GET(
 
     // Get branding configuration
     const { branding, domain, whitelabel, error } =
-      await brandingManager.getProjectBranding(params.projectId);
+      await brandingManager.getProjectBranding(projectId);
 
     if (error) {
       return NextResponse.json(
@@ -220,8 +221,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -252,7 +254,7 @@ export async function PUT(
     // Apply branding updates with sovereignty validation
     const { success, error: update_error } =
       await brandingManager.updateProjectBranding(
-        params.projectId,
+        projectId,
         user.id,
         updates
       );
@@ -270,7 +272,7 @@ export async function PUT(
 
     // Get updated branding configuration
     const { branding, domain, whitelabel } =
-      await brandingManager.getProjectBranding(params.projectId);
+      await brandingManager.getProjectBranding(projectId);
 
     // Generate updated CSS
     const updated_css = branding
@@ -309,8 +311,9 @@ export async function PUT(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
+  const { projectId } = await params;
   try {
     const supabase = await createServerClient();
     const {
@@ -331,7 +334,7 @@ export async function POST(
     const { data: membership } = await supabase
       .from('project_members')
       .select('role')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .eq('user_id', user.id)
       .eq('status', 'active')
       .single();
@@ -345,16 +348,16 @@ export async function POST(
 
     switch (action) {
       case 'generate_template':
-        return await this.handleGenerateTemplate(params.projectId, payload);
+        return await handleGenerateTemplate(projectId, payload);
 
       case 'verify_domain':
-        return await this.handleDomainVerification(params.projectId, payload);
+        return await handleDomainVerification(projectId, payload);
 
       case 'test_accessibility':
-        return await this.handleAccessibilityTest(params.projectId, payload);
+        return await handleAccessibilityTest(projectId, payload);
 
       case 'export_branding':
-        return await this.handleExportBranding(params.projectId, payload);
+        return await handleExportBranding(projectId, payload);
 
       default:
         return NextResponse.json(

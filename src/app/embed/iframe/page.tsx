@@ -9,25 +9,26 @@ import React from 'react';
 import { EmbedWidget } from '@/components/embed/embed-widget';
 
 interface EmbedIframePageProps {
-  searchParams: {
+  searchParams: Promise<{
     project_id?: string;
     type?: string;
     theme?: string;
     story_id?: string;
     limit?: string;
-  };
+  }>;
 }
 
-export default function EmbedIframePage({
+export default async function EmbedIframePage({
   searchParams,
 }: EmbedIframePageProps) {
+  const params = await searchParams;
   const {
     project_id,
     type = 'story_card',
     theme = 'light',
     story_id,
     limit = '3',
-  } = searchParams;
+  } = params;
 
   if (!project_id) {
     return (

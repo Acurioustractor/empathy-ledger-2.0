@@ -303,7 +303,7 @@ export default function CMSDashboard() {
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="text-sm text-gray-500 font-light uppercase tracking-wide">
-                    {story.category.replace('-', ' ')}
+                    {('story').replace('-', ' ')}
                   </div>
                   <div className="flex items-center gap-2">
                     <div
